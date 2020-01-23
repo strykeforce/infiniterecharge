@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import org.strykeforce.thirdcoast.telemetry.TelemetryController;
+import org.strykeforce.thirdcoast.telemetry.TelemetryService;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,6 +23,9 @@ import frc.robot.subsystems.ExampleSubsystem;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  public static TelemetryService TELEMETRY;
+
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
@@ -27,6 +33,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    TELEMETRY = new TelemetryService(TelemetryController::new);
     // Configure the button bindings
     configureButtonBindings();
   }
