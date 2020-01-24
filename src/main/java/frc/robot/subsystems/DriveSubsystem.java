@@ -6,45 +6,45 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.kauailabs.navx.frc.AHRS;
-
-import org.slf4j.LoggerFactory;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+import frc.robot.commands.TeleopDriveCommand;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.swerve.SwerveDrive;
 import org.strykeforce.thirdcoast.swerve.SwerveDriveConfig;
 import org.strykeforce.thirdcoast.swerve.Wheel;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 import org.strykeforce.thirdcoast.telemetry.item.TalonItem;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
-import edu.wpi.first.wpilibj.SPI;
-
 public class DriveSubsystem extends SubsystemBase {
 
-    private static final double ROBOT_LENGTH = 1.0;
-    private static final double ROBOT_WIDTH = 1.0;
+  private static final double ROBOT_LENGTH = 1.0;
+  private static final double ROBOT_WIDTH = 1.0;
 
-    private final SwerveDrive swerve = configSwerve();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
-    public DriveSubsystem() {
-        
-    }
+  private final SwerveDrive swerve = configSwerve();
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public void drive(double forward, double strafe, double yaw) {
-        swerve.drive(forward, strafe, yaw);
-    }
+  public DriveSubsystem() {
+    swerve.setFieldOriented(true);
+    setDefaultCommand(new TeleopDriveCommand());
+  }
 
-    public void zeroGyro() {
-        AHRS gyro = swerve.getGyro();
-        gyro.setAngleAdjustment(0);
-        double adj = gyro.getAngle() % 360;
-        gyro.setAngleAdjustment(-adj);
-        logger.info("resetting gyro: ({})", adj);
-    }
+  public void drive(double forward, double strafe, double yaw) {
+    swerve.drive(forward, strafe, yaw);
+  }
 
-    private Wheel[] getWheels() {
-        TalonSRXConfiguration azimuthConfig = new TalonSRXConfiguration();
+  public void zeroGyro() {
+    AHRS gyro = swerve.getGyro();
+    gyro.setAngleAdjustment(0);
+    double adj = gyro.getAngle() % 360;
+    gyro.setAngleAdjustment(-adj);
+    logger.info("resetting gyro: ({})", adj);
+  }
+
+  private Wheel[] getWheels() {
+    TalonSRXConfiguration azimuthConfig = new TalonSRXConfiguration();
     azimuthConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
     azimuthConfig.continuousCurrentLimit = 10;
     azimuthConfig.peakCurrentDuration = 0;
@@ -71,14 +71,13 @@ public class DriveSubsystem extends SubsystemBase {
     driveConfig.velocityMeasurementWindow = 64;
     driveConfig.voltageCompSaturation = 12;
 
-    
     TelemetryService telemetryService = RobotContainer.TELEMETRY;
     telemetryService.stop();
 
     Wheel[] wheels = new Wheel[4];
 
-    for (int i = 0; i<4; i++) {
-        TalonSRX azimuthTalon = new TalonSRX(i);
+    for (int i = 0; i < 4; i++) {
+      TalonSRX azimuthTalon = new TalonSRX(i);
       azimuthTalon.configAllSettings(azimuthConfig);
       azimuthTalon.enableCurrentLimit(true);
       azimuthTalon.enableVoltageCompensation(true);
@@ -89,24 +88,24 @@ public class DriveSubsystem extends SubsystemBase {
       driveTalon.setNeutralMode(NeutralMode.Brake);
       driveTalon.enableCurrentLimit(true);
       driveTalon.enableVoltageCompensation(true);
-      
+
       telemetryService.register(new TalonItem(azimuthTalon, "Azimuth " + i));
       telemetryService.register(new TalonItem(driveTalon, "Drive " + (i + 10)));
     }
     telemetryService.start();
-    
+
     return wheels;
-    }
+  }
 
-    private SwerveDrive configSwerve() {
-        SwerveDriveConfig config = new SwerveDriveConfig();
-        config.length = ROBOT_LENGTH;
-        config.width = ROBOT_WIDTH;
-        config.wheels = getWheels();
-        config.gyro = new AHRS(SPI.Port.kMXP);
-        config.gyroLoggingEnabled = true;
-        config.summarizeTalonErrors = false;
+  private SwerveDrive configSwerve() {
+    SwerveDriveConfig config = new SwerveDriveConfig();
+    config.length = ROBOT_LENGTH;
+    config.width = ROBOT_WIDTH;
+    config.wheels = getWheels();
+    config.gyro = new AHRS(SPI.Port.kMXP);
+    config.gyroLoggingEnabled = true;
+    config.summarizeTalonErrors = false;
 
-        return new SwerveDrive(config);
-    }
+    return new SwerveDrive(config);
+  }
 }
