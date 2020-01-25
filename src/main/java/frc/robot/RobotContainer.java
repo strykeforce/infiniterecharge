@@ -11,7 +11,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.controls.Controls;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import org.strykeforce.thirdcoast.telemetry.TelemetryController;
+import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,13 +24,22 @@ import frc.robot.subsystems.ExampleSubsystem;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  public static TelemetryService TELEMETRY;
+
   // The robot's subsystems and commands are defined here...
+  public static DriveSubsystem DRIVE;
+  public static Controls CONTROLS;
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    TELEMETRY = new TelemetryService(TelemetryController::new);
+    DRIVE = new DriveSubsystem();
+    CONTROLS = new Controls();
+
     // Configure the button bindings
     configureButtonBindings();
   }
