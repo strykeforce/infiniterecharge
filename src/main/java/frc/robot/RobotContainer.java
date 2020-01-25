@@ -27,9 +27,9 @@ public class RobotContainer {
 
   public static TelemetryService TELEMETRY;
 
+  // The robot's subsystems and commands are defined here...
   public static DriveSubsystem DRIVE;
   public static Controls CONTROLS;
-  // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
@@ -39,6 +39,7 @@ public class RobotContainer {
     TELEMETRY = new TelemetryService(TelemetryController::new);
     DRIVE = new DriveSubsystem();
     CONTROLS = new Controls();
+
     // Configure the button bindings
     configureButtonBindings();
   }
