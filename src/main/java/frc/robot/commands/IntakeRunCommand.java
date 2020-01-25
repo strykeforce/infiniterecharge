@@ -15,5 +15,6 @@ public class IntakeRunCommand extends InstantCommand {
   @Override
   public void initialize() {
     INTAKE.runIntake(setpoint);
+    System.out.println("Running intake");
   }
 }
