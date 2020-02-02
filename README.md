@@ -14,8 +14,8 @@ Drive        | FX   | drive       | 12 | 3
 Drive        | FX   | drive       | 13 | 1
 Intake       | FX   | intake      | 20 | 15
 Magazine     | SRX  | magazine    | 30 | 9
-Shooter      | FX   | leftMaster  | 40 | 
-Shooter      | FX   | rightSlave  | 41 | 
+Shooter      | FX   | leftMaster  | 40 | 12
+Shooter      | FX   | rightSlave  | 41 | 13
 Shooter      | SRX  | turret      | 42 | 10
 Shooter      | SRX  | hood        | 43 | 11
 Climb        | SRX  | climb       | 50 | 14
