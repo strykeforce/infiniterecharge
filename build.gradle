@@ -62,8 +62,6 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
-    implementation "org.strykeforce.thirdcoast:swerve:${thirdcoastVersion}"
-    implementation "org.strykeforce.thirdcoast:telemetry:${thirdcoastVersion}"
     implementation "ch.qos.logback:logback-classic:${logbackVersion}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib"

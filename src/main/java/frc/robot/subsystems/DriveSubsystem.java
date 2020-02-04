@@ -3,32 +3,34 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.commands.TeleopDriveCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.swerve.SwerveDrive;
 import org.strykeforce.thirdcoast.swerve.SwerveDriveConfig;
 import org.strykeforce.thirdcoast.swerve.Wheel;
+import org.strykeforce.thirdcoast.talon.TalonFXItem;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
-import org.strykeforce.thirdcoast.telemetry.item.TalonItem;
+import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private static final double ROBOT_LENGTH = 1.0;
-  private static final double ROBOT_WIDTH = 1.0;
+  private static final double ROBOT_LENGTH = 25.5;
+  private static final double ROBOT_WIDTH = 21.5;
+  private static final double DRIVE_SETPOINT_MAX = 0.0;
 
   private final SwerveDrive swerve = configSwerve();
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public DriveSubsystem() {
     swerve.setFieldOriented(true);
-    setDefaultCommand(new TeleopDriveCommand());
   }
 
   public void drive(double forward, double strafe, double yaw) {
@@ -60,10 +62,11 @@ public class DriveSubsystem extends SubsystemBase {
     azimuthConfig.velocityMeasurementWindow = 64;
     azimuthConfig.voltageCompSaturation = 12;
 
-    TalonSRXConfiguration driveConfig = new TalonSRXConfiguration();
-    driveConfig.continuousCurrentLimit = 40;
-    driveConfig.peakCurrentDuration = 45;
-    driveConfig.peakCurrentLimit = 40;
+    TalonFXConfiguration driveConfig = new TalonFXConfiguration();
+    driveConfig.supplyCurrLimit.currentLimit = 40;
+    driveConfig.supplyCurrLimit.triggerThresholdCurrent = 45;
+    driveConfig.supplyCurrLimit.triggerThresholdTime = 40;
+    driveConfig.supplyCurrLimit.enable = true;
     driveConfig.slot0.integralZone = 1000;
     driveConfig.slot0.maxIntegralAccumulator = 150_000;
     driveConfig.slot0.allowableClosedloopError = 0;
@@ -83,14 +86,15 @@ public class DriveSubsystem extends SubsystemBase {
       azimuthTalon.enableVoltageCompensation(true);
       azimuthTalon.setNeutralMode(NeutralMode.Coast);
 
-      TalonSRX driveTalon = new TalonSRX(i + 10);
+      TalonFX driveTalon = new TalonFX(i + 10);
       driveTalon.configAllSettings(driveConfig);
       driveTalon.setNeutralMode(NeutralMode.Brake);
-      driveTalon.enableCurrentLimit(true);
       driveTalon.enableVoltageCompensation(true);
 
-      telemetryService.register(new TalonItem(azimuthTalon, "Azimuth " + i));
-      telemetryService.register(new TalonItem(driveTalon, "Drive " + (i + 10)));
+      telemetryService.register(new TalonSRXItem(azimuthTalon, "Azimuth " + i));
+      telemetryService.register(new TalonFXItem(driveTalon, "Drive " + (i + 10)));
+
+      wheels[i] = new Wheel(azimuthTalon, driveTalon, DRIVE_SETPOINT_MAX);
     }
     telemetryService.start();
 
