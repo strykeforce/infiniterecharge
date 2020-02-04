@@ -36,7 +36,7 @@ public class TeleopDriveCommand extends CommandBase {
     double strafe = strafeScale.apply(driverControls.getStrafe());
     double yaw = yawScale.apply(driverControls.getYaw());
 
-    DRIVE.drive(forward, strafe, yaw);
+    DRIVE.drive(-forward, -strafe, -yaw);
   }
 
   @Override
