@@ -2,6 +2,8 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.RobotContainer;
+import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
 
 public class DriverControls {
@@ -10,6 +12,7 @@ public class DriverControls {
   DriverControls(int portNumber) {
     joystick = new Joystick(portNumber);
     new JoystickButton(joystick, Button.RESET.id).whenPressed(new ZeroGyroCommand());
+    RobotContainer.DRIVE.setDefaultCommand(new TeleopDriveCommand());
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {
