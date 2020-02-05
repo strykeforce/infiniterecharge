@@ -31,6 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public DriveSubsystem() {
     swerve.setFieldOriented(true);
+    zeroAzimuths();
   }
 
   public void drive(double forward, double strafe, double yaw) {
@@ -43,6 +44,10 @@ public class DriveSubsystem extends SubsystemBase {
     double adj = gyro.getAngle() % 360;
     gyro.setAngleAdjustment(-adj);
     logger.info("resetting gyro: ({})", adj);
+  }
+
+  public void zeroAzimuths() {
+    swerve.zeroAzimuthEncoders();
   }
 
   private Wheel[] getWheels() {
