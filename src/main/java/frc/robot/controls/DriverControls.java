@@ -14,10 +14,10 @@ public class DriverControls {
     new JoystickButton(joystick, Button.RESET.id).whenPressed(new ZeroGyroCommand());
 
     // RobotContainer.DRIVE.setDefaultCommand(new TeleopDriveCommand());
-    new JoystickButton(joystick, Shoulder.LEFT_DOWN.id).whenPressed(new IntakeRunCommand(-0.25));
+    new JoystickButton(joystick, Shoulder.LEFT_DOWN.id).whenPressed(new IntakeRunCommand(-0.4));
     new JoystickButton(joystick, Shoulder.LEFT_DOWN.id).whenReleased(new IntakeStopCommand());
     new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenReleased(new IntakeStopCommand());
-    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new IntakeRunCommand(0.25));
+    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new IntakeRunCommand(0.4));
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {
