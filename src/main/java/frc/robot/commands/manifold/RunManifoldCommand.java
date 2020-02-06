@@ -5,7 +5,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.MagazineSubsystem;
 
 public class RunManifoldCommand extends InstantCommand {
-  private MagazineSubsystem magazineSubsystem = RobotContainer.MANIFOLD;
+  private MagazineSubsystem magazineSubsystem = RobotContainer.MAGAZINE;
   private double setSpeed;
 
   public RunManifoldCommand(double speed) {
