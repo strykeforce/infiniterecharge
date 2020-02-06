@@ -68,7 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
     azimuthConfig.voltageCompSaturation = 12;
 
     TalonFXConfiguration driveConfig = new TalonFXConfiguration();
-    driveConfig.supplyCurrLimit.currentLimit = 40;
+    driveConfig.supplyCurrLimit.currentLimit = 0.04;
     driveConfig.supplyCurrLimit.triggerThresholdCurrent = 45;
     driveConfig.supplyCurrLimit.triggerThresholdTime = 40;
     driveConfig.supplyCurrLimit.enable = true;

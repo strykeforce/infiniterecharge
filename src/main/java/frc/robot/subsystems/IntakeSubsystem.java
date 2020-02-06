@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     talonConfig.supplyCurrLimit.currentLimit = 40.0;
     talonConfig.supplyCurrLimit.triggerThresholdCurrent = 45.0;
-    talonConfig.supplyCurrLimit.triggerThresholdTime = 40.0;
+    talonConfig.supplyCurrLimit.triggerThresholdTime = 0.04;
     talonConfig.supplyCurrLimit.enable = true;
 
     intakeDrive.configAllSettings(talonConfig);
