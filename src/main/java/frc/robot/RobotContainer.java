@@ -16,6 +16,7 @@ import frc.robot.controls.Controls;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.MagazineSubsystem;
 import org.strykeforce.thirdcoast.telemetry.TelemetryController;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 
@@ -31,6 +32,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   public static DriveSubsystem DRIVE;
+  public static MagazineSubsystem MAGAZINE;
   public static Controls CONTROLS;
   public static IntakeSubsystem INTAKE;
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -41,6 +43,7 @@ public class RobotContainer {
   public RobotContainer() {
     TELEMETRY = new TelemetryService(TelemetryController::new);
     DRIVE = new DriveSubsystem();
+    MAGAZINE = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();
     CONTROLS = new Controls();
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
