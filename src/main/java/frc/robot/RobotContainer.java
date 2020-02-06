@@ -32,7 +32,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   public static DriveSubsystem DRIVE;
-  public static ManifoldSubsystem MANIFOLD;
+  public static MagazineSubsystem MANIFOLD;
   public static Controls CONTROLS;
   public static IntakeSubsystem INTAKE;
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -43,7 +43,7 @@ public class RobotContainer {
   public RobotContainer() {
     TELEMETRY = new TelemetryService(TelemetryController::new);
     DRIVE = new DriveSubsystem();
-    MANIFOLD = new ManifoldSubsystem();
+    MANIFOLD = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();
     CONTROLS = new Controls();
     DRIVE.setDefaultCommand(new TeleopDriveCommand());

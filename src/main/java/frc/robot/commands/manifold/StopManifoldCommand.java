@@ -2,17 +2,17 @@ package frc.robot.commands.manifold;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ManifoldSubsystem;
+import frc.robot.subsystems.MagazineSubsystem;
 
 public class StopManifoldCommand extends InstantCommand {
-  private ManifoldSubsystem manifoldSubsystem = RobotContainer.MANIFOLD;
+  private MagazineSubsystem magazineSubsystem = RobotContainer.MANIFOLD;
 
   public StopManifoldCommand() {
-    addRequirements(manifoldSubsystem);
+    addRequirements(magazineSubsystem);
   }
 
   @Override
   public void initialize() {
-    manifoldSubsystem.stopTalon();
+    magazineSubsystem.stopTalon();
   }
 }
