@@ -4,18 +4,18 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.MagazineSubsystem;
 
-public class RunMagazineCommand extends InstantCommand {
+public class LimitMagazineCommand extends InstantCommand {
   private MagazineSubsystem magazineSubsystem = RobotContainer.MAGAZINE;
   private double setSpeed;
 
-  public RunMagazineCommand(double speed) {
+  public LimitMagazineCommand(double speed) {
     addRequirements(magazineSubsystem);
     this.setSpeed = speed;
   }
 
   @Override
   public void initialize() {
-    magazineSubsystem.enableLimitSwitch(false);
+    magazineSubsystem.enableLimitSwitch(true);
     magazineSubsystem.runTalon(setSpeed);
   }
 }
