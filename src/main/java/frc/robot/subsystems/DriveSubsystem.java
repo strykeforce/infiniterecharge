@@ -130,4 +130,8 @@ public class DriveSubsystem extends SubsystemBase {
     swerveWheels[2].setAzimuthPosition(XLOCK_FR_TICKS.intValue());
     swerveWheels[3].setAzimuthPosition(XLOCK_FL_TICKS.intValue());
   }
+
+  public AHRS getGyro() {
+    return swerve.getGyro();
+  }
 }
