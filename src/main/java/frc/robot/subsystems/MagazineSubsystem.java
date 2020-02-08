@@ -27,7 +27,8 @@ public class MagazineSubsystem extends SubsystemBase {
     config.peakCurrentLimit = 35;
     magazineTalon.configAllSettings(config);
     magazineTalon.enableCurrentLimit(true);
-    magazineTalon.configForwardLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
+    magazineTalon.configForwardLimitSwitchSource(
+        LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
     TelemetryService telemetry = RobotContainer.TELEMETRY;
     telemetry.stop();
     telemetry.register(new TalonSRXItem(magazineTalon, "Magazine"));
@@ -44,9 +45,15 @@ public class MagazineSubsystem extends SubsystemBase {
 
   public void enableLimitSwitch(boolean isEnabled) {
     if (isEnabled) {
-      magazineTalon.configForwardLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
+      magazineTalon.configForwardLimitSwitchSource(
+          LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
     } else {
-      magazineTalon.configForwardLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.Disabled, 43);
-    } 
+      magazineTalon.configForwardLimitSwitchSource(
+          LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.Disabled, 43);
+    }
+  }
+
+  public boolean isIntakeBeamBroken() {
+    return magazineTalon.getSensorCollection().isRevLimitSwitchClosed();
   }
 }
