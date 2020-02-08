@@ -10,13 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.controls.Controls;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.MagazineSubsystem;
+import frc.robot.subsystems.*;
 import org.strykeforce.thirdcoast.telemetry.TelemetryController;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 
@@ -35,9 +31,7 @@ public class RobotContainer {
   public static MagazineSubsystem MAGAZINE;
   public static Controls CONTROLS;
   public static IntakeSubsystem INTAKE;
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  public static ShooterSubsystem SHOOTER;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -45,6 +39,7 @@ public class RobotContainer {
     DRIVE = new DriveSubsystem();
     MAGAZINE = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();
+    SHOOTER = new ShooterSubsystem();
     CONTROLS = new Controls();
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
 
@@ -67,6 +62,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null; // FIXME
   }
 }
