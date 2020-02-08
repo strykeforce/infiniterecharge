@@ -9,7 +9,8 @@ import frc.robot.commands.shooter.RunShooterCommand;
 public class OpenLoopShootCommand extends SequentialCommandGroup {
   public OpenLoopShootCommand() {
     addCommands(
-        new RunMagazineCommand(-0.1),
+        new RunMagazineCommand(-0.2),
+        new RunShooterCommand(-0.2),
         new WaitCommand(500),
         new RunShooterCommand(0.5),
         new WaitCommand(1500),
