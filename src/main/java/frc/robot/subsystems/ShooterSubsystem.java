@@ -56,6 +56,7 @@ public class ShooterSubsystem extends SubsystemBase {
     lMasterConfig.supplyCurrLimit.triggerThresholdCurrent = 45;
     lMasterConfig.supplyCurrLimit.triggerThresholdTime = 0.04;
     lMasterConfig.supplyCurrLimit.enable = true;
+    leftMaster = new TalonFX(L_MASTER_ID);
     lMasterConfig.slot0.kP = 0.45;
     lMasterConfig.slot0.kI = 0;
     lMasterConfig.slot0.kD = 10;
