@@ -1,5 +1,10 @@
 # 2020 FIRST INFINITE RECHARGE
 
+## Controls
+
+![driver](docs/2020-Driver-Controls.PNG)
+![game-controls](docs/2020-Game-Controls.PNG)
+
 ## Talons
 
 Subsystem    | Type | Talon       | ID | PDP
@@ -19,3 +24,6 @@ Shooter      | FX   | rightSlave  | 41 | 13
 Shooter      | SRX  | turret      | 42 | 10
 Shooter      | SRX  | hood        | 43 | 11
 Climb        | SRX  | climb       | 50 | 14
+
+* Intake beam break routed to reverse limit switch on magazine
+* Magazine beam break routed to forward limit switch on hood
