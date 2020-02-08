@@ -4,14 +4,18 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import org.strykeforce.thirdcoast.talon.TalonFXItem;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
+import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
 
 public class ShooterSubsystem extends SubsystemBase {
   private static TalonFX leftMaster;
+  private static TalonSRX hood;
   private static final int LMASTERID = 40;
+  private static final int HOODID = 43;
 
   public ShooterSubsystem() {
     configTalons();
@@ -27,8 +31,11 @@ public class ShooterSubsystem extends SubsystemBase {
     leftMaster.configAllSettings(lMasterConfig);
     leftMaster.setNeutralMode(NeutralMode.Coast);
 
+    hood = new TalonSRX(HOODID);
+
     TelemetryService telService = RobotContainer.TELEMETRY;
     telService.stop();
+    telService.register(new TalonSRXItem(hood, "ShooterHood"));
     telService.register(new TalonFXItem(leftMaster, "ShooterLeftMaster"));
     telService.start();
   }
@@ -39,5 +46,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void stop() {
     leftMaster.set(ControlMode.PercentOutput, 0);
+  }
+
+  public boolean isMagazineBeamBroken() {
+    return hood.getSensorCollection().isFwdLimitSwitchClosed();
   }
 }
