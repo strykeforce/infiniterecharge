@@ -56,4 +56,9 @@ public class MagazineSubsystem extends SubsystemBase {
   public boolean isIntakeBeamBroken() {
     return magazineTalon.getSensorCollection().isRevLimitSwitchClosed();
   }
+
+  public void disableReverseLimitSwitch() {
+    magazineTalon.configReverseLimitSwitchSource(
+        LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled);
+  }
 }
