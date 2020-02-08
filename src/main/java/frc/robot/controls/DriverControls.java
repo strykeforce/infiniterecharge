@@ -3,9 +3,10 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ZeroGyroCommand;
-import frc.robot.commands.intake.IntakeRunCommand;
-import frc.robot.commands.intake.IntakeStopCommand;
 import frc.robot.commands.sequences.AutoIntakeCmdGroup;
+import frc.robot.commands.sequences.OpenLoopShootCommand;
+import frc.robot.commands.sequences.StopIntakeAndMagazineCommandGroup;
+import frc.robot.commands.sequences.StopShootCommand;
 
 public class DriverControls {
   private Joystick joystick;
@@ -15,10 +16,11 @@ public class DriverControls {
     new JoystickButton(joystick, Button.RESET.id).whenPressed(new ZeroGyroCommand());
 
     // RobotContainer.DRIVE.setDefaultCommand(new TeleopDriveCommand());
-    new JoystickButton(joystick, Shoulder.LEFT_DOWN.id).whenPressed(new AutoIntakeCmdGroup());
-    new JoystickButton(joystick, Shoulder.LEFT_DOWN.id).whenReleased(new IntakeStopCommand());
-    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenReleased(new IntakeStopCommand());
-    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new IntakeRunCommand(0.5));
+    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new OpenLoopShootCommand());
+    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenReleased(new StopShootCommand());
+    new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id).whenPressed(new AutoIntakeCmdGroup());
+    new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id)
+        .whenReleased(new StopIntakeAndMagazineCommandGroup());
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {
