@@ -11,12 +11,12 @@ import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
 
 public class MagazineSubsystem extends SubsystemBase {
-  private static final int MANIFOLD_ID = 30;
+  private static final int MAGAZINE_ID = 30;
 
   private TalonSRX magazineTalon;
 
   public MagazineSubsystem() {
-    magazineTalon = new TalonSRX(MANIFOLD_ID);
+    magazineTalon = new TalonSRX(MAGAZINE_ID);
     configureTalon();
   }
 
