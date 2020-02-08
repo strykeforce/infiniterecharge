@@ -17,31 +17,31 @@ package frc.robot;
  */
 public final class Constants {
 
-public static final class IntakeConstants{
+  public static final class IntakeConstants {
 
     public static final double kIntakeSpeed = -0.5;
     public static final double kEjectSpeed = 0.25;
     public static final long kShootDelayIntake = 500;
-}
+  }
 
-public static final class MagazineConstants{
+  public static final class MagazineConstants {
 
     public static final double kOpenloopUp = 1.0;
     public static final double kOpenloopReverse = -0.25;
     public static final double kOpenloopArmReverse = -0.2;
     public static final long kArmTimeToShooterOn = 500;
-}
+  }
 
-public static final class ShooterConstants{
+  public static final class ShooterConstants {
 
     public static final double kOpenloopShoot = 0.5;
     public static final double kOpenloopArmReverse = -0.2;
     public static final long kArmTimeToAccelerate = 1500;
-}
+  }
 
-    public static final class DriveConstants {
+  public static final class DriveConstants {
         public static final double kDeadbandXLock = 0.2;
-    }
+  }
 
 
 

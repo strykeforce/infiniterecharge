@@ -8,6 +8,8 @@ import frc.robot.commands.magazine.RunMagazineCommand;
 
 public class ReverseIntakeAndMagazineCommandGroup extends ParallelCommandGroup {
   public ReverseIntakeAndMagazineCommandGroup() {
-    addCommands(new IntakeRunCommand(IntakeConstants.kEjectSpeed), new RunMagazineCommand(MagazineConstants.kOpenloopReverse));
+    addCommands(
+        new IntakeRunCommand(IntakeConstants.kEjectSpeed),
+        new RunMagazineCommand(MagazineConstants.kOpenloopReverse));
   }
 }
