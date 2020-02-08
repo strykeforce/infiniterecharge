@@ -1,6 +1,7 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.MagazineSubsystem;
@@ -18,7 +19,7 @@ public class IntakeAutoStopCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    intakeSubsystem.runIntake(-0.5);
+    intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
   }
 
   @Override
