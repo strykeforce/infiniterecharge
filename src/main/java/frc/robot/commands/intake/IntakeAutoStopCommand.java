@@ -15,6 +15,7 @@ public class IntakeAutoStopCommand extends CommandBase {
   private boolean timerOn;
   private IntakeStates state;
   private long reverseTime;
+  private int stallCount = 0;
 
   public IntakeAutoStopCommand() {
     addRequirements(intakeSubsystem);
@@ -37,24 +38,34 @@ public class IntakeAutoStopCommand extends CommandBase {
         if (magazine.isIntakeBeamBroken() && !timerOn) {
           timerOn = true;
           time = System.currentTimeMillis();
+          System.out.println("intake beam broken");
         } else if (magazine.isIntakeBeamBroken() && timerOn) {
           if (System.currentTimeMillis() - time >= Constants.IntakeConstants.kTimeFullIntake) {
             state = IntakeStates.DONE;
+            System.out.println("intake stopping");
             intakeSubsystem.stopIntake();
           }
         } else {
           timerOn = false;
         }
-        if (intakeSubsystem.isStalled()) {
+
+        if (intakeSubsystem.isStalled()) stallCount++;
+        else stallCount = 0;
+
+        if (stallCount >= Constants.IntakeConstants.kStallCount) {
           state = IntakeStates.REVERSING;
+          System.out.println("intake stalled");
           reverseTime = System.currentTimeMillis();
           intakeSubsystem.runIntake(Constants.IntakeConstants.kEjectSpeed);
         }
+        break;
       case REVERSING:
         if ((System.currentTimeMillis() - reverseTime) >= Constants.IntakeConstants.kReverseTime) {
           state = IntakeStates.INTAKING;
+          System.out.println("unjammed running intake");
           intakeSubsystem.runIntake(Constants.IntakeConstants.kIntakeSpeed);
         }
+        break;
     }
   }
 
