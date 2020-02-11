@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.intake.IntakeStopCommand;
@@ -19,6 +20,7 @@ public class DriverControls {
     new JoystickButton(joystick, Shoulder.LEFT_DOWN.id).whenReleased(new IntakeStopCommand());
     new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenReleased(new IntakeStopCommand());
     new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new IntakeRunCommand(0.5));
+    new JoystickButton(joystick, Button.X.id).whenPressed(new XLockCommand());
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {

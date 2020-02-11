@@ -25,6 +25,11 @@ public class DriveSubsystem extends SubsystemBase {
   private static final double ROBOT_LENGTH = 25.5;
   private static final double ROBOT_WIDTH = 21.5;
   private static final double DRIVE_SETPOINT_MAX = 0.0;
+  private static final Double XLOCK_FL_RATIO =
+      Math.atan2(ROBOT_WIDTH, ROBOT_LENGTH) * 0.5 / Math.PI;
+  private static final Double XLOCK_FL_TICKS = XLOCK_FL_RATIO * (4096 / 2);
+  private static final Double XLOCK_FR_RATIO = -XLOCK_FL_RATIO;
+  private static final Double XLOCK_FR_TICKS = XLOCK_FR_RATIO * (4096 / 2);
 
   private final SwerveDrive swerve = configSwerve();
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -116,5 +121,14 @@ public class DriveSubsystem extends SubsystemBase {
     config.summarizeTalonErrors = false;
 
     return new SwerveDrive(config);
+  }
+
+  public void xLockSwerveDrive() {
+    System.out.println("FrontLeft: " + XLOCK_FL_TICKS + ", FrontRight: " + XLOCK_FR_TICKS);
+    Wheel[] swerveWheels = swerve.getWheels();
+    swerveWheels[0].setAzimuthPosition(XLOCK_FL_TICKS.intValue());
+    swerveWheels[1].setAzimuthPosition(XLOCK_FR_TICKS.intValue());
+    swerveWheels[2].setAzimuthPosition(XLOCK_FR_TICKS.intValue());
+    swerveWheels[3].setAzimuthPosition(XLOCK_FL_TICKS.intValue());
   }
 }
