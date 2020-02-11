@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,7 +26,7 @@ public class MagazineSubsystem extends SubsystemBase {
     magazineTalon.configAllSettings(config);
     magazineTalon.enableCurrentLimit(true);
     magazineTalon.configForwardLimitSwitchSource(
-        LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
+        RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
     magazineTalon.setNeutralMode(NeutralMode.Brake);
     TelemetryService telemetry = RobotContainer.TELEMETRY;
     telemetry.stop();
@@ -48,10 +45,10 @@ public class MagazineSubsystem extends SubsystemBase {
   public void enableLimitSwitch(boolean isEnabled) {
     if (isEnabled) {
       magazineTalon.configForwardLimitSwitchSource(
-          LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
+          RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
     } else {
       magazineTalon.configForwardLimitSwitchSource(
-          LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.Disabled, 43);
+          RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.Disabled, 43);
     }
   }
 
