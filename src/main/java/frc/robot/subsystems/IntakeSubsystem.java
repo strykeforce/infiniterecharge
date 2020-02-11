@@ -47,8 +47,8 @@ public class IntakeSubsystem extends SubsystemBase {
   public boolean isStalled() {
 
     if (intakeDrive.getMotorOutputPercent() != 0) {
-      if (intakeDrive.getSelectedSensorVelocity() < Constants.IntakeConstants.kStallVelocity)
-        return true;
+      if (Math.abs(intakeDrive.getSelectedSensorVelocity())
+          < Constants.IntakeConstants.kStallVelocity) return true;
       else return false;
     } else return false;
   }
