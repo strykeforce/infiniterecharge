@@ -8,6 +8,6 @@ import frc.robot.commands.magazine.LimitMagazineCommand;
 public class AutoIntakeCmdGroup extends ParallelCommandGroup {
   public AutoIntakeCmdGroup() {
     addCommands(
-        new LimitMagazineCommand(MagazineConstants.kOpenloopUp), new IntakeAutoStopCommand());
+        new LimitMagazineCommand(MagazineConstants.kOpenLoopLoad), new IntakeAutoStopCommand());
   }
 }
