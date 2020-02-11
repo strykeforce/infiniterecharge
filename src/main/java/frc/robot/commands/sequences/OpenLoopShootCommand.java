@@ -17,7 +17,7 @@ public class OpenLoopShootCommand extends SequentialCommandGroup {
         new WaitCommand(MagazineConstants.kArmTimeToShooterOn),
         new RunShooterCommand(ShooterConstants.kOpenloopShoot),
         new WaitCommand(ShooterConstants.kArmTimeToAccelerate),
-        new RunMagazineCommand(MagazineConstants.kOpenloopUp),
+        new RunMagazineCommand(MagazineConstants.kOpenloopShoot),
         new WaitCommand(IntakeConstants.kShootDelayIntake),
         new IntakeRunCommand(IntakeConstants.kIntakeSpeed));
   }
