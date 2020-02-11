@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,5 +42,14 @@ public class IntakeSubsystem extends SubsystemBase {
   public void runIntake(double setpoint) {
     logger.info("run Intake");
     intakeDrive.set(ControlMode.PercentOutput, setpoint);
+  }
+
+  public boolean isStalled() {
+
+    if (intakeDrive.getMotorOutputPercent() != 0) {
+      if (intakeDrive.getSelectedSensorVelocity() < Constants.IntakeConstants.kStallVelocity)
+        return true;
+      else return false;
+    } else return false;
   }
 }

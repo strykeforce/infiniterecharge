@@ -22,6 +22,9 @@ public final class Constants {
     public static final double kIntakeSpeed = -0.5;
     public static final double kEjectSpeed = 0.25;
     public static final long kShootDelayIntake = 500;
+    public static final int kStallVelocity = 1000;
+    public static final long kTimeFullIntake = 500;
+    public static final long kReverseTime = 100;
   }
 
   public static final class MagazineConstants {
