@@ -7,7 +7,9 @@ import frc.robot.subsystems.DriveSubsystem;
 public class XLockCommand extends InstantCommand {
   private DriveSubsystem driveSubsystem = RobotContainer.DRIVE;
 
-  public XLockCommand() {}
+  public XLockCommand() {
+    addRequirements(driveSubsystem);
+  }
 
   @Override
   public void initialize() {
