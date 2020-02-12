@@ -29,6 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final double TURRET_TICKS_PER_DEGREE = 1; // FIXME
   private static final double HOOD_TICKS_PER_DEGREE = 1; // FIXME
   private static final double kTurretZeroTicks = 1; // FIXME
+  private static final double kHoodZeroTicks = 1; // FIXME
   private static final double kWrapRange = 1; // FIXME
   private static final double kTurretMidpoint = 1; // FIXME
 
@@ -70,7 +71,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void run(double setPoint) {
-    leftMaster.set(ControlMode.PercentOutput, setPoint);
+    leftMaster.set(ControlMode.Velocity, setPoint);
   }
 
   public boolean zeroTurret() {
@@ -93,11 +94,40 @@ public class ShooterSubsystem extends SubsystemBase {
     return didZero;
   }
 
+  public boolean zeroHood() {
+    boolean didZero = false;
+    if (hood.getSensorCollection().isRevLimitSwitchClosed()) {
+      int absPos = hood.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+
+      // appears backwards because absolute and relative encoders are out-of-phase in hardware
+      int offset = (int) (kHoodZeroTicks - absPos);
+      hood.setSelectedSensorPosition(offset);
+      didZero = true;
+    } else {
+      hood.configPeakOutputForward(0, 0);
+      hood.configPeakOutputReverse(0, 0);
+    }
+
+    hood.configForwardLimitSwitchSource(
+            LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled);
+
+    return didZero;
+  }
+
   public void rotateTurret(double offset) {
     double currentAngle = turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
     double targetAngle = currentAngle + offset;
     if (targetAngle <= kWrapRange && turret.getSelectedSensorPosition() > kTurretMidpoint
         || targetAngle < 0) {
+      targetAngle += 360;
+    }
+    double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
+    turret.set(ControlMode.MotionMagic, setPoint);
+  }
+
+  public void setTurretAngle(double targetAngle) {
+    if (targetAngle <= kWrapRange && turret.getSelectedSensorPosition() > kTurretMidpoint
+            || targetAngle < 0) {
       targetAngle += 360;
     }
     double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
