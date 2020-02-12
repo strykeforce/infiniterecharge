@@ -35,9 +35,4 @@ public class XLockCommand extends CommandBase {
   public boolean isFinished() {
     return isDoneLocked;
   }
-
-  @Override
-  public void end(boolean interrupted) {
-    System.out.println("XLock is finished");
-  }
 }
