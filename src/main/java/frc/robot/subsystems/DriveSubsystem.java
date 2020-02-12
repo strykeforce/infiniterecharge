@@ -134,4 +134,8 @@ public class DriveSubsystem extends SubsystemBase {
   public AHRS getGyro() {
     return swerve.getGyro();
   }
+
+  public AHRS getGyro() {
+    return swerve.getGyro();
+  }
 }
