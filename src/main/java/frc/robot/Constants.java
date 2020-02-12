@@ -51,11 +51,6 @@ public final class Constants {
   }
 
   public static final class DriveConstants {
-        public static final double kDeadbandXLock = 0.2;
+    public static final double kDeadbandXLock = 0.2;
   }
-
-
-
-
-
 }
