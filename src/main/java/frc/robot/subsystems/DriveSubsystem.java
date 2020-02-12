@@ -30,6 +30,7 @@ public class DriveSubsystem extends SubsystemBase {
   private static final Double XLOCK_FL_TICKS = XLOCK_FL_RATIO * (4096 / 2);
   private static final Double XLOCK_FR_RATIO = -XLOCK_FL_RATIO;
   private static final Double XLOCK_FR_TICKS = XLOCK_FR_RATIO * (4096 / 2);
+  private static boolean isXLocked = false;
 
   private final SwerveDrive swerve = configSwerve();
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -126,9 +127,10 @@ public class DriveSubsystem extends SubsystemBase {
   public void xLockSwerveDrive() {
     System.out.println("FrontLeft: " + XLOCK_FL_TICKS + ", FrontRight: " + XLOCK_FR_TICKS);
     Wheel[] swerveWheels = swerve.getWheels();
-    swerveWheels[0].setAzimuthPosition(XLOCK_FL_TICKS.intValue());
-    swerveWheels[1].setAzimuthPosition(XLOCK_FR_TICKS.intValue());
-    swerveWheels[2].setAzimuthPosition(XLOCK_FR_TICKS.intValue());
-    swerveWheels[3].setAzimuthPosition(XLOCK_FL_TICKS.intValue());
+    swerveWheels[0].setAzimuthPosition(2000);
+    swerveWheels[1].setAzimuthPosition(2000);
+    swerveWheels[2].setAzimuthPosition(2000);
+    swerveWheels[3].setAzimuthPosition(2000);
+    isXLocked = true;
   }
 }
