@@ -111,7 +111,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     hood.configForwardLimitSwitchSource(
-            LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled);
+        LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled);
 
     return didZero;
   }
@@ -129,7 +129,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setTurretAngle(double targetAngle) {
     if (targetAngle <= kWrapRange && turret.getSelectedSensorPosition() > kTurretMidpoint
-            || targetAngle < 0) {
+        || targetAngle < 0) {
       targetAngle += 360;
     }
     double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
