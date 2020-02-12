@@ -70,8 +70,8 @@ public class ShooterSubsystem extends SubsystemBase {
     telService.start();
   }
 
-  public void run(double setPoint) {
-    leftMaster.set(ControlMode.Velocity, setPoint);
+  public void run(double velocity) {
+    leftMaster.set(ControlMode.Velocity, velocity);
   }
 
   public boolean zeroTurret() {
