@@ -9,18 +9,27 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.talon.TalonFXItem;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
 
 public class ShooterSubsystem extends SubsystemBase {
   private static final DriveSubsystem DRIVE = RobotContainer.DRIVE;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private static TalonFX leftMaster;
   private static TalonFX rightSlave;
   private static TalonSRX turret;
   private static TalonSRX hood;
+
+  public static boolean isArmed = false;
+  private static int targetSpeed = 0;
+  private static int stableCounts = 0;
 
   private static final int L_MASTER_ID = 40;
   private static final int R_SLAVE_ID = 41;
@@ -69,11 +78,25 @@ public class ShooterSubsystem extends SubsystemBase {
     telService.stop();
     telService.register(new TalonSRXItem(hood, "ShooterHood"));
     telService.register(new TalonFXItem(leftMaster, "ShooterLeftMaster"));
+    telService.register(new TalonFXItem(rightSlave, "ShooterRightSlave"));
+    telService.register(new TalonSRXItem(turret, "ShooterTurret"));
     telService.start();
   }
 
-  public void run(double velocity) {
+  public void run(int velocity) {
+    rightSlave.follow(leftMaster);
     leftMaster.set(ControlMode.Velocity, velocity);
+    targetSpeed = velocity;
+  }
+
+  public void stop() {
+    rightSlave.follow(leftMaster);
+    leftMaster.set(ControlMode.PercentOutput, 0);
+  }
+
+  public void runOpenLoop(double percent) {
+    rightSlave.follow(leftMaster);
+    leftMaster.set(ControlMode.PercentOutput, percent);
   }
 
   public boolean zeroTurret() {
@@ -147,8 +170,19 @@ public class ShooterSubsystem extends SubsystemBase {
     hood.set(ControlMode.MotionMagic, setPoint);
   }
 
-  public void stop() {
-    leftMaster.set(ControlMode.PercentOutput, 0);
+  public boolean atTargetSpeed() {
+      double currentSpeed = leftMaster.getSelectedSensorVelocity();
+      if (Math.abs(targetSpeed - currentSpeed) > Constants.ShooterConstants.kCloseEnough) {
+        stableCounts = 0;
+      } else {
+        stableCounts++;
+      }
+      if (stableCounts >= Constants.ShooterConstants.kStableCounts) {
+        logger.info("Shooter at speed {}", targetSpeed);
+        return true;
+      } else {
+        return false;
+      }
   }
 
   public boolean isMagazineBeamBroken() {

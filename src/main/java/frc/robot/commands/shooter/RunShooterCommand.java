@@ -16,6 +16,6 @@ public class RunShooterCommand extends InstantCommand {
 
   @Override
   public void initialize() {
-    shooterSubsystem.run(wheelSpeed);
+    shooterSubsystem.runOpenLoop(wheelSpeed);
   }
 }
