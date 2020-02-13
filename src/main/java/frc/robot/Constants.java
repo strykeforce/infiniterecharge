@@ -42,12 +42,18 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    // Subsystem Specific
+    // Shooter Specific
     public static final double kOpenloopShoot = 0.5;
     public static final double kOpenloopArmReverse = -0.2;
+    public static final int kCloseEnough = 1000;
+    public static final int kStableCounts = 5;
+
+    // Turret Specific
+    public static final int kCloseEnoughTurret = 100;
 
     // Command Specific
     public static final long kArmTimeToAccelerate = 1500;
+    public static final int kArmSpeed = 10000;
   }
 
   public static final class DriveConstants {
