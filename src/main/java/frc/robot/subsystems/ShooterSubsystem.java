@@ -37,12 +37,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final int TURRET_ID = 42;
   private static final int HOOD_ID = 43;
 
-  private static final double TURRET_TICKS_PER_DEGREE = 1; // FIXME
-  private static final double HOOD_TICKS_PER_DEGREE = 1; // FIXME
+  private static final double TURRET_TICKS_PER_DEGREE = Constants.ShooterConstants.TURRET_TICKS_PER_DEGREE;
+  private static final double HOOD_TICKS_PER_DEGREE = Constants.ShooterConstants.HOOD_TICKS_PER_DEGREE;
   private static final double kTurretZeroTicks = 1; // FIXME
   private static final double kHoodZeroTicks = 1; // FIXME
-  private static final double kWrapRange = 1; // FIXME
-  private static final double kTurretMidpoint = 1; // FIXME
+  private static final double kWrapRange = Constants.ShooterConstants.kWrapRange;
+  private static final double kTurretMidpoint = Constants.ShooterConstants.kTurretMidpoint;
 
   public ShooterSubsystem() {
     configTalons();
@@ -104,14 +104,14 @@ public class ShooterSubsystem extends SubsystemBase {
     boolean didZero = false;
     if (turret.getSensorCollection().isFwdLimitSwitchClosed()) {
       int absPos = turret.getSensorCollection().getPulseWidthPosition() & 0xFFF;
-
-      // appears backwards because absolute and relative encoders are out-of-phase in hardware
-      int offset = (int) (kTurretZeroTicks - absPos);
+      int offset = (int) (absPos - kTurretZeroTicks);
       turret.setSelectedSensorPosition(offset);
       didZero = true;
+      logger.info("Turret zeroed; offset: {} zeroTicks: {} absPosition: {}", offset, kTurretZeroTicks, absPos);
     } else {
       turret.configPeakOutputForward(0, 0);
       turret.configPeakOutputReverse(0, 0);
+      logger.error("Turret zero failed. Killing turret...");
     }
 
     turret.configForwardLimitSwitchSource(
@@ -124,17 +124,17 @@ public class ShooterSubsystem extends SubsystemBase {
     boolean didZero = false;
     if (hood.getSensorCollection().isRevLimitSwitchClosed()) {
       int absPos = hood.getSensorCollection().getPulseWidthPosition() & 0xFFF;
-
-      // appears backwards because absolute and relative encoders are out-of-phase in hardware
-      int offset = (int) (kHoodZeroTicks - absPos);
+      int offset = (int) (absPos - kHoodZeroTicks);
       hood.setSelectedSensorPosition(offset);
       didZero = true;
+      logger.info("Hood zeroed; offset: {} zeroTicks: {} absPosition: {}", offset, kHoodZeroTicks, absPos);
     } else {
       hood.configPeakOutputForward(0, 0);
       hood.configPeakOutputReverse(0, 0);
+      logger.error("Hood zero failed. Killing hood...");
     }
 
-    hood.configForwardLimitSwitchSource(
+    hood.configReverseLimitSwitchSource(
         LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled);
 
     return didZero;

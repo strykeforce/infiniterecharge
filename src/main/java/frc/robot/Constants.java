@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,6 +18,17 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static boolean isCompBot;
+
+  private static DigitalInput digitalInput = new DigitalInput(9);
+
+  public Constants() {
+    if (digitalInput.get())
+      isCompBot = false;
+    else
+      isCompBot = true;
+  }
 
   public static final class IntakeConstants {
     // Subsystem Specific
@@ -48,9 +61,20 @@ public final class Constants {
     public static final double kOpenloopArmReverse = -0.2;
     public static final int kCloseEnough = 1000;
     public static final int kStableCounts = 5;
+    
 
     // Turret Specific
     public static final int kCloseEnoughTurret = 100;
+    public static final double TURRET_TICKS_PER_DEGREE = 1; // FIXME
+    public static final double kWrapRange = 1; // FIXME
+    public static final double kTurretMidpoint = 1; // FIXME
+    private static double kTurretZeroTicks = 1; // FIXME
+
+
+    // Hood Specific
+    public static final double HOOD_TICKS_PER_DEGREE = 1; // FIXME
+    private static double kHoodZeroTicks = 1; // FIXME
+
 
     // Command Specific
     public static final long kArmTimeToAccelerate = 1500;
@@ -59,5 +83,13 @@ public final class Constants {
 
   public static final class DriveConstants {
     public static final double kDeadbandXLock = 0.2;
+  }
+
+  public static class CompConstants {
+
+  }
+
+  public static class ProtoConstants {
+    
   }
 }
