@@ -24,7 +24,7 @@ public final class Constants {
     public static final int kStallVelocity = 100;
 
     // Command Specific
-    public static final long kTimeFullIntake = 500;
+    public static final long kTimeFullIntake = 1000;
     public static final long kShootDelayIntake = 500;
     public static final long kReverseTime = 500;
     public static final double kStallCount = 5;
@@ -39,6 +39,7 @@ public final class Constants {
 
     // Command Specific
     public static final long kArmTimeToShooterOn = 500;
+    public static final int kBeamStableCounts = 5;
   }
 
   public static final class ShooterConstants {
