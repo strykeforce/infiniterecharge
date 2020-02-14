@@ -24,10 +24,8 @@ public final class Constants {
   private static DigitalInput digitalInput = new DigitalInput(9);
 
   public Constants() {
-    if (digitalInput.get())
-      isCompBot = false;
-    else
-      isCompBot = true;
+    if (digitalInput.get()) isCompBot = false;
+    else isCompBot = true;
   }
 
   public static final class IntakeConstants {
@@ -61,20 +59,17 @@ public final class Constants {
     public static final double kOpenloopArmReverse = -0.2;
     public static final int kCloseEnough = 1000;
     public static final int kStableCounts = 5;
-    
 
     // Turret Specific
     public static final int kCloseEnoughTurret = 100;
+    public static final int kTurretStableThreshold = 1; // FIXME
     public static final double TURRET_TICKS_PER_DEGREE = 1; // FIXME
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
-    private static double kTurretZeroTicks = 1; // FIXME
-
 
     // Hood Specific
     public static final double HOOD_TICKS_PER_DEGREE = 1; // FIXME
-    private static double kHoodZeroTicks = 1; // FIXME
-
+    private static double kHoodZeroTicks = 2000;
 
     // Command Specific
     public static final long kArmTimeToAccelerate = 1500;
@@ -85,11 +80,7 @@ public final class Constants {
     public static final double kDeadbandXLock = 0.2;
   }
 
-  public static class CompConstants {
+  public static class CompConstants {}
 
-  }
-
-  public static class ProtoConstants {
-    
-  }
+  public static class ProtoConstants {}
 }

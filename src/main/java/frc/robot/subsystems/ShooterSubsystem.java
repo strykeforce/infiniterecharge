@@ -1,13 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -29,6 +23,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public static boolean isArmed = false;
   private static int targetShooterSpeed = 0;
   private static double targetTurretAngle = 0;
+  private static int turretSetpointTicks = 0;
   private static int shooterStableCounts = 0;
   private static int turretStableCounts = 0;
 
@@ -37,8 +32,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final int TURRET_ID = 42;
   private static final int HOOD_ID = 43;
 
-  private static final double TURRET_TICKS_PER_DEGREE = Constants.ShooterConstants.TURRET_TICKS_PER_DEGREE;
-  private static final double HOOD_TICKS_PER_DEGREE = Constants.ShooterConstants.HOOD_TICKS_PER_DEGREE;
+  private static final double TURRET_TICKS_PER_DEGREE =
+      Constants.ShooterConstants.TURRET_TICKS_PER_DEGREE;
+  private static final double HOOD_TICKS_PER_DEGREE =
+      Constants.ShooterConstants.HOOD_TICKS_PER_DEGREE;
   private static final double kTurretZeroTicks = 1; // FIXME
   private static final double kHoodZeroTicks = 1; // FIXME
   private static final double kWrapRange = Constants.ShooterConstants.kWrapRange;
@@ -69,10 +66,20 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // turret setup
     turret = new TalonSRX(TURRET_ID);
+    turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 25, 0.04));
+    hoodConfig.forwardSoftLimitThreshold = 10000;
+    hoodConfig.reverseSoftLimitThreshold = 0;
+    hoodConfig.forwardSoftLimitEnable = true;
+    hoodConfig.reverseSoftLimitEnable = true;
     turret.configAllSettings(turretConfig);
 
     // hood setup
     hood = new TalonSRX(HOOD_ID);
+    hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, 1));
+    hoodConfig.forwardSoftLimitThreshold = 10000;
+    hoodConfig.reverseSoftLimitThreshold = 0;
+    hoodConfig.forwardSoftLimitEnable = true;
+    hoodConfig.reverseSoftLimitEnable = true;
     hood.configAllSettings(hoodConfig);
 
     TelemetryService telService = RobotContainer.TELEMETRY;
@@ -107,7 +114,11 @@ public class ShooterSubsystem extends SubsystemBase {
       int offset = (int) (absPos - kTurretZeroTicks);
       turret.setSelectedSensorPosition(offset);
       didZero = true;
-      logger.info("Turret zeroed; offset: {} zeroTicks: {} absPosition: {}", offset, kTurretZeroTicks, absPos);
+      logger.info(
+          "Turret zeroed; offset: {} zeroTicks: {} absPosition: {}",
+          offset,
+          kTurretZeroTicks,
+          absPos);
     } else {
       turret.configPeakOutputForward(0, 0);
       turret.configPeakOutputReverse(0, 0);
@@ -127,7 +138,8 @@ public class ShooterSubsystem extends SubsystemBase {
       int offset = (int) (absPos - kHoodZeroTicks);
       hood.setSelectedSensorPosition(offset);
       didZero = true;
-      logger.info("Hood zeroed; offset: {} zeroTicks: {} absPosition: {}", offset, kHoodZeroTicks, absPos);
+      logger.info(
+          "Hood zeroed; offset: {} zeroTicks: {} absPosition: {}", offset, kHoodZeroTicks, absPos);
     } else {
       hood.configPeakOutputForward(0, 0);
       hood.configPeakOutputReverse(0, 0);
@@ -168,12 +180,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private void setTurret(double setPoint) {
     targetTurretAngle = setPoint;
-    turret.set(ControlMode.MotionMagic, setPoint);
+    turret.set(ControlMode.Position, setPoint);
   }
 
   public void setHoodAngle(double angle) {
     double setPoint = angle * HOOD_TICKS_PER_DEGREE;
-    hood.set(ControlMode.MotionMagic, setPoint);
+    hood.set(ControlMode.Position, setPoint);
   }
 
   public boolean atTargetSpeed() {
