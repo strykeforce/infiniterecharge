@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.talon.TalonFXItem;
@@ -28,8 +27,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private static TalonSRX hood;
 
   public static boolean isArmed = false;
-  private static int targetSpeed = 0;
-  private static int stableCounts = 0;
+  private static int targetShooterSpeed = 0;
+  private static double targetTurretAngle = 0;
+  private static int shooterStableCounts = 0;
+  private static int turretStableCounts = 0;
 
   private static final int L_MASTER_ID = 40;
   private static final int R_SLAVE_ID = 41;
@@ -86,7 +87,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void run(int velocity) {
     rightSlave.follow(leftMaster);
     leftMaster.set(ControlMode.Velocity, velocity);
-    targetSpeed = velocity;
+    targetShooterSpeed = velocity;
   }
 
   public void stop() {
@@ -147,7 +148,7 @@ public class ShooterSubsystem extends SubsystemBase {
       targetAngle += 360;
     }
     double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
-    turret.set(ControlMode.MotionMagic, setPoint);
+    setTurret(setPoint);
   }
 
   public void setTurretAngle(double targetAngle) {
@@ -156,12 +157,17 @@ public class ShooterSubsystem extends SubsystemBase {
       targetAngle += 360;
     }
     double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
-    turret.set(ControlMode.MotionMagic, setPoint);
+    setTurret(setPoint);
   }
 
   public void seekTarget() {
     double bearing = Math.IEEEremainder(DRIVE.getGyro().getAngle(), 360);
     double setPoint = -bearing * TURRET_TICKS_PER_DEGREE;
+    setTurret(setPoint);
+  }
+
+  private void setTurret(double setPoint) {
+    targetTurretAngle = setPoint;
     turret.set(ControlMode.MotionMagic, setPoint);
   }
 
@@ -171,18 +177,34 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean atTargetSpeed() {
-      double currentSpeed = leftMaster.getSelectedSensorVelocity();
-      if (Math.abs(targetSpeed - currentSpeed) > Constants.ShooterConstants.kCloseEnough) {
-        stableCounts = 0;
-      } else {
-        stableCounts++;
-      }
-      if (stableCounts >= Constants.ShooterConstants.kStableCounts) {
-        logger.info("Shooter at speed {}", targetSpeed);
-        return true;
-      } else {
-        return false;
-      }
+    double currentSpeed = leftMaster.getSelectedSensorVelocity();
+    if (Math.abs(targetShooterSpeed - currentSpeed) > Constants.ShooterConstants.kCloseEnough) {
+      shooterStableCounts = 0;
+    } else {
+      shooterStableCounts++;
+    }
+    if (shooterStableCounts >= Constants.ShooterConstants.kStableCounts) {
+      logger.info("Shooter at speed {}", targetShooterSpeed);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public boolean turretAtTarget() {
+    double currentTurretAngle = turret.getSelectedSensorPosition();
+    if (Math.abs(targetTurretAngle - currentTurretAngle)
+        > Constants.ShooterConstants.kCloseEnoughTurret) {
+      turretStableCounts = 0;
+    } else {
+      turretStableCounts++;
+    }
+    if (turretStableCounts >= Constants.ShooterConstants.kStableCounts) {
+      logger.info("Turret at angle {}", targetTurretAngle);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public boolean isMagazineBeamBroken() {
