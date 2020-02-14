@@ -42,11 +42,11 @@ public class VisionSubsystem extends SubsystemBase {
           @Override
           public void onTargetData(TargetData arg0) {
             targetData = (CenterTargetData) arg0;
-            //FIXME: width is not real
+            // FIXME: width is not real
             double pixWidth = targetData.getBottomRightX() - targetData.getTopLeftX();
             double enclosedAngle = HORIZ_FOV * pixWidth / HORIZ_RES;
 
-            //double fieldOrientedOffset = shooter.getTurretAngle() + gyro.getYaw()
+            // double fieldOrientedOffset = shooter.getTurretAngle() + gyro.getYaw()
           }
         });
   }
