@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.*;
+import org.strykeforce.deadeye.Deadeye;
 import org.strykeforce.thirdcoast.telemetry.TelemetryController;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 
@@ -32,6 +33,7 @@ public class RobotContainer {
   public static Controls CONTROLS;
   public static IntakeSubsystem INTAKE;
   public static ShooterSubsystem SHOOTER;
+  public static Deadeye DEADEYE = Deadeye.INSTANCE;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

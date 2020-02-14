@@ -81,6 +81,10 @@ public final class Constants {
     public static final double kDeadbandXLock = 0.2;
   }
 
+  public static final class VisionConstants {
+    public static final String kCameraID = "D0";
+  }
+
   public static class CompConstants {}
 
   public static class ProtoConstants {}
