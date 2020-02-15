@@ -22,10 +22,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public static boolean isArmed = false;
   private static int targetShooterSpeed = 0;
-  private static double targetTurretAngle = 0;
-  private static int turretSetpointTicks = 0;
+  private static double targetTurretPosition = 0;
   private static int shooterStableCounts = 0;
   private static int turretStableCounts = 0;
+
+  private static double targetHoodPosition = 0;
+  private static int hoodStableCounts = 0;
 
   private static final int L_MASTER_ID = 40;
   private static final int R_SLAVE_ID = 41;
@@ -36,8 +38,8 @@ public class ShooterSubsystem extends SubsystemBase {
       Constants.ShooterConstants.TURRET_TICKS_PER_DEGREE;
   private static final double HOOD_TICKS_PER_DEGREE =
       Constants.ShooterConstants.HOOD_TICKS_PER_DEGREE;
-  private static final double kTurretZeroTicks = 1; // FIXME
-  private static final double kHoodZeroTicks = 1; // FIXME
+  private static final double kTurretZeroTicks = Constants.ShooterConstants.kTurretZero;
+  private static final double kHoodZeroTicks = Constants.ShooterConstants.kHoodZeroTicks;
   private static final double kWrapRange = Constants.ShooterConstants.kWrapRange;
   private static final double kTurretMidpoint = Constants.ShooterConstants.kTurretMidpoint;
 
@@ -54,6 +56,10 @@ public class ShooterSubsystem extends SubsystemBase {
     lMasterConfig.supplyCurrLimit.triggerThresholdCurrent = 45;
     lMasterConfig.supplyCurrLimit.triggerThresholdTime = 0.04;
     lMasterConfig.supplyCurrLimit.enable = true;
+    lMasterConfig.slot0.kP = 0.45;
+    lMasterConfig.slot0.kI = 0;
+    lMasterConfig.slot0.kD = 10;
+    lMasterConfig.slot0.kF = 0.05;
     leftMaster = new TalonFX(L_MASTER_ID);
     leftMaster.configAllSettings(lMasterConfig);
     leftMaster.setNeutralMode(NeutralMode.Coast);
@@ -67,10 +73,15 @@ public class ShooterSubsystem extends SubsystemBase {
     // turret setup
     turret = new TalonSRX(TURRET_ID);
     turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 25, 0.04));
-    hoodConfig.forwardSoftLimitThreshold = 10000;
-    hoodConfig.reverseSoftLimitThreshold = 0;
-    hoodConfig.forwardSoftLimitEnable = true;
-    hoodConfig.reverseSoftLimitEnable = true;
+    turretConfig.forwardSoftLimitThreshold = 26000;
+    turretConfig.reverseSoftLimitThreshold = -700;
+    turretConfig.forwardSoftLimitEnable = true;
+    turretConfig.reverseSoftLimitEnable = true;
+    turretConfig.slot0.kP = 1;
+    turretConfig.slot0.kI = 0;
+    turretConfig.slot0.kD = 40;
+    turretConfig.slot0.kF = 0;
+    turretConfig.slot0.integralZone = 0;
     turret.configAllSettings(turretConfig);
 
     // hood setup
@@ -80,6 +91,11 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodConfig.reverseSoftLimitThreshold = 0;
     hoodConfig.forwardSoftLimitEnable = true;
     hoodConfig.reverseSoftLimitEnable = true;
+    hoodConfig.slot0.kP = 4;
+    hoodConfig.slot0.kI = 0;
+    hoodConfig.slot0.kD = 60;
+    hoodConfig.slot0.kF = 0;
+    hood.setNeutralMode(NeutralMode.Brake);
     hood.configAllSettings(hoodConfig);
 
     TelemetryService telService = RobotContainer.TELEMETRY;
@@ -109,9 +125,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean zeroTurret() {
     boolean didZero = false;
-    if (turret.getSensorCollection().isFwdLimitSwitchClosed()) {
+    if (!turret.getSensorCollection().isFwdLimitSwitchClosed()) { // FIXME
       int absPos = turret.getSensorCollection().getPulseWidthPosition() & 0xFFF;
-      int offset = (int) (absPos - kTurretZeroTicks);
+      // inverted because absolute and relative encoders are out of phase
+      int offset = (int) -(absPos - kTurretZeroTicks);
       turret.setSelectedSensorPosition(offset);
       didZero = true;
       logger.info(
@@ -133,7 +150,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean zeroHood() {
     boolean didZero = false;
-    if (hood.getSensorCollection().isRevLimitSwitchClosed()) {
+    if (!hood.getSensorCollection().isRevLimitSwitchClosed()) { // FIXME
       int absPos = hood.getSensorCollection().getPulseWidthPosition() & 0xFFF;
       int offset = (int) (absPos - kHoodZeroTicks);
       hood.setSelectedSensorPosition(offset);
@@ -173,19 +190,29 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void seekTarget() {
-    double bearing = Math.IEEEremainder(DRIVE.getGyro().getAngle(), 360);
-    double setPoint = -bearing * TURRET_TICKS_PER_DEGREE;
+    double bearing = Math.IEEEremainder(DRIVE.getGyro().getAngle(), 360) + 270;
+    double setPoint = bearing * TURRET_TICKS_PER_DEGREE;
+    logger.info("Seeking Target at angle = {}", bearing);
+    logger.info("Seeking Target at position = {}", setPoint);
     setTurret(setPoint);
   }
 
   private void setTurret(double setPoint) {
-    targetTurretAngle = setPoint;
+    targetTurretPosition = setPoint;
     turret.set(ControlMode.Position, setPoint);
   }
 
+  public void turretOpenLoop(double output) {
+    turret.set(ControlMode.PercentOutput, output);
+  }
+
   public void setHoodAngle(double angle) {
-    double setPoint = angle * HOOD_TICKS_PER_DEGREE;
-    hood.set(ControlMode.Position, setPoint);
+    targetHoodPosition = angle * HOOD_TICKS_PER_DEGREE;
+    hood.set(ControlMode.Position, targetHoodPosition);
+  }
+
+  public void hoodOpenLoop(double output) {
+    hood.set(ControlMode.PercentOutput, output);
   }
 
   public boolean atTargetSpeed() {
@@ -204,15 +231,31 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean turretAtTarget() {
-    double currentTurretAngle = turret.getSelectedSensorPosition();
-    if (Math.abs(targetTurretAngle - currentTurretAngle)
+    double currentTurretPosition = turret.getSelectedSensorPosition();
+    if (Math.abs(targetTurretPosition - currentTurretPosition)
         > Constants.ShooterConstants.kCloseEnoughTurret) {
       turretStableCounts = 0;
     } else {
       turretStableCounts++;
     }
     if (turretStableCounts >= Constants.ShooterConstants.kStableCounts) {
-      logger.info("Turret at angle {}", targetTurretAngle);
+      logger.info("Turret at position {}", targetTurretPosition);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public boolean hoodAtTarget() {
+    double currentHoodPosition = hood.getSelectedSensorPosition();
+    if (Math.abs(targetHoodPosition - currentHoodPosition)
+        > Constants.ShooterConstants.kCloseEnoughHood) {
+      hoodStableCounts = 0;
+    } else {
+      hoodStableCounts++;
+    }
+    if (hoodStableCounts >= Constants.ShooterConstants.kStableCounts) {
+      logger.info("Hood at position {}", targetHoodPosition);
       return true;
     } else {
       return false;

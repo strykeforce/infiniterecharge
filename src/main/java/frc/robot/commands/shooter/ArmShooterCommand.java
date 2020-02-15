@@ -20,10 +20,17 @@ public class ArmShooterCommand extends CommandBase {
     if (!shooterSubsystem.isArmed) {
       shooterSubsystem.run(Constants.ShooterConstants.kArmSpeed);
     }
+    System.out.println("Arming!!!");
   }
 
   @Override
   public boolean isFinished() {
     return isArmed || shooterSubsystem.atTargetSpeed();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    shooterSubsystem.isArmed = true;
+    System.out.println("Armed!!!");
   }
 }

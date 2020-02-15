@@ -62,14 +62,15 @@ public final class Constants {
 
     // Turret Specific
     public static final int kCloseEnoughTurret = 100;
-    public static final int kTurretStableThreshold = 1; // FIXME
-    public static final double TURRET_TICKS_PER_DEGREE = 1; // FIXME
+    public static final int kTurretZero = 2488; // FIXME
+    public static final double TURRET_TICKS_PER_DEGREE = 72; // Jerry's value: 79.644
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
 
     // Hood Specific
-    public static final double HOOD_TICKS_PER_DEGREE = 1; // FIXME
-    private static double kHoodZeroTicks = 2000;
+    public static final double HOOD_TICKS_PER_DEGREE = 572; // FIXME
+    public static final int kCloseEnoughHood = 100;
+    public static double kHoodZeroTicks = 2650;
 
     // Command Specific
     public static final long kArmTimeToAccelerate = 1500;

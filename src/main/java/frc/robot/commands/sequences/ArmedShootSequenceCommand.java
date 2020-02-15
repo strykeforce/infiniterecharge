@@ -1,8 +1,8 @@
 package frc.robot.commands.sequences;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.commands.WaitCommand;
 import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.magazine.RunMagazineCommand;
 import frc.robot.commands.shooter.ArmShooterCommand;

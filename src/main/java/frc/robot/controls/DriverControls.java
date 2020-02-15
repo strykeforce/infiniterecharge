@@ -8,7 +8,7 @@ import frc.robot.commands.sequences.ArmedShootSequenceCommand;
 import frc.robot.commands.sequences.AutoIntakeCmdGroup;
 import frc.robot.commands.sequences.StopIntakeAndMagazineCommandGroup;
 import frc.robot.commands.sequences.StopShootCommand;
-import frc.robot.commands.shooter.TurretPositionCommand;
+import frc.robot.commands.shooter.HoodOpenLoopCommand;
 
 public class DriverControls {
   private Joystick joystick;
@@ -24,8 +24,10 @@ public class DriverControls {
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id).whenPressed(new AutoIntakeCmdGroup());
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id)
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
-    new JoystickButton(joystick, Trim.LEFT_Y_POS.id).whenPressed(new TurretPositionCommand(10));
-    new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenPressed(new TurretPositionCommand(0));
+    new JoystickButton(joystick, Trim.LEFT_Y_POS.id).whenPressed(new HoodOpenLoopCommand(.2));
+    new JoystickButton(joystick, Trim.LEFT_Y_POS.id).whenReleased(new HoodOpenLoopCommand(0));
+    new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenPressed(new HoodOpenLoopCommand(-.2));
+    new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenReleased(new HoodOpenLoopCommand(0));
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {
