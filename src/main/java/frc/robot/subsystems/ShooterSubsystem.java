@@ -211,9 +211,13 @@ public class ShooterSubsystem extends SubsystemBase {
     hood.set(ControlMode.Position, position);
   }
 
+  public double getTurretAngle() {
+      return turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
+  }
   public void hoodOpenLoop(double output) {
     hood.set(ControlMode.PercentOutput, output);
   }
+
 
   public boolean atTargetSpeed() {
     double currentSpeed = leftMaster.getSelectedSensorVelocity();
