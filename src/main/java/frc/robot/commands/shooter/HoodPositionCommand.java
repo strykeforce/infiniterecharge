@@ -14,7 +14,7 @@ public class HoodPositionCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setHoodAngle(position);
+    shooter.setHoodPosition(position);
   }
 
   @Override

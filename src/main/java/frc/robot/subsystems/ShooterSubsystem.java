@@ -28,6 +28,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private static double targetHoodPosition = 0;
   private static int hoodStableCounts = 0;
+  private static boolean followTarget = false;
 
   private static final int L_MASTER_ID = 40;
   private static final int R_SLAVE_ID = 41;
@@ -172,7 +173,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void rotateTurret(double offset) {
     double currentAngle = turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
-    double targetAngle = currentAngle + offset;
+    double targetAngle = Math.IEEEremainder(currentAngle + offset, 360);
     if (targetAngle <= kWrapRange && turret.getSelectedSensorPosition() > kTurretMidpoint
         || targetAngle < 0) {
       targetAngle += 360;
@@ -207,17 +208,17 @@ public class ShooterSubsystem extends SubsystemBase {
     turret.set(ControlMode.PercentOutput, output);
   }
 
-  public void setHoodAngle(int position) {
+  public void setHoodPosition(int position) {
     hood.set(ControlMode.Position, position);
   }
 
   public double getTurretAngle() {
-      return turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
+    return turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
   }
+
   public void hoodOpenLoop(double output) {
     hood.set(ControlMode.PercentOutput, output);
   }
-
 
   public boolean atTargetSpeed() {
     double currentSpeed = leftMaster.getSelectedSensorVelocity();

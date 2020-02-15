@@ -33,7 +33,8 @@ public class RobotContainer {
   public static Controls CONTROLS;
   public static IntakeSubsystem INTAKE;
   public static ShooterSubsystem SHOOTER;
-  public static Deadeye DEADEYE = Deadeye.INSTANCE;
+  public static Deadeye DEADEYE;
+  public static VisionSubsystem VISION;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -42,8 +43,12 @@ public class RobotContainer {
     MAGAZINE = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();
     SHOOTER = new ShooterSubsystem();
+    DEADEYE = Deadeye.INSTANCE;
+    VISION = new VisionSubsystem();
+
     CONTROLS = new Controls();
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
+    TELEMETRY.start();
 
     // Configure the button bindings
     configureButtonBindings();
