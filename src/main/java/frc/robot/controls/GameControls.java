@@ -58,7 +58,7 @@ public class GameControls {
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
     new JoystickButton(controller, Button.kY.value).whenPressed(new ArmSequenceCommand());
     new JoystickButton(controller, Button.kStart.value).whenPressed(new SeekTargetCommand());
-    new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(8.7));
+    new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(5000));
     dPad.whenActive(new ReverseIntakeAndMagazineCommandGroup());
     dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
 

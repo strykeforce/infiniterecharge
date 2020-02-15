@@ -6,15 +6,15 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class HoodPositionCommand extends CommandBase {
   private static final ShooterSubsystem shooter = RobotContainer.SHOOTER;
-  private double angle;
+  private int position;
 
-  public HoodPositionCommand(double angle) {
-    this.angle = angle;
+  public HoodPositionCommand(int position) {
+    this.position = position;
   }
 
   @Override
   public void initialize() {
-    shooter.setHoodAngle(angle);
+    shooter.setHoodAngle(position);
   }
 
   @Override

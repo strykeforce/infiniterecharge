@@ -206,9 +206,8 @@ public class ShooterSubsystem extends SubsystemBase {
     turret.set(ControlMode.PercentOutput, output);
   }
 
-  public void setHoodAngle(double angle) {
-    targetHoodPosition = angle * HOOD_TICKS_PER_DEGREE;
-    hood.set(ControlMode.Position, targetHoodPosition);
+  public void setHoodAngle(int position) {
+    hood.set(ControlMode.Position, position);
   }
 
   public void hoodOpenLoop(double output) {
