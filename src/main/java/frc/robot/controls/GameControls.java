@@ -4,12 +4,18 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.sequences.ArmSequenceCommand;
 import frc.robot.commands.sequences.AutoIntakeCmdGroup;
 import frc.robot.commands.sequences.ReverseIntakeAndMagazineCommandGroup;
 import frc.robot.commands.sequences.StopIntakeAndMagazineCommandGroup;
+import frc.robot.commands.shooter.HoodPositionCommand;
+import frc.robot.commands.shooter.SeekTargetCommand;
+import frc.robot.commands.shooter.TurretOpenLoopCommand;
 
 public class GameControls {
   private XboxController controller;
+
+  private static final double LEFT_DEADBAND = 0.8;
 
   public GameControls(int portNumber) {
     controller = new XboxController(portNumber);
@@ -22,10 +28,42 @@ public class GameControls {
           }
         };
 
+    Trigger LeftStickRight =
+        new Trigger() {
+          @Override
+          public boolean get() {
+            return controller.getRawAxis(XboxController.Axis.kLeftX.value) > LEFT_DEADBAND;
+          }
+        };
+
+    Trigger LeftStickLeft =
+        new Trigger() {
+          @Override
+          public boolean get() {
+            return controller.getRawAxis(XboxController.Axis.kLeftX.value) < -LEFT_DEADBAND;
+          }
+        };
+
+    Trigger LeftStickOff =
+        new Trigger() {
+          @Override
+          public boolean get() {
+            return Math.abs(controller.getRawAxis(XboxController.Axis.kLeftX.value))
+                < LEFT_DEADBAND;
+          }
+        };
+
     new JoystickButton(controller, Button.kB.value).whenPressed(new AutoIntakeCmdGroup());
     new JoystickButton(controller, Button.kB.value)
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
+    new JoystickButton(controller, Button.kY.value).whenPressed(new ArmSequenceCommand());
+    new JoystickButton(controller, Button.kStart.value).whenPressed(new SeekTargetCommand());
+    new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(5000));
     dPad.whenActive(new ReverseIntakeAndMagazineCommandGroup());
     dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
+
+    LeftStickLeft.whenActive(new TurretOpenLoopCommand(0.3));
+    LeftStickRight.whenActive(new TurretOpenLoopCommand(-0.3));
+    LeftStickOff.whenActive(new TurretOpenLoopCommand(0));
   }
 }
