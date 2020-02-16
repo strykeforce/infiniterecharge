@@ -18,11 +18,12 @@ public class ShooterTrackingCommand extends CommandBase {
 
   @Override
   public void execute() {
-    //    if (vision.getOffsetAngle() == 180) shooter.seekTarget();
-    //    else shooter.rotateTurret(vision.getOffsetAngle());
+    if (vision.getOffsetAngle() == 180) shooter.seekTarget();
+    else shooter.rotateTurret(-vision.getOffsetAngle());
 
-    int hoodPos = (int) (10000 * (90 - vision.getElevationAngle()) / 90);
-    shooter.setHoodPosition(hoodPos);
+    //    int hoodPos = (int) (5000 * (90 - vision.getElevationAngle()) / 90);
+    //    if (hoodPos > 5000) hoodPos = 5000;
+    //    shooter.setHoodPosition(hoodPos);
   }
 
   @Override

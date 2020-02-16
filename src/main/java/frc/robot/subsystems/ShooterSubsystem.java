@@ -209,6 +209,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setHoodPosition(int position) {
+    if (position > 5000) position = 5000;
     hood.set(ControlMode.Position, position);
   }
 

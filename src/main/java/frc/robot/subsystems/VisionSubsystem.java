@@ -65,10 +65,13 @@ public class VisionSubsystem extends SubsystemBase {
           @Override
           public void onTargetData(TargetData arg0) {
             targetData = (MinAreaRectTargetData) arg0;
-            if (targetData.getValid()) {
-              double pixWidth = targetData.getBottomRightX() - targetData.getTopLeftX();
+            double pixWidth = targetData.getBottomRightX() - targetData.getTopLeftX();
+            double pixHeight = targetData.getTopLeftY() - targetData.getBottomRightY();
+            System.out.println("W: " + pixWidth);
+            System.out.println("H: " + pixHeight);
+            if (pixWidth > 50 && 1 < pixWidth / pixHeight && pixWidth / pixHeight < 10) {
               degreeOffset = HORIZ_FOV * targetData.getCenterOffsetX() / HORIZ_RES;
-              double enclosedAngle = HORIZ_FOV * pixWidth / HORIZ_RES;
+              double enclosedAngle = HORIZ_FOV * targetData.getWidth() / HORIZ_RES;
 
               // angle from field square to center of target
               double fieldOrientedOffset =
@@ -89,9 +92,10 @@ public class VisionSubsystem extends SubsystemBase {
                   Math.toDegrees(Math.atan((TARGET_HEIGHT - CAMERA_HEIGHT) / distance));
 
               //              logger.info("Target pixel width = {}", pixWidth);
-              logger.info("Enclosed angle = {}", elevationAngle);
+              logger.info("Angle offset = {}", degreeOffset);
               logger.info("Target distance = {}", distance);
             } else {
+              System.out.println("Invalid target");
               degreeOffset = 180;
             }
           }
