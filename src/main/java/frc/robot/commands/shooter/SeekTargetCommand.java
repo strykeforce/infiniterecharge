@@ -5,13 +5,15 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class SeekTargetCommand extends CommandBase {
-  private static final ShooterSubsystem shooterSubsystem = RobotContainer.SHOOTER;
+  private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
 
-  public SeekTargetCommand() {}
+  public SeekTargetCommand() {
+    addRequirements(SHOOTER);
+  }
 
   @Override
   public void initialize() {
-    shooterSubsystem.seekTarget();
+    SHOOTER.seekTarget();
   }
 
   @Override
@@ -19,6 +21,6 @@ public class SeekTargetCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return shooterSubsystem.turretAtTarget();
+    return SHOOTER.turretAtTarget();
   }
 }

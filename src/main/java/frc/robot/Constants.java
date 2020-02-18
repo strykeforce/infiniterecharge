@@ -70,7 +70,7 @@ public final class Constants {
     // Hood Specific
     public static final double HOOD_TICKS_PER_DEGREE = 572; // FIXME
     public static final int kCloseEnoughHood = 100;
-    public static double kHoodZeroTicks = 3266;
+    public static double kHoodZeroTicks = 1347;
 
     // Command Specific
     public static final long kArmTimeToAccelerate = 1500;

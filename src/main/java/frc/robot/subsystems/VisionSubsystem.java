@@ -1,23 +1,33 @@
 package frc.robot.subsystems;
 
 import com.squareup.moshi.Moshi;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Set;
+import java.util.function.DoubleSupplier;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.deadeye.*;
+import org.strykeforce.thirdcoast.telemetry.TelemetryService;
+import org.strykeforce.thirdcoast.telemetry.item.Measurable;
+import org.strykeforce.thirdcoast.telemetry.item.Measure;
 
-public class VisionSubsystem extends SubsystemBase {
-  public static final double HORIZ_FOV = 48.8;
-  public static final double HORIZ_RES = 720;
+public class VisionSubsystem extends SubsystemBase implements Measurable {
+  private static final String RANGE = "RANGE";
+  private static final String BEARING = "BEARING";
+  private static final String X_OFFSET = "X_OFFSET";
+
+  public static final double VERTICAL_FOV = 48.8;
+  public static final double HORIZ_FOV = 62.2;
+  public static final double HORIZ_RES = 1280;
   public static final double TARGET_WIDTH_IN = 34.65;
   public static final double CAMERA_HEIGHT = 22;
   public static final double TARGET_HEIGHT = 98.25;
@@ -32,15 +42,16 @@ public class VisionSubsystem extends SubsystemBase {
   private static FileInputStream tableFile;
   private static double[][] lookupTable;
 
-  private static double degreeOffset;
-  private static double elevationAngle;
+  private static double degreeOffset = 180;
+  private static double pixOffset = 0;
+  private static double distance = 0;
+  private static double elevationAngle = 0;
   private static boolean trackingEnabled;
 
   public static String kCameraID;
 
   //  private static Camera<TargetCenterData> shooterCam;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private final DigitalOutput lightsOutput = new DigitalOutput(6); // FIXME
 
   public VisionSubsystem() {
     kCameraID = Constants.VisionConstants.kCameraID;
@@ -50,11 +61,15 @@ public class VisionSubsystem extends SubsystemBase {
     drive = RobotContainer.DRIVE;
 
     shooterCamera = deadeye.getCamera(kCameraID);
-    shooterCamera.setEnabled(false);
+    if (shooterCamera.getEnabled()) shooterCamera.setEnabled(false);
 
     configureProcess();
-    lightsOutput.setPWMRate(0);
-    lightsOutput.enablePWM(100);
+
+    TelemetryService telService = RobotContainer.TELEMETRY;
+    telService.stop();
+    telService.register(this);
+    telService.start();
+    shooterCamera.setEnabled(true);
   }
 
   public void configureProcess() {
@@ -69,8 +84,9 @@ public class VisionSubsystem extends SubsystemBase {
             double pixHeight = targetData.getTopLeftY() - targetData.getBottomRightY();
             System.out.println("W: " + pixWidth);
             System.out.println("H: " + pixHeight);
-            if (pixWidth > 50 && 1 < pixWidth / pixHeight && pixWidth / pixHeight < 10) {
-              degreeOffset = HORIZ_FOV * targetData.getCenterOffsetX() / HORIZ_RES;
+            if (pixWidth > 10 && .1 < pixWidth / pixHeight && pixWidth / pixHeight < 10) {
+              pixOffset = targetData.getCenterOffsetX();
+              degreeOffset = HORIZ_FOV * pixOffset / HORIZ_RES;
               double enclosedAngle = HORIZ_FOV * targetData.getWidth() / HORIZ_RES;
 
               // angle from field square to center of target
@@ -87,15 +103,15 @@ public class VisionSubsystem extends SubsystemBase {
               //                      * (Math.sin(Math.toRadians(gamma))
               //                              / Math.tan(Math.toRadians(enclosedAngle / 2))
               //                          + Math.cos(Math.toRadians(gamma)));
-              double distance = TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
+              distance = TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
               elevationAngle =
                   Math.toDegrees(Math.atan((TARGET_HEIGHT - CAMERA_HEIGHT) / distance));
 
               //              logger.info("Target pixel width = {}", pixWidth);
-              logger.info("Angle offset = {}", degreeOffset);
-              logger.info("Target distance = {}", distance);
+              //              logger.info("Angle offset = {}", degreeOffset);
+              //              logger.info("Target distance = {}", distance);
             } else {
-              System.out.println("Invalid target");
+              //              System.out.println("Invalid target");
               degreeOffset = 180;
             }
           }
@@ -117,6 +133,14 @@ public class VisionSubsystem extends SubsystemBase {
 
   public double getElevationAngle() {
     return elevationAngle;
+  }
+
+  public double getXOffset() {
+    return pixOffset;
+  }
+
+  public double getDistance() {
+    return distance;
   }
 
   public void setCameraEnabled(boolean enabled) {
@@ -152,7 +176,53 @@ public class VisionSubsystem extends SubsystemBase {
       exception.printStackTrace(System.out);
       didRead = false;
     }
-    ;
+
     return didRead;
+  }
+
+  @NotNull
+  @Override
+  public String getDescription() {
+    return "Vision Subsystem";
+  }
+
+  @Override
+  public int getDeviceId() {
+    return 0;
+  }
+
+  @NotNull
+  @Override
+  public Set<Measure> getMeasures() {
+    return Set.of(
+        new Measure(RANGE, "Raw Range"),
+        new Measure(BEARING, "Bearing"),
+        new Measure(X_OFFSET, "Pixel offset"));
+  }
+
+  @NotNull
+  @Override
+  public String getType() {
+    return "vision";
+  }
+
+  @Override
+  public int compareTo(@NotNull Measurable item) {
+    return 0;
+  }
+
+  @NotNull
+  @Override
+  public DoubleSupplier measurementFor(@NotNull Measure measure) {
+    switch (measure.getName()) {
+      case RANGE:
+        return this::getDistance;
+      case BEARING:
+        return this::getOffsetAngle;
+      case X_OFFSET:
+        return this::getXOffset;
+      default:
+        return () -> 2767;
+    }
   }
 }

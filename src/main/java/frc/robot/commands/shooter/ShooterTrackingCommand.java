@@ -6,20 +6,23 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class ShooterTrackingCommand extends CommandBase {
-  private static final ShooterSubsystem shooter = RobotContainer.SHOOTER;
-  private static final VisionSubsystem vision = RobotContainer.VISION;
+  private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
+  private static final VisionSubsystem VISION = RobotContainer.VISION;
 
-  public ShooterTrackingCommand() {}
+  public ShooterTrackingCommand() {
+    addRequirements(SHOOTER);
+  }
 
   @Override
   public void initialize() {
-    vision.setTrackingEnabled(true);
+    VISION.setTrackingEnabled(true);
   }
 
   @Override
   public void execute() {
-    if (vision.getOffsetAngle() == 180) shooter.seekTarget();
-    else shooter.rotateTurret(-vision.getOffsetAngle());
+    System.out.println(VISION.getOffsetAngle());
+    if (VISION.getOffsetAngle() == 180) SHOOTER.seekTarget();
+    else SHOOTER.rotateTurret(-VISION.getOffsetAngle());
 
     //    int hoodPos = (int) (5000 * (90 - vision.getElevationAngle()) / 90);
     //    if (hoodPos > 5000) hoodPos = 5000;
@@ -28,6 +31,6 @@ public class ShooterTrackingCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return !vision.isTrackingEnabled();
+    return !VISION.isTrackingEnabled();
   }
 }

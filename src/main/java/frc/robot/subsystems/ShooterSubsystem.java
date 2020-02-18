@@ -74,6 +74,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // turret setup
     turret = new TalonSRX(TURRET_ID);
+    turret.enableCurrentLimit(false);
     turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 25, 0.04));
     turretConfig.forwardSoftLimitThreshold = 26000;
     turretConfig.reverseSoftLimitThreshold = -700;
@@ -88,6 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // hood setup
     hood = new TalonSRX(HOOD_ID);
+    hood.enableCurrentLimit(false);
     hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, 1));
     hoodConfig.forwardSoftLimitThreshold = 10000;
     hoodConfig.reverseSoftLimitThreshold = 0;
