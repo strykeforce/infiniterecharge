@@ -18,7 +18,11 @@ public class TempVisInstant extends InstantCommand {
 
   @Override
   public void initialize() {
-    logger.info("Temp command running with offset = {}", VISION.getOffsetAngle());
-    if (VISION.getTargetData().getValid()) SHOOTER.rotateTurret(-VISION.getOffsetAngle());
+    // logger.info("Temp command running with offset = {}", VISION.getOffsetAngle());
+    if (VISION.getTargetData().getValid()) {
+      double offset = VISION.getOffsetAngle();
+      SHOOTER.rotateTurret(-1.015 * offset);
+      logger.info("Single correction: offset angle {}, correction: {}", offset, 1.015 * offset);
+    }
   }
 }

@@ -22,12 +22,13 @@ public class ShooterTrackingCommand extends CommandBase {
   @Override
   public void initialize() {
     VISION.setTrackingEnabled(true);
+    SHOOTER.setTurretAngle(SHOOTER.getTurretAngle());
   }
 
   @Override
   public void execute() {
     offset = VISION.getOffsetAngle();
-    correction = offset * .9;
+    correction = offset * .7;
     if (offset == 180) {
       if (SHOOTER.turretInRange()) {
         SHOOTER.seekTarget();
