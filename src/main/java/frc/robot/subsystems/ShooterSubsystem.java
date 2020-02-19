@@ -74,8 +74,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // turret setup
     turret = new TalonSRX(TURRET_ID);
-    turret.enableCurrentLimit(false);
-    turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 25, 0.04));
     turretConfig.forwardSoftLimitThreshold = 26000;
     turretConfig.reverseSoftLimitThreshold = -700;
     turretConfig.forwardSoftLimitEnable = true;
@@ -86,11 +84,11 @@ public class ShooterSubsystem extends SubsystemBase {
     turretConfig.slot0.kF = 0;
     turretConfig.slot0.integralZone = 0;
     turret.configAllSettings(turretConfig);
+    turret.enableCurrentLimit(false);
+    turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 25, 0.04));
 
     // hood setup
     hood = new TalonSRX(HOOD_ID);
-    hood.enableCurrentLimit(false);
-    hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, 1));
     hoodConfig.forwardSoftLimitThreshold = 10000;
     hoodConfig.reverseSoftLimitThreshold = 0;
     hoodConfig.forwardSoftLimitEnable = true;
@@ -101,6 +99,8 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodConfig.slot0.kF = 0;
     hood.setNeutralMode(NeutralMode.Brake);
     hood.configAllSettings(hoodConfig);
+    hood.enableCurrentLimit(false);
+    hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, 1));
 
     TelemetryService telService = RobotContainer.TELEMETRY;
     telService.stop();
@@ -180,8 +180,8 @@ public class ShooterSubsystem extends SubsystemBase {
         || targetAngle < 0) {
       targetAngle += 360;
     }
-    double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
-    setTurret(setPoint);
+
+    setTurret(targetAngle * TURRET_TICKS_PER_DEGREE);
   }
 
   public void setTurretAngle(double targetAngle) {
@@ -247,6 +247,22 @@ public class ShooterSubsystem extends SubsystemBase {
       turretStableCounts++;
     }
     if (turretStableCounts >= Constants.ShooterConstants.kStableCounts) {
+      logger.info("Turret at position {}", targetTurretPosition);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public boolean turretInRange() {
+    double currentTurretPosition = turret.getSelectedSensorPosition();
+    if (Math.abs(targetTurretPosition - currentTurretPosition)
+        > Constants.ShooterConstants.kCloseEnoughTurret) {
+      turretStableCounts = 0;
+    } else {
+      turretStableCounts++;
+    }
+    if (turretStableCounts >= 1) {
       logger.info("Turret at position {}", targetTurretPosition);
       return true;
     } else {

@@ -9,8 +9,8 @@ import frc.robot.commands.sequences.AutoIntakeCmdGroup;
 import frc.robot.commands.sequences.StopIntakeAndMagazineCommandGroup;
 import frc.robot.commands.sequences.StopShootCommand;
 import frc.robot.commands.shooter.HoodOpenLoopCommand;
-import frc.robot.commands.shooter.ShooterTrackingCommand;
 import frc.robot.commands.vision.StopVisionTrackingCommand;
+import frc.robot.commands.vision.TestVisCommand;
 
 public class DriverControls {
   private Joystick joystick;
@@ -30,7 +30,7 @@ public class DriverControls {
     new JoystickButton(joystick, Trim.LEFT_Y_POS.id).whenReleased(new HoodOpenLoopCommand(0));
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenPressed(new HoodOpenLoopCommand(-.2));
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenReleased(new HoodOpenLoopCommand(0));
-    new JoystickButton(joystick, Trim.RIGHT_Y_POS.id).whenPressed(new ShooterTrackingCommand());
+    new JoystickButton(joystick, Trim.RIGHT_Y_POS.id).whenPressed(new TestVisCommand());
     new JoystickButton(joystick, Trim.RIGHT_Y_NEG.id).whenPressed(new StopVisionTrackingCommand());
   }
   /** Left stick X (up-down) axis. */

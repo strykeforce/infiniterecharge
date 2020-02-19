@@ -4,10 +4,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShooterTrackingCommand extends CommandBase {
   private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
   private static final VisionSubsystem VISION = RobotContainer.VISION;
+  public Logger logger = LoggerFactory.getLogger("Track Command");
+
+  private static double offset;
+  private static double correction;
 
   public ShooterTrackingCommand() {
     addRequirements(SHOOTER);
@@ -20,13 +26,19 @@ public class ShooterTrackingCommand extends CommandBase {
 
   @Override
   public void execute() {
-    System.out.println(VISION.getOffsetAngle());
-    if (VISION.getOffsetAngle() == 180) SHOOTER.seekTarget();
-    else SHOOTER.rotateTurret(-VISION.getOffsetAngle());
-
-    //    int hoodPos = (int) (5000 * (90 - vision.getElevationAngle()) / 90);
-    //    if (hoodPos > 5000) hoodPos = 5000;
-    //    shooter.setHoodPosition(hoodPos);
+    offset = VISION.getOffsetAngle();
+    correction = offset * .9;
+    if (offset == 180) {
+      if (SHOOTER.turretInRange()) {
+        SHOOTER.seekTarget();
+      }
+    } else if (Math.abs(offset) > 1) {
+      if (SHOOTER.turretInRange()) {
+        logger.info("Offset = {}", offset);
+        logger.info("Correction(90%) = {}", correction);
+        SHOOTER.rotateTurret(-correction);
+      }
+    } else SHOOTER.rotateTurret(0);
   }
 
   @Override

@@ -25,12 +25,12 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static final String BEARING = "BEARING";
   private static final String X_OFFSET = "X_OFFSET";
 
-  public static final double VERTICAL_FOV = 48.8;
-  public static final double HORIZ_FOV = 62.2;
-  public static final double HORIZ_RES = 1280;
-  public static final double TARGET_WIDTH_IN = 34.65;
-  public static final double CAMERA_HEIGHT = 22;
-  public static final double TARGET_HEIGHT = 98.25;
+  public static double VERTICAL_FOV;
+  public static double HORIZ_FOV;
+  public static double HORIZ_RES;
+  public static double TARGET_WIDTH_IN;
+  public static double CAMERA_HEIGHT;
+  public static double TARGET_HEIGHT;
 
   private static Deadeye deadeye;
   private static DriveSubsystem drive;
@@ -49,18 +49,26 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static boolean trackingEnabled;
 
   public static String kCameraID;
+  public static double kTurretDeadband;
 
-  //  private static Camera<TargetCenterData> shooterCam;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public VisionSubsystem() {
+    VERTICAL_FOV = Constants.VisionConstants.VERTICAL_FOV;
+    HORIZ_FOV = Constants.VisionConstants.HORIZ_FOV;
+    HORIZ_RES = Constants.VisionConstants.HORIZ_RES;
+    CAMERA_HEIGHT = Constants.VisionConstants.CAMERA_HEIGHT;
+    TARGET_WIDTH_IN = Constants.VisionConstants.TARGET_WIDTH_IN;
+    TARGET_HEIGHT = Constants.VisionConstants.TARGET_HEIGHT;
     kCameraID = Constants.VisionConstants.kCameraID;
+    kTurretDeadband = Constants.VisionConstants.kTurretDeadband;
 
     deadeye = RobotContainer.DEADEYE;
     shooter = RobotContainer.SHOOTER;
     drive = RobotContainer.DRIVE;
 
     shooterCamera = deadeye.getCamera(kCameraID);
+
     if (shooterCamera.getEnabled()) shooterCamera.setEnabled(false);
 
     configureProcess();
@@ -74,7 +82,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public void configureProcess() {
     shooterCamera.setJsonAdapter(new MinAreaRectTargetDataJsonAdapter(new Moshi.Builder().build()));
-
+    shooterCamera.getId();
     shooterCamera.setTargetDataListener(
         new TargetDataListener() {
           @Override
@@ -82,11 +90,10 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
             targetData = (MinAreaRectTargetData) arg0;
             double pixWidth = targetData.getBottomRightX() - targetData.getTopLeftX();
             double pixHeight = targetData.getTopLeftY() - targetData.getBottomRightY();
-            System.out.println("W: " + pixWidth);
-            System.out.println("H: " + pixHeight);
-            if (pixWidth > 10 && .1 < pixWidth / pixHeight && pixWidth / pixHeight < 10) {
-              pixOffset = targetData.getCenterOffsetX();
-              degreeOffset = HORIZ_FOV * pixOffset / HORIZ_RES;
+
+            if (pixWidth != 0) {
+              setPixOffset(targetData.getCenterOffsetX());
+              setDegreeOffset(HORIZ_FOV * pixOffset / HORIZ_RES);
               double enclosedAngle = HORIZ_FOV * targetData.getWidth() / HORIZ_RES;
 
               // angle from field square to center of target
@@ -103,20 +110,17 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
               //                      * (Math.sin(Math.toRadians(gamma))
               //                              / Math.tan(Math.toRadians(enclosedAngle / 2))
               //                          + Math.cos(Math.toRadians(gamma)));
-              distance = TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
-              elevationAngle =
-                  Math.toDegrees(Math.atan((TARGET_HEIGHT - CAMERA_HEIGHT) / distance));
+              setDistance(TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2)));
+              setElevationAngle(
+                  Math.toDegrees(Math.atan((TARGET_HEIGHT - CAMERA_HEIGHT) / distance)));
 
-              //              logger.info("Target pixel width = {}", pixWidth);
-              //              logger.info("Angle offset = {}", degreeOffset);
-              //              logger.info("Target distance = {}", distance);
-            } else {
-              //              System.out.println("Invalid target");
-              degreeOffset = 180;
-            }
+            } else setDegreeOffset(180);
           }
         });
-    setCameraEnabled(true);
+  }
+
+  public synchronized MinAreaRectTargetData getTargetData() {
+    return targetData;
   }
 
   public void setTrackingEnabled(boolean isEnabled) {
@@ -127,23 +131,39 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     return trackingEnabled;
   }
 
-  public double getOffsetAngle() {
+  public synchronized double getOffsetAngle() {
     return degreeOffset;
   }
 
-  public double getElevationAngle() {
+  public synchronized void setDegreeOffset(double setValue) {
+    degreeOffset = setValue;
+  }
+
+  public synchronized double getElevationAngle() {
     return elevationAngle;
   }
 
-  public double getXOffset() {
+  public synchronized void setElevationAngle(double setValue) {
+    elevationAngle = setValue;
+  }
+
+  public synchronized double getPixOffset() {
     return pixOffset;
   }
 
-  public double getDistance() {
+  public synchronized void setPixOffset(double setValue) {
+    pixOffset = setValue;
+  }
+
+  public synchronized double getDistance() {
     return distance;
   }
 
-  public void setCameraEnabled(boolean enabled) {
+  public synchronized void setDistance(double setValue) {
+    distance = setValue;
+  }
+
+  public synchronized void setCameraEnabled(boolean enabled) {
     // shooterCamera.setEnabled(enabled);
   }
 
@@ -220,7 +240,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
       case BEARING:
         return this::getOffsetAngle;
       case X_OFFSET:
-        return this::getXOffset;
+        return this::getPixOffset;
       default:
         return () -> 2767;
     }
