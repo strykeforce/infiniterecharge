@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class AimShooterCommand extends CommandBase {
   private VisionSubsystem VISION = RobotContainer.VISION;
   private ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
-  public Logger logger = LoggerFactory.getLogger("Temp Command");
+  public Logger logger = LoggerFactory.getLogger("Aim Shooter Command");
 
   public AimShooterCommand() {
     addRequirements(SHOOTER);

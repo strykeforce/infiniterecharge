@@ -28,7 +28,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private static double targetHoodPosition = 0;
   private static int hoodStableCounts = 0;
-  private static boolean followTarget = false;
+
+  private static int tuningTurretPosition = 0;
+  private static int tuningHoodPosition = 0;
+  private static int tuningShooterVelocity = 0;
 
   private static final int L_MASTER_ID = 40;
   private static final int R_SLAVE_ID = 41;
@@ -74,8 +77,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // turret setup
     turret = new TalonSRX(TURRET_ID);
-    turretConfig.forwardSoftLimitThreshold = 26000;
-    turretConfig.reverseSoftLimitThreshold = -700;
+    turretConfig.forwardSoftLimitThreshold = Constants.ShooterConstants.kForwardLimit;
+    turretConfig.reverseSoftLimitThreshold = Constants.ShooterConstants.kReverseLimit;
     turretConfig.forwardSoftLimitEnable = true;
     turretConfig.reverseSoftLimitEnable = true;
     turretConfig.slot0.kP = 1;
@@ -194,7 +197,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void seekTarget() {
-    double bearing = Math.IEEEremainder(DRIVE.getGyro().getAngle(), 360) + 270;
+    double bearing = (DRIVE.getGyro().getAngle() + 270) % 360;
     if (bearing < 0) bearing += 360;
     double setPoint = bearing * TURRET_TICKS_PER_DEGREE;
     logger.info("Seeking Target at angle = {}", bearing);
@@ -222,6 +225,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void hoodOpenLoop(double output) {
     hood.set(ControlMode.PercentOutput, output);
+  }
+
+  public void setTuningSetpoints(int turretPosition, int hoodPosition, int shooterVelocity) {
+    tuningTurretPosition = turretPosition;
+    tuningHoodPosition = hoodPosition;
+    tuningShooterVelocity = shooterVelocity;
+  }
+
+  public void applyTuningSetpoints() {
+    setTurret(tuningTurretPosition);
+    setHoodPosition(tuningHoodPosition);
+    run(tuningShooterVelocity);
   }
 
   public boolean atTargetSpeed() {

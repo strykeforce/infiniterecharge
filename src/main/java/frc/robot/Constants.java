@@ -63,6 +63,8 @@ public final class Constants {
     // Turret Specific
     public static final int kCloseEnoughTurret = 40;
     public static final int kTurretZero = 2488;
+    public static final int kForwardLimit = 26000;
+    public static final int kReverseLimit = -700;
     public static final double TURRET_TICKS_PER_DEGREE = 72.404;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
