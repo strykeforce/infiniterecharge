@@ -195,6 +195,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void seekTarget() {
     double bearing = Math.IEEEremainder(DRIVE.getGyro().getAngle(), 360) + 270;
+    if (bearing < 0) bearing += 360;
     double setPoint = bearing * TURRET_TICKS_PER_DEGREE;
     logger.info("Seeking Target at angle = {}", bearing);
     logger.info("Seeking Target at position = {}", setPoint);
@@ -254,7 +255,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public boolean turretInRange() {
+  public boolean turretInRange(int targetCounts) {
     double currentTurretPosition = turret.getSelectedSensorPosition();
     if (Math.abs(targetTurretPosition - currentTurretPosition)
         > Constants.ShooterConstants.kCloseEnoughTurret) {
@@ -262,7 +263,7 @@ public class ShooterSubsystem extends SubsystemBase {
     } else {
       turretStableCounts++;
     }
-    if (turretStableCounts >= 1) {
+    if (turretStableCounts >= targetCounts) {
       logger.info("Turret at position {}", targetTurretPosition);
       return true;
     } else {

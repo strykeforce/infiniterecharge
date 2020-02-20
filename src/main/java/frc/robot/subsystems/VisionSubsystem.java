@@ -42,11 +42,9 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static FileInputStream tableFile;
   private static double[][] lookupTable;
 
-  private static double degreeOffset = 180;
-  private static double pixOffset = 0;
-  private static double distance = 0;
-  private static double elevationAngle = 0;
   private static boolean trackingEnabled;
+  private static double initOffset = 0;
+  private static int visionStableCounts;
 
   public static String kCameraID;
   public static double kTurretDeadband;
@@ -88,33 +86,6 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
           @Override
           public void onTargetData(TargetData arg0) {
             targetData = (MinAreaRectTargetData) arg0;
-            double pixWidth = targetData.getBottomRightX() - targetData.getTopLeftX();
-            double pixHeight = targetData.getTopLeftY() - targetData.getBottomRightY();
-
-            if (pixWidth != 0) {
-              setPixOffset(targetData.getCenterOffsetX());
-              setDegreeOffset(HORIZ_FOV * pixOffset / HORIZ_RES);
-              double enclosedAngle = HORIZ_FOV * targetData.getWidth() / HORIZ_RES;
-
-              // angle from field square to center of target
-              double fieldOrientedOffset =
-                  90
-                      - (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
-                          + (270 - shooter.getTurretAngle())
-                          + degreeOffset);
-              // angle from field square to edge of target
-              double gamma = fieldOrientedOffset + enclosedAngle / 2;
-              //              double distance =
-              //                  TARGET_WIDTH_IN
-              //                      / 2
-              //                      * (Math.sin(Math.toRadians(gamma))
-              //                              / Math.tan(Math.toRadians(enclosedAngle / 2))
-              //                          + Math.cos(Math.toRadians(gamma)));
-              setDistance(TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2)));
-              setElevationAngle(
-                  Math.toDegrees(Math.atan((TARGET_HEIGHT - CAMERA_HEIGHT) / distance)));
-
-            } else setDegreeOffset(180);
           }
         });
   }
@@ -131,40 +102,52 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     return trackingEnabled;
   }
 
-  public synchronized double getOffsetAngle() {
-    return degreeOffset;
+  public double getOffsetAngle() {
+    return HORIZ_FOV * getPixOffset() / HORIZ_RES;
   }
 
-  public synchronized void setDegreeOffset(double setValue) {
-    degreeOffset = setValue;
+  public double getElevationAngle() {
+    return Math.toDegrees(Math.atan((TARGET_HEIGHT - CAMERA_HEIGHT) / getDistance()));
   }
 
-  public synchronized double getElevationAngle() {
-    return elevationAngle;
+  public double getPixOffset() {
+    MinAreaRectTargetData targetData = getTargetData();
+    return targetData.getCenterOffsetX();
   }
 
-  public synchronized void setElevationAngle(double setValue) {
-    elevationAngle = setValue;
+  public double getDistance() {
+    MinAreaRectTargetData targetData = getTargetData();
+    double enclosedAngle = HORIZ_FOV * targetData.getWidth() / HORIZ_RES;
+    return TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
+
+    // angle from field square to center of target
+    // double fieldOrientedOffset = 90 - (Math.IEEEremainder(drive.getGyro().getAngle(), 360) +
+    // (270 - shooter.getTurretAngle()) + getOffsetAngle());
+
+    // angle from field square to edge of target
+    // double gamma = fieldOrientedOffset + enclosedAngle / 2;
+    // return TARGET_WIDTH_IN / 2 * (Math.sin(Math.toRadians(gamma)) /
+    // Math.tan(Math.toRadians(enclosedAngle / 2)) + Math.cos(Math.toRadians(gamma)));
   }
 
-  public synchronized double getPixOffset() {
-    return pixOffset;
+  public void setCameraEnabled(boolean enabled) {
+    shooterCamera.setEnabled(enabled);
   }
 
-  public synchronized void setPixOffset(double setValue) {
-    pixOffset = setValue;
-  }
-
-  public synchronized double getDistance() {
-    return distance;
-  }
-
-  public synchronized void setDistance(double setValue) {
-    distance = setValue;
-  }
-
-  public synchronized void setCameraEnabled(boolean enabled) {
-    // shooterCamera.setEnabled(enabled);
+  public boolean isStable() {
+    double currentOffset = getPixOffset();
+    if (Math.abs(initOffset - currentOffset) > Constants.VisionConstants.kStableRange) {
+      visionStableCounts = 0;
+      initOffset = currentOffset;
+    } else {
+      visionStableCounts++;
+    }
+    if (visionStableCounts >= Constants.VisionConstants.kStableCounts) {
+      visionStableCounts = 0;
+      return true;
+    } else {
+      return false;
+    }
   }
 
   private boolean readTable() {

@@ -4,13 +4,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroGyroCommand;
-import frc.robot.commands.sequences.ArmedShootSequenceCommand;
-import frc.robot.commands.sequences.AutoIntakeCmdGroup;
-import frc.robot.commands.sequences.StopIntakeAndMagazineCommandGroup;
-import frc.robot.commands.sequences.StopShootCommand;
+import frc.robot.commands.sequences.*;
 import frc.robot.commands.shooter.HoodOpenLoopCommand;
-import frc.robot.commands.vision.StopVisionTrackingCommand;
-import frc.robot.commands.vision.TestVisCommand;
+import frc.robot.commands.shooter.ShooterTrackingCommand;
 
 public class DriverControls {
   private Joystick joystick;
@@ -26,12 +22,14 @@ public class DriverControls {
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id).whenPressed(new AutoIntakeCmdGroup());
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id)
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
+
     new JoystickButton(joystick, Trim.LEFT_Y_POS.id).whenPressed(new HoodOpenLoopCommand(.2));
     new JoystickButton(joystick, Trim.LEFT_Y_POS.id).whenReleased(new HoodOpenLoopCommand(0));
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenPressed(new HoodOpenLoopCommand(-.2));
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenReleased(new HoodOpenLoopCommand(0));
-    new JoystickButton(joystick, Trim.RIGHT_Y_POS.id).whenPressed(new TestVisCommand());
-    new JoystickButton(joystick, Trim.RIGHT_Y_NEG.id).whenPressed(new StopVisionTrackingCommand());
+
+    new JoystickButton(joystick, Trim.RIGHT_Y_NEG.id).whenPressed(new ShooterTrackingCommand());
+    new JoystickButton(joystick, Trim.RIGHT_Y_POS.id).whenPressed(new VisionShootCommandGroup());
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {

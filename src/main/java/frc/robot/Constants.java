@@ -91,6 +91,9 @@ public final class Constants {
 
     public static final String kCameraID = "D0";
     public static final double kTurretDeadband = 3;
+
+    public static final int kStableRange = 20;
+    public static final int kStableCounts = 5;
   }
 
   public static class CompConstants {}

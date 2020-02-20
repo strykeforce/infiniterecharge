@@ -21,6 +21,6 @@ public class TurretRangeCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return SHOOTER.turretInRange();
+    return SHOOTER.turretInRange(1);
   }
 }

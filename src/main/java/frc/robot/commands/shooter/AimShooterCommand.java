@@ -1,28 +1,33 @@
-package frc.robot.commands.vision;
+package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TempVisInstant extends InstantCommand {
+public class AimShooterCommand extends CommandBase {
   private VisionSubsystem VISION = RobotContainer.VISION;
   private ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
   public Logger logger = LoggerFactory.getLogger("Temp Command");
 
-  public TempVisInstant() {
+  public AimShooterCommand() {
     addRequirements(SHOOTER);
+    addRequirements(VISION);
   }
 
   @Override
   public void initialize() {
-    // logger.info("Temp command running with offset = {}", VISION.getOffsetAngle());
     if (VISION.getTargetData().getValid()) {
       double offset = VISION.getOffsetAngle();
       SHOOTER.rotateTurret(-1.015 * offset);
       logger.info("Single correction: offset angle {}, correction: {}", offset, 1.015 * offset);
     }
+  }
+
+  @Override
+  public boolean isFinished() {
+    return SHOOTER.turretAtTarget() && VISION.isStable();
   }
 }
