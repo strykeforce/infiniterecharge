@@ -227,13 +227,8 @@ public class ShooterSubsystem extends SubsystemBase {
     hood.set(ControlMode.PercentOutput, output);
   }
 
-  public void setTuningSetpoints(int turretPosition, int hoodPosition, int shooterVelocity) {
-    tuningTurretPosition = turretPosition;
-    tuningHoodPosition = hoodPosition;
-    tuningShooterVelocity = shooterVelocity;
-  }
-
-  public void applyTuningSetpoints() {
+  public void applyTuningSetpoints(
+      double tuningTurretPosition, int tuningHoodPosition, int tuningShooterVelocity) {
     setTurret(tuningTurretPosition);
     setHoodPosition(tuningHoodPosition);
     run(tuningShooterVelocity);

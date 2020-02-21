@@ -1,8 +1,9 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.shooter.ExecuteTuningCommand;
-import frc.robot.commands.shooter.SaveTuningValuesCommand;
+import frc.robot.commands.sequences.*;
+import frc.robot.commands.shooter.ActuateTuningCommand;
+import frc.robot.commands.vision.UpdateWidthsCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +18,17 @@ public class SmartDashboardControls {
     SmartDashboard.putNumber("Tuning/turretPos", 0);
     SmartDashboard.putNumber("Tuning/hoodPos", 0);
     SmartDashboard.putNumber("Tuning/shooterVel", 0);
-    SmartDashboard.putData(
-        "Tuning/saveNums",
-        new SaveTuningValuesCommand(
-            (int) SmartDashboard.getNumber("Tuning/turretPos", 0),
-            (int) SmartDashboard.getNumber("Tuning/hoodPos", 0),
-            (int) SmartDashboard.getNumber("Tuning/shooterVel", 0)));
-    SmartDashboard.putData("Tuning/actuateTuning", new ExecuteTuningCommand());
+
+    SmartDashboard.putNumber("Tuning/rawPixWidth", 0);
+    SmartDashboard.putNumber("Tuning/correctedPixWidth", 0);
+    SmartDashboard.putData("Tuning/updateWidths", new UpdateWidthsCommand());
+
+    SmartDashboard.putData("Tuning/Fire", new TuneFireCommandGroup());
+
+    SmartDashboard.putData("Tuning/setPositions", new ActuateTuningCommand());
+
+    SmartDashboard.putData("Tuning/Intake", new AutoIntakeCmdGroup());
+    SmartDashboard.putData("Tuning/StartVolley", new ArmedShootSequenceCommand());
+    SmartDashboard.putData("Tuning/StopFiring", new StopShootCommand());
   }
 }

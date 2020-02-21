@@ -6,7 +6,7 @@ import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.shooter.HoodOpenLoopCommand;
-import frc.robot.commands.shooter.ShooterTrackingCommand;
+import frc.robot.commands.vision.StopVisionTrackingCommand;
 
 public class DriverControls {
   private Joystick joystick;
@@ -17,7 +17,7 @@ public class DriverControls {
 
     // RobotContainer.DRIVE.setDefaultCommand(new TeleopDriveCommand());
     new JoystickButton(joystick, Button.X.id).whenPressed(new XLockCommand());
-    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new ArmedShootSequenceCommand());
+    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new VisionShootCommandGroup());
     new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenReleased(new StopShootCommand());
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id).whenPressed(new AutoIntakeCmdGroup());
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id)
@@ -28,8 +28,7 @@ public class DriverControls {
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenPressed(new HoodOpenLoopCommand(-.2));
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenReleased(new HoodOpenLoopCommand(0));
 
-    new JoystickButton(joystick, Trim.RIGHT_Y_NEG.id).whenPressed(new ShooterTrackingCommand());
-    new JoystickButton(joystick, Trim.RIGHT_Y_POS.id).whenPressed(new VisionShootCommandGroup());
+    new JoystickButton(joystick, Trim.RIGHT_Y_NEG.id).whenPressed(new StopVisionTrackingCommand());
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {

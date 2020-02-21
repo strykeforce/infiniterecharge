@@ -1,23 +1,32 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExecuteTuningCommand extends CommandBase {
+public class ActuateTuningCommand extends CommandBase {
   private ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
-  public Logger logger = LoggerFactory.getLogger("Save Tuning Command");
+  public Logger logger = LoggerFactory.getLogger("Execute Tuning Command");
 
-  public ExecuteTuningCommand() {
+  private int turretSetpoint;
+  private int hoodSetpoint;
+  private int shooterSpeed;
+
+  public ActuateTuningCommand() {
     addRequirements(SHOOTER);
   }
 
   @Override
   public void initialize() {
     logger.info("Actuating tuning setpoints");
-    SHOOTER.applyTuningSetpoints();
+
+    turretSetpoint = (int) SmartDashboard.getNumber("Tuning/turretPos", 0);
+    hoodSetpoint = (int) SmartDashboard.getNumber("Tuning/hoodPos", 0);
+    shooterSpeed = (int) SmartDashboard.getNumber("Tuning/shooterVel", 0);
+    SHOOTER.applyTuningSetpoints(turretSetpoint, hoodSetpoint, shooterSpeed);
   }
 
   @Override

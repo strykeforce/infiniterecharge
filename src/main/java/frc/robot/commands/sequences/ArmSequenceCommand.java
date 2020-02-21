@@ -7,7 +7,7 @@ import frc.robot.commands.magazine.RunMagazineCommand;
 import frc.robot.commands.magazine.WaitForMagazineBeamCommand;
 import frc.robot.commands.shooter.ArmShooterCommand;
 import frc.robot.commands.shooter.RunShooterCommand;
-import frc.robot.commands.shooter.SeekTargetCommand;
+import frc.robot.commands.shooter.ShooterTrackingCommand;
 
 public class ArmSequenceCommand extends SequentialCommandGroup {
   public ArmSequenceCommand() {
@@ -17,6 +17,6 @@ public class ArmSequenceCommand extends SequentialCommandGroup {
         new RunShooterCommand(ShooterConstants.kOpenloopArmReverse),
         new WaitForMagazineBeamCommand(),
         new ArmShooterCommand(),
-        new SeekTargetCommand());
+        new ShooterTrackingCommand());
   }
 }
