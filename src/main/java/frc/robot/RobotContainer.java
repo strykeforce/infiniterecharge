@@ -32,6 +32,8 @@ public class RobotContainer {
   public static Controls CONTROLS;
   public static IntakeSubsystem INTAKE;
   public static ShooterSubsystem SHOOTER;
+  public static HoodSubsystem HOOD;
+  public static TurretSubsystem TURRET;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -41,6 +43,8 @@ public class RobotContainer {
     INTAKE = new IntakeSubsystem();
     SHOOTER = new ShooterSubsystem();
     CONTROLS = new Controls();
+    HOOD = new HoodSubsystem();
+    TURRET = new TurretSubsystem();
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
 
     // Configure the button bindings

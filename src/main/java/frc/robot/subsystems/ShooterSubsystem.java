@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.talon.TalonFXItem;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
-import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
 
 public class ShooterSubsystem extends SubsystemBase {
   private static final DriveSubsystem DRIVE = RobotContainer.DRIVE;
@@ -26,9 +25,9 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final int R_SLAVE_ID = 41;
 
   private static final double HOOD_TICKS_PER_DEGREE =
-          Constants.ShooterConstants.HOOD_TICKS_PER_DEGREE;
+      Constants.ShooterConstants.HOOD_TICKS_PER_DEGREE;
   private static final double TURRET_TICKS_PER_DEGREE =
-          Constants.ShooterConstants.TURRET_TICKS_PER_DEGREE;
+      Constants.ShooterConstants.TURRET_TICKS_PER_DEGREE;
 
   public ShooterSubsystem() {
     configTalons();
@@ -92,5 +91,4 @@ public class ShooterSubsystem extends SubsystemBase {
       return false;
     }
   }
-
 }

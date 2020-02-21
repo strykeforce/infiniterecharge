@@ -2,10 +2,10 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 
 public class HoodPositionCommand extends CommandBase {
-  private static final ShooterSubsystem shooter = RobotContainer.SHOOTER;
+  private static final HoodSubsystem hood = RobotContainer.HOOD;
   private int position;
 
   public HoodPositionCommand(int position) {
@@ -14,11 +14,11 @@ public class HoodPositionCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setHoodAngle(position);
+    hood.setHoodAngle(position);
   }
 
   @Override
   public boolean isFinished() {
-    return shooter.hoodAtTarget();
+    return hood.hoodAtTarget();
   }
 }

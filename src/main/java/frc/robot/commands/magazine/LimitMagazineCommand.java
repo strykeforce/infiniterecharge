@@ -2,12 +2,14 @@ package frc.robot.commands.magazine;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.MagazineSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class LimitMagazineCommand extends CommandBase {
   private MagazineSubsystem magazineSubsystem = RobotContainer.MAGAZINE;
   private ShooterSubsystem shooterSubsystem = RobotContainer.SHOOTER;
+  private HoodSubsystem hoodSubsystem = RobotContainer.HOOD;
   private double setSpeed;
 
   public LimitMagazineCommand(double speed) {
@@ -17,7 +19,7 @@ public class LimitMagazineCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    if (!shooterSubsystem.isMagazineBeamBroken()) {
+    if (!hoodSubsystem.isMagazineBeamBroken()) {
       magazineSubsystem.runTalon(setSpeed);
       magazineSubsystem.enableLimitSwitch(true);
     }
@@ -25,7 +27,7 @@ public class LimitMagazineCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return shooterSubsystem.isMagazineBeamBroken();
+    return hoodSubsystem.isMagazineBeamBroken();
   }
 
   @Override
