@@ -68,6 +68,8 @@ dependencies {
 
     implementation "com.squareup.moshi:moshi:1.9.2"
 
+    compile 'com.opencsv:opencsv:5.1'
+
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.9'
 
     // Enable simulation gui support. Must check the box in vscode to enable support

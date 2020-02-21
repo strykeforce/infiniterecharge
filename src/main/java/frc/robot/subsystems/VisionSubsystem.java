@@ -1,17 +1,16 @@
 package frc.robot.subsystems;
 
+import com.opencsv.CSVReader;
 import com.squareup.moshi.Moshi;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
+import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static MinAreaRectTargetData targetData;
 
   private static String path = "table.xlsx"; // FIXME
-  private static FileInputStream tableFile;
+  private static Scanner tableFile;
   private static double[][] lookupTable;
 
   private static boolean trackingEnabled;
@@ -165,37 +164,21 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     }
   }
 
-  private boolean readTable() {
-    int rowNum = -1, columnNum = -1;
-    boolean didRead;
+  private void readTable() throws Exception {
+    CSVReader csvReader = new CSVReader(new FileReader(new File("table.csv")));
 
-    try {
-      tableFile = new FileInputStream(new File(path));
-      XSSFWorkbook workbook = new XSSFWorkbook(tableFile);
-      XSSFSheet sheet = workbook.getSheetAt(0);
+    List<String[]> list = csvReader.readAll();
 
-      lookupTable = new double[sheet.getLastRowNum()][sheet.getRow(0).getLastCellNum()];
+    // Convert to 2D array
+    String[][] strArr = new String[list.size()][];
+    strArr = list.toArray(strArr);
+    lookupTable = new double[strArr.length][strArr[0].length];
 
-      for (int i = 0; i < sheet.getLastRowNum(); i++) {
-        Row row = sheet.getRow(i);
-        rowNum = i;
-        for (int j = 0; j < row.getLastCellNum(); j++) {
-          Cell cell = row.getCell(j);
-          columnNum = j;
-          lookupTable[i][j] = cell.getNumericCellValue();
-        }
+    for (int j = 0; j < strArr.length; j++) {
+      for (int i = 0; i < strArr[0].length; i++) {
+        lookupTable[j][i] = Double.parseDouble(strArr[j][i]);
       }
-
-      tableFile.close();
-      didRead = true;
-    } catch (Exception exception) {
-      if (rowNum == -1) logger.error("Error reading vision file");
-      else logger.error("Error reading cell ({}, {})", columnNum, rowNum);
-      exception.printStackTrace(System.out);
-      didRead = false;
     }
-
-    return didRead;
   }
 
   @NotNull
