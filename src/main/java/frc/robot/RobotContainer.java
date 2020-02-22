@@ -10,7 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.commands.drive.TeleopDriveCommand;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.*;
 import org.strykeforce.thirdcoast.telemetry.TelemetryController;

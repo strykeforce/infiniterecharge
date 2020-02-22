@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final SwerveDrive swerve = configSwerve();
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  static boolean gyroOffsetEnabled = false;
 
   public DriveSubsystem() {
     swerve.setFieldOriented(true);
@@ -133,5 +135,23 @@ public class DriveSubsystem extends SubsystemBase {
 
   public AHRS getGyro() {
     return swerve.getGyro();
+  }
+
+  public void setGyroOffset(boolean enabled) {
+    double angle = Constants.DriveConstants.kFieldGenAngleOffset;
+
+    if (gyroOffsetEnabled == enabled) {
+      return;
+    }
+    gyroOffsetEnabled = enabled;
+    if (!enabled) {
+      angle = -1 * angle;
+    }
+    AHRS gyro = swerve.getGyro();
+    double adj;
+    adj = gyro.getAngleAdjustment();
+    adj += angle;
+    logger.info("gyro angle adjust = {}", adj);
+    gyro.setAngleAdjustment(adj);
   }
 }
