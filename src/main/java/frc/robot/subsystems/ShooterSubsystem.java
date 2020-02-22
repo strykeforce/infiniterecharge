@@ -81,14 +81,20 @@ public class ShooterSubsystem extends SubsystemBase {
     turretConfig.reverseSoftLimitThreshold = Constants.ShooterConstants.kReverseLimit;
     turretConfig.forwardSoftLimitEnable = true;
     turretConfig.reverseSoftLimitEnable = true;
-    turretConfig.slot0.kP = 1;
-    turretConfig.slot0.kI = 0;
-    turretConfig.slot0.kD = 40;
-    turretConfig.slot0.kF = 0;
-    turretConfig.slot0.integralZone = 0;
+    turretConfig.slot0.kP = 2;
+    turretConfig.slot0.kI = 0.01;
+    turretConfig.slot0.kD = 80;
+    turretConfig.slot0.kF = 0.21;
+    turretConfig.slot0.integralZone = 40;
+    turretConfig.slot0.maxIntegralAccumulator = 4500;
+    turretConfig.voltageMeasurementFilter = 32;
+    turretConfig.voltageCompSaturation = 12;
     turret.configAllSettings(turretConfig);
+    turret.configMotionCruiseVelocity(4000);
+    turret.configMotionAcceleration(30000);
     turret.enableCurrentLimit(false);
-    turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 25, 0.04));
+    turret.enableVoltageCompensation(true);
+    turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 30, 500));
 
     // hood setup
     hood = new TalonSRX(HOOD_ID);
@@ -207,7 +213,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private void setTurret(double setPoint) {
     targetTurretPosition = setPoint;
-    turret.set(ControlMode.Position, setPoint);
+    turret.set(ControlMode.MotionMagic, setPoint);
   }
 
   public void turretOpenLoop(double output) {
@@ -232,6 +238,10 @@ public class ShooterSubsystem extends SubsystemBase {
     setTurret(tuningTurretPosition);
     setHoodPosition(tuningHoodPosition);
     run(tuningShooterVelocity);
+  }
+
+  public double getShooterSpeed() {
+    return leftMaster.getSelectedSensorVelocity();
   }
 
   public boolean atTargetSpeed() {

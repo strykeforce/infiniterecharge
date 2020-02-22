@@ -70,8 +70,6 @@ dependencies {
 
     compile 'com.opencsv:opencsv:5.1'
 
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.9'
-
     // Enable simulation gui support. Must check the box in vscode to enable support
     // upon debugging
     simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)

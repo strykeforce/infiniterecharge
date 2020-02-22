@@ -16,7 +16,6 @@ public class ArmShooterCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    isArmed = SHOOTER.isArmed;
     if (!SHOOTER.isArmed) {
       SHOOTER.run(Constants.ShooterConstants.kArmSpeed);
     }
