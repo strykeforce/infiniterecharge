@@ -4,10 +4,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.sequences.ArmSequenceCommand;
-import frc.robot.commands.sequences.AutoIntakeCmdGroup;
-import frc.robot.commands.sequences.ReverseIntakeAndMagazineCommandGroup;
-import frc.robot.commands.sequences.StopIntakeAndMagazineCommandGroup;
+import frc.robot.commands.sequences.*;
 import frc.robot.commands.shooter.HoodPositionCommand;
 import frc.robot.commands.shooter.SeekTargetCommand;
 import frc.robot.commands.shooter.TurretOpenLoopCommand;
@@ -61,6 +58,7 @@ public class GameControls {
     new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(5000));
     dPad.whenActive(new ReverseIntakeAndMagazineCommandGroup());
     dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
+    new JoystickButton(controller, Button.kX.value).whenPressed(new StopShootCommand());
 
     LeftStickLeft.whenActive(new TurretOpenLoopCommand(0.3));
     LeftStickRight.whenActive(new TurretOpenLoopCommand(-0.3));
