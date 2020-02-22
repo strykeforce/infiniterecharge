@@ -110,29 +110,18 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public double getPixOffset() {
-    MinAreaRectTargetData targetData = getTargetData();
-    return targetData.getCenterOffsetX();
+    return getTargetData().getCenterOffsetX();
   }
 
   public double getDistance() {
-    MinAreaRectTargetData targetData = getTargetData();
-    double enclosedAngle = HORIZ_FOV * targetData.getWidth() / HORIZ_RES;
-    if (targetData.getValid())
+    double enclosedAngle = HORIZ_FOV * getTargetData().getWidth() / HORIZ_RES;
+    if (getTargetData().getValid())
       return TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
     return -1;
-    // angle from field square to center of target
-    // double fieldOrientedOffset = 90 - (Math.IEEEremainder(drive.getGyro().getAngle(), 360) +
-    // (270 - shooter.getTurretAngle()) + getOffsetAngle());
-
-    // angle from field square to edge of target
-    // double gamma = fieldOrientedOffset + enclosedAngle / 2;
-    // return TARGET_WIDTH_IN / 2 * (Math.sin(Math.toRadians(gamma)) /
-    // Math.tan(Math.toRadians(enclosedAngle / 2)) + Math.cos(Math.toRadians(gamma)));
   }
 
   public double getRawWidth() {
-    MinAreaRectTargetData targetData = getTargetData();
-    return targetData.getBottomRightX() - targetData.getTopRightY();
+    return getTargetData().getBottomRightX() - getTargetData().getTopRightY();
   }
 
   public double getCorrectedWidth() {
@@ -142,6 +131,10 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
                 + (270 - shooter.getTurretAngle())
                 + getOffsetAngle());
     return getRawWidth() / Math.sin(Math.toRadians(fieldOrientedOffset));
+  }
+
+  public boolean isTargetValid() {
+    return getTargetData().getValid();
   }
 
   public void setCameraEnabled(boolean enabled) {

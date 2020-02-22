@@ -23,7 +23,9 @@ public class ShooterTrackingCommand extends CommandBase {
 
   @Override
   public void execute() {
-    SHOOTER.seekTarget();
+    if(VISION.isTargetValid()) {
+      SHOOTER.rotateTurret(VISION.getOffsetAngle());
+    } else SHOOTER.seekTarget();
   }
 
   @Override
