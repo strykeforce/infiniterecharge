@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.talon.TalonFXItem;
@@ -171,18 +170,18 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean atTargetSpeed() {
-      double currentSpeed = leftMaster.getSelectedSensorVelocity();
-      if (Math.abs(targetSpeed - currentSpeed) > Constants.ShooterConstants.kCloseEnough) {
-        stableCounts = 0;
-      } else {
-        stableCounts++;
-      }
-      if (stableCounts >= Constants.ShooterConstants.kStableCounts) {
-        logger.info("Shooter at speed {}", targetSpeed);
-        return true;
-      } else {
-        return false;
-      }
+    double currentSpeed = leftMaster.getSelectedSensorVelocity();
+    if (Math.abs(targetSpeed - currentSpeed) > Constants.ShooterConstants.kCloseEnough) {
+      stableCounts = 0;
+    } else {
+      stableCounts++;
+    }
+    if (stableCounts >= Constants.ShooterConstants.kStableCounts) {
+      logger.info("Shooter at speed {}", targetSpeed);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public boolean isMagazineBeamBroken() {

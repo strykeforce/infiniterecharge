@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.drive.GyroOffsetCommand;
 import frc.robot.commands.sequences.AutoIntakeCmdGroup;
+import frc.robot.commands.sequences.GyroOffsetTurnCmdGroup;
 import frc.robot.commands.sequences.OpenLoopShootCommand;
 import frc.robot.commands.sequences.StopIntakeAndMagazineCommandGroup;
 import frc.robot.commands.sequences.StopShootCommand;
@@ -21,6 +23,8 @@ public class DriverControls {
     new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new OpenLoopShootCommand());
     new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenReleased(new StopShootCommand());
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id).whenPressed(new AutoIntakeCmdGroup());
+    new JoystickButton(joystick, Button.UP.id).whenPressed(new GyroOffsetTurnCmdGroup());
+    new JoystickButton(joystick, Button.DOWN.id).whenPressed(new GyroOffsetCommand(false));
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id)
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
   }
