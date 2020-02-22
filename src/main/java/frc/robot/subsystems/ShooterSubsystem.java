@@ -24,11 +24,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final int L_MASTER_ID = 40;
   private static final int R_SLAVE_ID = 41;
 
-  private static final double HOOD_TICKS_PER_DEGREE =
-      Constants.ShooterConstants.HOOD_TICKS_PER_DEGREE;
-  private static final double TURRET_TICKS_PER_DEGREE =
-      Constants.ShooterConstants.TURRET_TICKS_PER_DEGREE;
-
   public ShooterSubsystem() {
     configTalons();
   }

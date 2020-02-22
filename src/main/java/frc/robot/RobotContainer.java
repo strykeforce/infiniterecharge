@@ -27,6 +27,7 @@ public class RobotContainer {
   public static TelemetryService TELEMETRY;
 
   // The robot's subsystems and commands are defined here...
+  public static Constants CONSTANTS;
   public static DriveSubsystem DRIVE;
   public static MagazineSubsystem MAGAZINE;
   public static Controls CONTROLS;
@@ -38,6 +39,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     TELEMETRY = new TelemetryService(TelemetryController::new);
+    CONSTANTS = new Constants();
     DRIVE = new DriveSubsystem();
     MAGAZINE = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();

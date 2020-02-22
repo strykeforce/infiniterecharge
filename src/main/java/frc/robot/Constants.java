@@ -26,6 +26,14 @@ public final class Constants {
   public Constants() {
     if (digitalInput.get()) isCompBot = false;
     else isCompBot = true;
+
+    if (isCompBot) {
+      ShooterConstants.TURRET_TICKS_PER_DEGREE = CompConstants.TURRET_TICKS_PER_DEGREE;
+      ShooterConstants.HOOD_TICKS_PER_DEGREE = CompConstants.HOOD_TICKS_PER_DEGREE;
+    } else {
+      ShooterConstants.TURRET_TICKS_PER_DEGREE = ProtoConstants.TURRET_TICKS_PER_DEGREE;
+      ShooterConstants.HOOD_TICKS_PER_DEGREE = ProtoConstants.HOOD_TICKS_PER_DEGREE;
+    }
   }
 
   public static final class IntakeConstants {
@@ -61,14 +69,14 @@ public final class Constants {
     public static final int kStableCounts = 5;
 
     // Turret Specific
+    public static double TURRET_TICKS_PER_DEGREE = 72; // Jerry's value: 79.644
     public static final int kCloseEnoughTurret = 100;
     public static final int kTurretZero = 2488; // FIXME
-    public static final double TURRET_TICKS_PER_DEGREE = 72; // Jerry's value: 79.644
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
 
     // Hood Specific
-    public static final double HOOD_TICKS_PER_DEGREE = 572; // FIXME
+    public static double HOOD_TICKS_PER_DEGREE = 572; // FIXME
     public static final int kCloseEnoughHood = 100;
     public static double kHoodZeroTicks = 2650;
 
@@ -81,7 +89,13 @@ public final class Constants {
     public static final double kDeadbandXLock = 0.2;
   }
 
-  public static class CompConstants {}
+  public static class CompConstants {
+    public static final double TURRET_TICKS_PER_DEGREE = 72; // Jerry's value: 79.644
+    public static final double HOOD_TICKS_PER_DEGREE = 572;
+  }
 
-  public static class ProtoConstants {}
+  public static class ProtoConstants {
+    public static final double TURRET_TICKS_PER_DEGREE = 72; // Jerry's value: 79.644
+    public static final double HOOD_TICKS_PER_DEGREE = 572;
+  }
 }
