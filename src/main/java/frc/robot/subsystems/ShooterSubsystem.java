@@ -29,10 +29,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private static double targetHoodPosition = 0;
   private static int hoodStableCounts = 0;
 
-  private static int tuningTurretPosition = 0;
-  private static int tuningHoodPosition = 0;
-  private static int tuningShooterVelocity = 0;
-
   private static final int L_MASTER_ID = 40;
   private static final int R_SLAVE_ID = 41;
   private static final int TURRET_ID = 42;
