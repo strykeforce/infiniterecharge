@@ -6,31 +6,30 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ArmShooterCommand extends CommandBase {
-  private static final ShooterSubsystem shooterSubsystem = RobotContainer.SHOOTER;
+  private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
 
   private boolean isArmed;
 
   public ArmShooterCommand() {
-    addRequirements(shooterSubsystem);
+    //    addRequirements(shooterSubsystem); weird
   }
 
   @Override
   public void initialize() {
-    isArmed = shooterSubsystem.isArmed;
-    if (!shooterSubsystem.isArmed) {
-      shooterSubsystem.run(Constants.ShooterConstants.kArmSpeed);
+    if (!SHOOTER.isArmed) {
+      SHOOTER.run(Constants.ShooterConstants.kArmSpeed);
     }
     System.out.println("Arming!!!");
   }
 
   @Override
   public boolean isFinished() {
-    return isArmed || shooterSubsystem.atTargetSpeed();
+    return isArmed || SHOOTER.atTargetSpeed();
   }
 
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.isArmed = true;
+    SHOOTER.isArmed = true;
     System.out.println("Armed!!!");
   }
 }

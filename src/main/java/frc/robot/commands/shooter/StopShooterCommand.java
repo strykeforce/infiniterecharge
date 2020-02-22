@@ -6,15 +6,15 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class StopShooterCommand extends InstantCommand {
 
-  private ShooterSubsystem shooterSubsystem = RobotContainer.SHOOTER;
+  private ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
 
   public StopShooterCommand() {
-    addRequirements(shooterSubsystem);
+    addRequirements(SHOOTER);
   }
 
   @Override
   public void initialize() {
-    shooterSubsystem.stop();
-    shooterSubsystem.isArmed = false;
+    SHOOTER.stop();
+    SHOOTER.isArmed = false;
   }
 }

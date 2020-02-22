@@ -9,6 +9,7 @@ public class TurretOpenLoopCommand extends InstantCommand {
   private final double setpoint;
 
   public TurretOpenLoopCommand(double setpoint) {
+    addRequirements(SHOOTER);
     this.setpoint = setpoint;
   }
 

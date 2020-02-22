@@ -65,7 +65,10 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:${logbackVersion}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    
+
+    implementation "com.squareup.moshi:moshi:1.9.2"
+
+    compile 'com.opencsv:opencsv:5.1'
 
     // Enable simulation gui support. Must check the box in vscode to enable support
     // upon debugging

@@ -5,17 +5,17 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class RunShooterCommand extends InstantCommand {
+  private ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
 
-  private ShooterSubsystem shooterSubsystem = RobotContainer.SHOOTER;
   private double wheelSpeed;
 
   public RunShooterCommand(double speed) {
-    addRequirements(shooterSubsystem);
+    addRequirements(SHOOTER);
     wheelSpeed = speed;
   }
 
   @Override
   public void initialize() {
-    shooterSubsystem.runOpenLoop(wheelSpeed);
+    SHOOTER.runOpenLoop(wheelSpeed);
   }
 }
