@@ -9,6 +9,8 @@ public class HoodOpenLoopCommand extends InstantCommand {
   private final double output;
 
   public HoodOpenLoopCommand(double output) {
+    addRequirements(SHOOTER);
+
     this.output = output;
   }
 

@@ -5,20 +5,21 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.HoodSubsystem;
 
 public class HoodPositionCommand extends CommandBase {
-  private static final HoodSubsystem hood = RobotContainer.HOOD;
+  private static final HoodSubsystem HOOD = RobotContainer.HOOD;
   private int position;
 
   public HoodPositionCommand(int position) {
+    addRequirements(HOOD);
     this.position = position;
   }
 
   @Override
   public void initialize() {
-    hood.setHoodAngle(position);
+    HOOD.setHoodAngle(position);
   }
 
   @Override
   public boolean isFinished() {
-    return hood.hoodAtTarget();
+    return HOOD.hoodAtTarget();
   }
 }

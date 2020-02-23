@@ -6,21 +6,21 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
 public class TurretPositionCommand extends CommandBase {
-  private static final ShooterSubsystem shooter = RobotContainer.SHOOTER;
-  private static final TurretSubsystem turret = RobotContainer.TURRET;
+  private static final TurretSubsystem TURRET = RobotContainer.TURRET;
   private double angle;
 
   public TurretPositionCommand(double angle) {
+      addRequirements(TURRET);
     this.angle = angle;
   }
 
   @Override
   public void initialize() {
-    turret.setTurretAngle(angle);
+    TURRET.setTurretAngle(angle);
   }
 
   @Override
   public boolean isFinished() {
-    return turret.turretAtTarget();
+    return TURRET.turretAtTarget();
   }
 }

@@ -72,6 +72,10 @@ public class ShooterSubsystem extends SubsystemBase {
     leftMaster.set(ControlMode.PercentOutput, percent);
   }
 
+  public double getShooterSpeed() {
+    return leftMaster.getSelectedSensorVelocity();
+  }
+
   public boolean atTargetSpeed() {
     double currentSpeed = leftMaster.getSelectedSensorVelocity();
     if (Math.abs(targetShooterSpeed - currentSpeed) > Constants.ShooterConstants.kCloseEnough) {
@@ -86,4 +90,5 @@ public class ShooterSubsystem extends SubsystemBase {
       return false;
     }
   }
+
 }

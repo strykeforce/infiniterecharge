@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.*;
+import org.strykeforce.deadeye.Deadeye;
 import org.strykeforce.thirdcoast.telemetry.TelemetryController;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 
@@ -35,19 +36,27 @@ public class RobotContainer {
   public static ShooterSubsystem SHOOTER;
   public static HoodSubsystem HOOD;
   public static TurretSubsystem TURRET;
+  public static Deadeye DEADEYE;
+  public static VisionSubsystem VISION;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    TELEMETRY = new TelemetryService(TelemetryController::new);
     CONSTANTS = new Constants();
+    TELEMETRY = new TelemetryService(TelemetryController::new);
+
     DRIVE = new DriveSubsystem();
     MAGAZINE = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();
     SHOOTER = new ShooterSubsystem();
-    CONTROLS = new Controls();
+    DEADEYE = Deadeye.INSTANCE;
+    VISION = new VisionSubsystem();
     HOOD = new HoodSubsystem();
     TURRET = new TurretSubsystem();
+
+    //Create Controls last so all subsystems exist
+    CONTROLS = new Controls();
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
+    TELEMETRY.start();
 
     // Configure the button bindings
     configureButtonBindings();
