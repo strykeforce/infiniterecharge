@@ -22,10 +22,9 @@ public class HoodSubsystem extends SubsystemBase {
 
   private static final int HOOD_ID = 43;
 
-  private static final double HOOD_TICKS_PER_DEGREE =
-      Constants.ShooterConstants.HOOD_TICKS_PER_DEGREE;
+  private static final double HOOD_TICKS_PER_DEGREE = Constants.HoodConstants.HOOD_TICKS_PER_DEGREE;
 
-  private static final double kHoodZeroTicks = Constants.ShooterConstants.kHoodZeroTicks;
+  private static final double kHoodZeroTicks = Constants.HoodConstants.kHoodZeroTicks;
 
   public HoodSubsystem() {
     configTalons();
@@ -86,7 +85,7 @@ public class HoodSubsystem extends SubsystemBase {
   public boolean hoodAtTarget() {
     double currentHoodPosition = hood.getSelectedSensorPosition();
     if (Math.abs(targetHoodPosition - currentHoodPosition)
-        > Constants.ShooterConstants.kCloseEnoughHood) {
+        > Constants.HoodConstants.kCloseEnoughHood) {
       hoodStableCounts = 0;
     } else {
       hoodStableCounts++;

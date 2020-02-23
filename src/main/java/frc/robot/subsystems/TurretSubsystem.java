@@ -27,11 +27,11 @@ public class TurretSubsystem extends SubsystemBase {
   private static final int TURRET_ID = 42;
 
   private static final double TURRET_TICKS_PER_DEGREE =
-      Constants.ShooterConstants.TURRET_TICKS_PER_DEGREE;
+      Constants.TurretConstants.TURRET_TICKS_PER_DEGREE;
 
-  private static final double kTurretZeroTicks = Constants.ShooterConstants.kTurretZero;
-  private static final double kWrapRange = Constants.ShooterConstants.kWrapRange;
-  private static final double kTurretMidpoint = Constants.ShooterConstants.kTurretMidpoint;
+  private static final double kTurretZeroTicks = Constants.TurretConstants.kTurretZeroTicks;
+  private static final double kWrapRange = Constants.TurretConstants.kWrapRange;
+  private static final double kTurretMidpoint = Constants.TurretConstants.kTurretMidpoint;
 
   public TurretSubsystem() {
     configTalons();
@@ -125,7 +125,7 @@ public class TurretSubsystem extends SubsystemBase {
   public boolean turretAtTarget() {
     double currentTurretPosition = turret.getSelectedSensorPosition();
     if (Math.abs(targetTurretPosition - currentTurretPosition)
-        > Constants.ShooterConstants.kCloseEnoughTurret) {
+        > Constants.TurretConstants.kCloseEnoughTurret) {
       turretStableCounts = 0;
     } else {
       turretStableCounts++;

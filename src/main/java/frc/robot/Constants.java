@@ -28,11 +28,11 @@ public final class Constants {
     else isCompBot = true;
 
     if (isCompBot) {
-      ShooterConstants.TURRET_TICKS_PER_DEGREE = CompConstants.TURRET_TICKS_PER_DEGREE;
-      ShooterConstants.HOOD_TICKS_PER_DEGREE = CompConstants.HOOD_TICKS_PER_DEGREE;
+      TurretConstants.kTurretZeroTicks = CompConstants.kTurretZeroTicks;
+      HoodConstants.kHoodZeroTicks = CompConstants.kHoodZeroTicks;
     } else {
-      ShooterConstants.TURRET_TICKS_PER_DEGREE = ProtoConstants.TURRET_TICKS_PER_DEGREE;
-      ShooterConstants.HOOD_TICKS_PER_DEGREE = ProtoConstants.HOOD_TICKS_PER_DEGREE;
+      TurretConstants.kTurretZeroTicks = ProtoConstants.kTurretZeroTicks;
+      HoodConstants.kHoodZeroTicks = ProtoConstants.kHoodZeroTicks;
     }
   }
 
@@ -62,27 +62,31 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    // Shooter Specific
+    // Subsystem Specific
     public static final double kOpenloopShoot = 0.5;
     public static final double kOpenloopArmReverse = -0.2;
     public static final int kCloseEnough = 1000;
     public static final int kStableCounts = 5;
 
-    // Turret Specific
-    public static double TURRET_TICKS_PER_DEGREE = 72; // Jerry's value: 79.644
-    public static final int kCloseEnoughTurret = 100;
-    public static final int kTurretZero = 2488; // FIXME
-    public static final double kWrapRange = 1; // FIXME
-    public static final double kTurretMidpoint = 1; // FIXME
-
-    // Hood Specific
-    public static double HOOD_TICKS_PER_DEGREE = 572; // FIXME
-    public static final int kCloseEnoughHood = 100;
-    public static double kHoodZeroTicks = 2650;
-
     // Command Specific
     public static final long kArmTimeToAccelerate = 1500;
     public static final int kArmSpeed = 10000;
+  }
+
+  public static final class TurretConstants {
+    // Subsystem Specific
+    public static final double TURRET_TICKS_PER_DEGREE = 72;
+    public static final int kCloseEnoughTurret = 100;
+    public static int kTurretZeroTicks = 2488; // FIXME
+    public static final double kWrapRange = 1; // FIXME
+    public static final double kTurretMidpoint = 1; // FIXME
+  }
+
+  public static final class HoodConstants {
+    // Subsystem Specific
+    public static final double HOOD_TICKS_PER_DEGREE = 572; // FIXME
+    public static final int kCloseEnoughHood = 100;
+    public static double kHoodZeroTicks = 2650;
   }
 
   public static final class DriveConstants {
@@ -90,12 +94,12 @@ public final class Constants {
   }
 
   public static class CompConstants {
-    public static final double TURRET_TICKS_PER_DEGREE = 72; // Jerry's value: 79.644
-    public static final double HOOD_TICKS_PER_DEGREE = 572;
+    public static final int kTurretZeroTicks = 2488;
+    public static final double kHoodZeroTicks = 2650;
   }
 
   public static class ProtoConstants {
-    public static final double TURRET_TICKS_PER_DEGREE = 72; // Jerry's value: 79.644
-    public static final double HOOD_TICKS_PER_DEGREE = 572;
+    public static final int kTurretZeroTicks = 2488;
+    public static final double kHoodZeroTicks = 2650;
   }
 }
