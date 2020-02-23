@@ -24,9 +24,10 @@ public class HoodSubsystem extends SubsystemBase {
 
   private static final double HOOD_TICKS_PER_DEGREE = Constants.HoodConstants.HOOD_TICKS_PER_DEGREE;
 
-  private static final double kHoodZeroTicks = Constants.HoodConstants.kHoodZeroTicks;
+  private static int kHoodZeroTicks;
 
   public HoodSubsystem() {
+    kHoodZeroTicks = Constants.HoodConstants.kHoodZeroTicks;
     configTalons();
   }
 
@@ -35,18 +36,29 @@ public class HoodSubsystem extends SubsystemBase {
 
     // hood setup
     hood = new TalonSRX(HOOD_ID);
-    hoodConfig.forwardSoftLimitThreshold = 10000;
-    hoodConfig.reverseSoftLimitThreshold = 0;
+    hoodConfig.forwardSoftLimitThreshold = Constants.HoodConstants.kForwardSoftLimit;
+    hoodConfig.reverseSoftLimitThreshold = Constants.HoodConstants.kReverseSoftLimit;
     hoodConfig.forwardSoftLimitEnable = true;
     hoodConfig.reverseSoftLimitEnable = true;
-    hoodConfig.slot0.kP = 4;
-    hoodConfig.slot0.kI = 0;
-    hoodConfig.slot0.kD = 60;
-    hoodConfig.slot0.kF = 0;
+    hoodConfig.slot0.kP = 4.0;
+    hoodConfig.slot0.kI = 0.0;
+    hoodConfig.slot0.kD = 60.0;
+    hoodConfig.slot0.kF = 0.19;
+    hoodConfig.slot0.integralZone = 0;
+    hoodConfig.slot0.maxIntegralAccumulator = 0;
+    hoodConfig.velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
+    hoodConfig.velocityMeasurementWindow = 64;
+    hoodConfig.motionAcceleration = 120_000;
+    hoodConfig.motionCruiseVelocity = 4_000;
+    hoodConfig.voltageCompSaturation = 12;
+    hoodConfig.voltageMeasurementFilter = 32;
+    hoodConfig.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
+    hoodConfig.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
     hood.setNeutralMode(NeutralMode.Brake);
     hood.configAllSettings(hoodConfig);
     hood.enableCurrentLimit(false);
-    hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, 1));
+    hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 30, 0.5));
+    hood.enableVoltageCompensation(true);
 
     TelemetryService telService = RobotContainer.TELEMETRY;
     telService.stop();
@@ -56,7 +68,8 @@ public class HoodSubsystem extends SubsystemBase {
 
   public boolean zeroHood() {
     boolean didZero = false;
-    if (!hood.getSensorCollection().isRevLimitSwitchClosed()) { // FIXME
+    // proximity sensor = normally closed
+    if (!hood.getSensorCollection().isRevLimitSwitchClosed()) {
       int absPos = hood.getSensorCollection().getPulseWidthPosition() & 0xFFF;
       int offset = (int) (absPos - kHoodZeroTicks);
       hood.setSelectedSensorPosition(offset);
