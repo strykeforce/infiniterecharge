@@ -95,7 +95,6 @@ public final class Constants {
     public static final double kDeadbandXLock = 0.2;
   }
 
-
   public static final class VisionConstants {
     public static final double VERTICAL_FOV = 48.8;
     public static final double HORIZ_FOV = 62.2;

@@ -42,17 +42,24 @@ public class TurretSubsystem extends SubsystemBase {
 
     // turret setup
     turret = new TalonSRX(TURRET_ID);
-    turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 25, 0.04));
-    turretConfig.forwardSoftLimitThreshold = 26000;
-    turretConfig.reverseSoftLimitThreshold = -700;
+    turretConfig.forwardSoftLimitThreshold = Constants.TurretConstants.kForwardLimit;
+    turretConfig.reverseSoftLimitThreshold = Constants.TurretConstants.kReverseLimit;
     turretConfig.forwardSoftLimitEnable = true;
     turretConfig.reverseSoftLimitEnable = true;
-    turretConfig.slot0.kP = 1;
-    turretConfig.slot0.kI = 0;
-    turretConfig.slot0.kD = 40;
-    turretConfig.slot0.kF = 0;
-    turretConfig.slot0.integralZone = 0;
+    turretConfig.slot0.kP = 2;
+    turretConfig.slot0.kI = 0.01;
+    turretConfig.slot0.kD = 80;
+    turretConfig.slot0.kF = 0.21;
+    turretConfig.slot0.integralZone = 40;
+    turretConfig.slot0.maxIntegralAccumulator = 4500;
+    turretConfig.voltageMeasurementFilter = 32;
+    turretConfig.voltageCompSaturation = 12;
     turret.configAllSettings(turretConfig);
+    turret.configMotionCruiseVelocity(4000);
+    turret.configMotionAcceleration(30000);
+    turret.enableCurrentLimit(false);
+    turret.enableVoltageCompensation(true);
+    turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 30, 500));
 
     TelemetryService telService = RobotContainer.TELEMETRY;
     telService.stop();
@@ -106,16 +113,17 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void seekTarget() {
-    double bearing = Math.IEEEremainder(DRIVE.getGyro().getAngle(), 360) + 270;
+    double bearing = (DRIVE.getGyro().getAngle() + 270) % 360;
+    if (bearing < 0) bearing += 360;
     double setPoint = bearing * TURRET_TICKS_PER_DEGREE;
     logger.info("Seeking Target at angle = {}", bearing);
     logger.info("Seeking Target at position = {}", setPoint);
     setTurret(setPoint);
   }
 
-  private void setTurret(double setPoint) {
+  public void setTurret(double setPoint) {
     targetTurretPosition = setPoint;
-    turret.set(ControlMode.Position, setPoint);
+    turret.set(ControlMode.MotionMagic, setPoint);
   }
 
   public void turretOpenLoop(double output) {
@@ -131,6 +139,26 @@ public class TurretSubsystem extends SubsystemBase {
       turretStableCounts++;
     }
     if (turretStableCounts >= Constants.ShooterConstants.kStableCounts) {
+      logger.info("Turret at position {}", targetTurretPosition);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public double getTurretAngle() {
+    return turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
+  }
+
+  public boolean turretInRange(int targetCounts) {
+    double currentTurretPosition = turret.getSelectedSensorPosition();
+    if (Math.abs(targetTurretPosition - currentTurretPosition)
+        > Constants.TurretConstants.kCloseEnoughTurret) {
+      turretStableCounts = 0;
+    } else {
+      turretStableCounts++;
+    }
+    if (turretStableCounts >= targetCounts) {
       logger.info("Turret at position {}", targetTurretPosition);
       return true;
     } else {

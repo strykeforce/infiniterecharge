@@ -90,5 +90,4 @@ public class ShooterSubsystem extends SubsystemBase {
       return false;
     }
   }
-
 }

@@ -6,7 +6,7 @@ import frc.robot.commands.magazine.RunMagazineCommand;
 import frc.robot.commands.magazine.WaitForMagazineBeamCommand;
 import frc.robot.commands.shooter.ArmShooterCommand;
 import frc.robot.commands.shooter.SafeShooterReverseCommand;
-import frc.robot.commands.shooter.ShooterTrackingCommand;
+import frc.robot.commands.turret.ShooterTrackingCommand;
 
 public class ArmSequenceCommand extends SequentialCommandGroup {
   public ArmSequenceCommand() {

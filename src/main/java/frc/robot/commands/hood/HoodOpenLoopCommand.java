@@ -1,4 +1,4 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.hood;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
@@ -9,7 +9,7 @@ public class HoodOpenLoopCommand extends InstantCommand {
   private final double output;
 
   public HoodOpenLoopCommand(double output) {
-    addRequirements(SHOOTER);
+    addRequirements(HOOD);
 
     this.output = output;
   }

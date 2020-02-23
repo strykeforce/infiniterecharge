@@ -1,23 +1,23 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretPositionCommand extends CommandBase {
+public class SeekTargetCommand extends CommandBase {
   private static final TurretSubsystem TURRET = RobotContainer.TURRET;
-  private double angle;
 
-  public TurretPositionCommand(double angle) {
-      addRequirements(TURRET);
-    this.angle = angle;
+  public SeekTargetCommand() {
+    addRequirements(TURRET);
   }
 
   @Override
   public void initialize() {
-    TURRET.setTurretAngle(angle);
+    TURRET.seekTarget();
   }
+
+  @Override
+  public void execute() {}
 
   @Override
   public boolean isFinished() {

@@ -35,7 +35,6 @@ public class HoodSubsystem extends SubsystemBase {
 
     // hood setup
     hood = new TalonSRX(HOOD_ID);
-    hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, 1));
     hoodConfig.forwardSoftLimitThreshold = 10000;
     hoodConfig.reverseSoftLimitThreshold = 0;
     hoodConfig.forwardSoftLimitEnable = true;
@@ -46,6 +45,8 @@ public class HoodSubsystem extends SubsystemBase {
     hoodConfig.slot0.kF = 0;
     hood.setNeutralMode(NeutralMode.Brake);
     hood.configAllSettings(hoodConfig);
+    hood.enableCurrentLimit(false);
+    hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, 1));
 
     TelemetryService telService = RobotContainer.TELEMETRY;
     telService.stop();
@@ -74,7 +75,7 @@ public class HoodSubsystem extends SubsystemBase {
     return didZero;
   }
 
-  public void setHoodAngle(int position) {
+  public void setHoodPosition(int position) {
     hood.set(ControlMode.Position, position);
   }
 
