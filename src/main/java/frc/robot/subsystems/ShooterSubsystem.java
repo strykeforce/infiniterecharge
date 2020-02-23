@@ -32,21 +32,27 @@ public class ShooterSubsystem extends SubsystemBase {
     TalonFXConfiguration lMasterConfig = new TalonFXConfiguration();
 
     lMasterConfig.supplyCurrLimit.currentLimit = 40.0;
-    lMasterConfig.supplyCurrLimit.triggerThresholdCurrent = 45;
-    lMasterConfig.supplyCurrLimit.triggerThresholdTime = 0.04;
+    lMasterConfig.supplyCurrLimit.triggerThresholdCurrent = 50.0;
+    lMasterConfig.supplyCurrLimit.triggerThresholdTime = 2.0;
     lMasterConfig.supplyCurrLimit.enable = true;
-    lMasterConfig.slot0.kP = 0.45;
+    lMasterConfig.slot0.kP = 1.5;
     lMasterConfig.slot0.kI = 0;
-    lMasterConfig.slot0.kD = 10;
-    lMasterConfig.slot0.kF = 0.05;
+    lMasterConfig.slot0.kD = 5;
+    lMasterConfig.slot0.kF = 0.048;
+    lMasterConfig.peakOutputForward = 1.0;
+    lMasterConfig.peakOutputReverse = -0.2;
+    lMasterConfig.velocityMeasurementPeriod = VelocityMeasPeriod.Period_20Ms;
+    lMasterConfig.velocityMeasurementWindow = 16;
     leftMaster = new TalonFX(L_MASTER_ID);
     leftMaster.configAllSettings(lMasterConfig);
     leftMaster.setNeutralMode(NeutralMode.Coast);
+    leftMaster.enableVoltageCompensation(false);
 
     rightSlave = new TalonFX(R_SLAVE_ID);
     rightSlave.configAllSettings(lMasterConfig);
     rightSlave.setNeutralMode(NeutralMode.Coast);
     rightSlave.setInverted(true);
+    rightSlave.enableVoltageCompensation(false);
     rightSlave.follow(leftMaster);
 
     TelemetryService telService = RobotContainer.TELEMETRY;
