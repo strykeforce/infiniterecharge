@@ -5,12 +5,12 @@ import frc.robot.commands.QuickLockDriveCommand;
 import frc.robot.commands.shooter.AimShooterCommand;
 import frc.robot.commands.vision.StopVisionTrackingCommand;
 
-public class VisionShootCommandGroup extends SequentialCommandGroup {
-  public VisionShootCommandGroup() {
+public class OneFrameShootCommandGroup extends SequentialCommandGroup {
+  public OneFrameShootCommandGroup() {
     addCommands(
-        new QuickLockDriveCommand(),
-        new StopVisionTrackingCommand(),
-        new AimShooterCommand(),
+                new QuickLockDriveCommand(),
+                new StopVisionTrackingCommand(),
+                new AimShooterCommand(),
         new ArmedShootSequenceCommand());
   }
 }

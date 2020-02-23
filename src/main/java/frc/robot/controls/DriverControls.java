@@ -17,7 +17,7 @@ public class DriverControls {
 
     // RobotContainer.DRIVE.setDefaultCommand(new TeleopDriveCommand());
     new JoystickButton(joystick, Button.X.id).whenPressed(new XLockCommand());
-    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new VisionShootCommandGroup());
+    new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenPressed(new ArmedShootSequenceCommand());
     new JoystickButton(joystick, Shoulder.LEFT_UP.id).whenReleased(new StopShootCommand());
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id).whenPressed(new AutoIntakeCmdGroup());
     new JoystickButton(joystick, Shoulder.RIGHT_DOWN.id)

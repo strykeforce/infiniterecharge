@@ -36,7 +36,7 @@ public final class Constants {
 
     // Command Specific
     public static final long kTimeFullIntake = 1000;
-    public static final long kShootDelayIntake = 500;
+    public static final long kShootDelayIntake = 250;
     public static final long kReverseTime = 500;
     public static final double kStallCount = 5;
   }
@@ -85,7 +85,7 @@ public final class Constants {
 
   public static final class VisionConstants {
     public static final double VERTICAL_FOV = 48.8;
-    public static final double HORIZ_FOV = 62.2;
+    public static final double HORIZ_FOV = 50.8;
     public static final double HORIZ_RES = 1280;
     public static final double TARGET_WIDTH_IN = 34.65;
     public static final double CAMERA_HEIGHT = 22;
