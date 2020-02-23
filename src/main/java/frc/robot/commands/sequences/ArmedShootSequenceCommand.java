@@ -6,7 +6,7 @@ import frc.robot.Constants;
 import frc.robot.commands.WaitCommand;
 import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.magazine.RunMagazineCommand;
-import frc.robot.commands.shooter.ShooterTrackingCommand;
+import frc.robot.commands.turret.ShooterTrackingCommand;
 
 public class ArmedShootSequenceCommand extends ParallelCommandGroup {
 
