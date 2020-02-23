@@ -1,26 +1,25 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.hood;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 
 public class HoodPositionCommand extends CommandBase {
-  private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
+  private static final HoodSubsystem HOOD = RobotContainer.HOOD;
   private int position;
 
   public HoodPositionCommand(int position) {
-    addRequirements(SHOOTER);
-
+    addRequirements(HOOD);
     this.position = position;
   }
 
   @Override
   public void initialize() {
-    SHOOTER.setHoodPosition(position);
+    HOOD.setHoodPosition(position);
   }
 
   @Override
   public boolean isFinished() {
-    return SHOOTER.hoodAtTarget();
+    return HOOD.hoodAtTarget();
   }
 }

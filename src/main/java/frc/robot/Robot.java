@@ -32,8 +32,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     RobotContainer.DRIVE.zeroGyro();
-    RobotContainer.SHOOTER.zeroHood();
-    RobotContainer.SHOOTER.zeroTurret();
+    RobotContainer.HOOD.zeroHood();
+    RobotContainer.TURRET.zeroTurret();
   }
 
   /**

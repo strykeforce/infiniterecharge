@@ -33,7 +33,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   private static Deadeye deadeye;
   private static DriveSubsystem drive;
-  private static ShooterSubsystem shooter;
+  private static TurretSubsystem turret;
   private static Camera<MinAreaRectTargetData> shooterCamera;
   private static MinAreaRectTargetData targetData;
 
@@ -61,7 +61,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     kTurretDeadband = Constants.VisionConstants.kTurretDeadband;
 
     deadeye = RobotContainer.DEADEYE;
-    shooter = RobotContainer.SHOOTER;
+    turret = RobotContainer.TURRET;
     drive = RobotContainer.DRIVE;
 
     shooterCamera = deadeye.getCamera(kCameraID);
@@ -139,7 +139,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     double fieldOrientedOffset =
         90
             - (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
-                + (270 - shooter.getTurretAngle())
+                + (270 - turret.getTurretAngle())
                 + getOffsetAngle());
     return getRawWidth() / Math.sin(Math.toRadians(fieldOrientedOffset));
   }

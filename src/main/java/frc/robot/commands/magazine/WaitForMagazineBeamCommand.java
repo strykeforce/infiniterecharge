@@ -3,12 +3,14 @@ package frc.robot.commands.magazine;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.MagazineSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class WaitForMagazineBeamCommand extends CommandBase {
   private ShooterSubsystem shooterSubsystem = RobotContainer.SHOOTER;
   private MagazineSubsystem magazineSubsystem = RobotContainer.MAGAZINE;
+  private HoodSubsystem hoodSubsystem = RobotContainer.HOOD;
   private int beamStableCount = 0;
 
   public WaitForMagazineBeamCommand() {
@@ -18,7 +20,7 @@ public class WaitForMagazineBeamCommand extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    if (shooterSubsystem.isMagazineBeamBroken()) beamStableCount = 0;
+    if (hoodSubsystem.isMagazineBeamBroken()) beamStableCount = 0;
     else beamStableCount++;
 
     if (beamStableCount >= Constants.MagazineConstants.kBeamStableCounts) return true;
