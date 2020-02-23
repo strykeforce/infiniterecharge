@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,11 +26,12 @@ public class TurretSubsystem extends SubsystemBase {
   private static final double TURRET_TICKS_PER_DEGREE =
       Constants.TurretConstants.TURRET_TICKS_PER_DEGREE;
 
-  private static final double kTurretZeroTicks = Constants.TurretConstants.kTurretZeroTicks;
+  private static int kTurretZeroTicks;
   private static final double kWrapRange = Constants.TurretConstants.kWrapRange;
   private static final double kTurretMidpoint = Constants.TurretConstants.kTurretMidpoint;
 
   public TurretSubsystem() {
+    kTurretZeroTicks = Constants.TurretConstants.kTurretZeroTicks;
     configTalons();
   }
 
@@ -54,9 +52,12 @@ public class TurretSubsystem extends SubsystemBase {
     turretConfig.slot0.maxIntegralAccumulator = 4500;
     turretConfig.voltageMeasurementFilter = 32;
     turretConfig.voltageCompSaturation = 12;
+    turretConfig.motionCruiseVelocity = 4_000;
+    turretConfig.motionAcceleration = 30_000;
+    turretConfig.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
+    turretConfig.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
     turret.configAllSettings(turretConfig);
-    turret.configMotionCruiseVelocity(4000);
-    turret.configMotionAcceleration(30000);
+    turret.setNeutralMode(NeutralMode.Brake);
     turret.enableCurrentLimit(false);
     turret.enableVoltageCompensation(true);
     turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 30, 500));
@@ -69,7 +70,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public boolean zeroTurret() {
     boolean didZero = false;
-    if (!turret.getSensorCollection().isFwdLimitSwitchClosed()) { // FIXME
+    double stringPotPosition = turret.getSensorCollection().getAnalogInRaw();
+    if (stringPotPosition <= Constants.TurretConstants.kMaxStringPotZero
+        && stringPotPosition >= Constants.TurretConstants.kMinStringPotZero) {
       int absPos = turret.getSensorCollection().getPulseWidthPosition() & 0xFFF;
       // inverted because absolute and relative encoders are out of phase
       int offset = (int) -(absPos - kTurretZeroTicks);
@@ -85,9 +88,6 @@ public class TurretSubsystem extends SubsystemBase {
       turret.configPeakOutputReverse(0, 0);
       logger.error("Turret zero failed. Killing turret...");
     }
-
-    turret.configForwardLimitSwitchSource(
-        LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled);
 
     return didZero;
   }
