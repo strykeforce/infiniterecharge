@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.hood.HoodOpenLoopCommand;
 import frc.robot.commands.sequences.*;
-import frc.robot.commands.shooter.HoodOpenLoopCommand;
 import frc.robot.commands.vision.StopVisionTrackingCommand;
 
 public class DriverControls {

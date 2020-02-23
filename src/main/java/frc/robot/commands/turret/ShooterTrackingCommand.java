@@ -1,15 +1,16 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ShooterTrackingCommand extends CommandBase {
-  private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
+  private static final TurretSubsystem TURRET = RobotContainer.TURRET;
   private static final VisionSubsystem VISION = RobotContainer.VISION;
   private static DriverControls DRIVER_CONTROLS;
 
@@ -18,7 +19,7 @@ public class ShooterTrackingCommand extends CommandBase {
   public Logger logger = LoggerFactory.getLogger("Track Command");
 
   public ShooterTrackingCommand() {
-    addRequirements(SHOOTER);
+    addRequirements(TURRET);
   }
 
   @Override
@@ -30,8 +31,8 @@ public class ShooterTrackingCommand extends CommandBase {
   @Override
   public void execute() {
     if (VISION.isTargetValid()) {
-      SHOOTER.rotateTurret(-0.95 * VISION.getOffsetAngle() + getStrafeAdjustment());
-    } else SHOOTER.seekTarget();
+      TURRET.rotateTurret(-0.95 * VISION.getOffsetAngle() + getStrafeAdjustment());
+    } else TURRET.seekTarget();
   }
 
   @Override

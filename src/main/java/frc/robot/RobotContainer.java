@@ -28,24 +28,32 @@ public class RobotContainer {
   public static TelemetryService TELEMETRY;
 
   // The robot's subsystems and commands are defined here...
+  public static Constants CONSTANTS;
   public static DriveSubsystem DRIVE;
   public static MagazineSubsystem MAGAZINE;
   public static Controls CONTROLS;
   public static IntakeSubsystem INTAKE;
   public static ShooterSubsystem SHOOTER;
+  public static HoodSubsystem HOOD;
+  public static TurretSubsystem TURRET;
   public static Deadeye DEADEYE;
   public static VisionSubsystem VISION;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    CONSTANTS = new Constants();
     TELEMETRY = new TelemetryService(TelemetryController::new);
+
     DRIVE = new DriveSubsystem();
     MAGAZINE = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();
     SHOOTER = new ShooterSubsystem();
     DEADEYE = Deadeye.INSTANCE;
     VISION = new VisionSubsystem();
+    HOOD = new HoodSubsystem();
+    TURRET = new TurretSubsystem();
 
+    // Create Controls last so all subsystems exist
     CONTROLS = new Controls();
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
     TELEMETRY.start();
