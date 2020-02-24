@@ -38,20 +38,31 @@ public class MagazineSmartFeedCommand extends CommandBase {
                 state = FeedStates.WAIT;
                 break;
             case WAIT:
-                if(System.currentTimeMillis() - timerStart > Constants.MagazineConstants.kArmTimeToShooterOn)
-                    
+                if(System.currentTimeMillis() - timerStart > Constants.MagazineConstants.kArmTimeToShooterOn) {
+                    state = FeedStates.START_INTAKE;
+                }
+                break;
+            case START_INTAKE:
+                INTAKE.runIntake(Constants.IntakeConstants.kIntakeSpeed);
+                state = FeedStates.RUNNING;
+                break;
+            case RUNNING:
+                if(isMoving()) {
+                    INTAKE.runIntake(0);
+                    MAGAZINE.runTalon(0);
+                    state = FeedStates.STOPPED;
+                }
+                break;
         }
     }
 
-    private boolean isMoving() {return false;}
-    private void startFeed() {}
-    private void stopFeed() {}
+    private boolean isMoving() {return TURRET.get;}
 
     private enum FeedStates {
         RUNNING,
         STOPPED,
         START_MAG,
         WAIT,
-        START_INTAKE
+        START_INTAKE,
     }
 }
