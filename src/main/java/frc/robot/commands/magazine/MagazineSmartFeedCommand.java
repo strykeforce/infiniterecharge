@@ -56,7 +56,7 @@ public class MagazineSmartFeedCommand extends CommandBase {
         }
     }
 
-    private boolean isMoving() {return TURRET.get;}
+    private boolean isMoving() {return TURRET.getTurretSpeed() > Constants.TurretConstants.kMaxShootSpeed;}
 
     private enum FeedStates {
         RUNNING,
