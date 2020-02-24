@@ -48,10 +48,10 @@ public class RobotContainer {
     MAGAZINE = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();
     SHOOTER = new ShooterSubsystem();
-    DEADEYE = Deadeye.INSTANCE;
-    VISION = new VisionSubsystem();
     HOOD = new HoodSubsystem();
     TURRET = new TurretSubsystem();
+    DEADEYE = Deadeye.INSTANCE;
+    VISION = new VisionSubsystem();
 
     // Create Controls last so all subsystems exist
     CONTROLS = new Controls();

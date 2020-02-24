@@ -114,8 +114,9 @@ public final class Constants {
     public static final double HOOD_TICKS_PER_DEGREE = 572;
     public static final int kCloseEnoughHood = 100;
     public static int kHoodZeroTicks = 1347;
-    public static final int kForwardSoftLimit = 8190; // 10000
-    public static final int kReverseSoftLimit = -1800; // 0
+    public static final int kForwardSoftLimit = 9000; // 10000
+    public static final int kReverseSoftLimit = 0; // 0
+    public static final int kOffsetZeroTicks = 1820;
   }
 
   public static final class DriveConstants {
@@ -144,7 +145,7 @@ public final class Constants {
     public static final double kMinStringPotZero = 13;
 
     // Hood
-    public static final int kHoodZeroTicks = 3153;
+    public static final int kHoodZeroTicks = 3236; // 3153
 
     // Camera
     public static final String kCameraId = "A0";

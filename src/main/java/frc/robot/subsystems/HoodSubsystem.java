@@ -72,7 +72,7 @@ public class HoodSubsystem extends SubsystemBase {
     if (!hood.getSensorCollection().isRevLimitSwitchClosed()) {
       int absPos = hood.getSensorCollection().getPulseWidthPosition() & 0xFFF;
       int offset = (int) (absPos - kHoodZeroTicks);
-      hood.setSelectedSensorPosition(offset);
+      hood.setSelectedSensorPosition(offset + Constants.HoodConstants.kOffsetZeroTicks);
       didZero = true;
       logger.info(
           "Hood zeroed; offset: {} zeroTicks: {} absPosition: {}", offset, kHoodZeroTicks, absPos);
@@ -89,7 +89,7 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   public void setHoodPosition(int position) {
-    hood.set(ControlMode.Position, position);
+    hood.set(ControlMode.MotionMagic, position);
   }
 
   public void hoodOpenLoop(double output) {
