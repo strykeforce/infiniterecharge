@@ -29,7 +29,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
   public static final int CW_LEFT = -1;
   public static final int CW_STAY = 0;
 
-  enum ColorNames {
+  public enum ColorNames {
     YELLOW,
     RED,
     GREEN,
@@ -145,6 +145,18 @@ public class ColorSensorSubsystem extends SubsystemBase {
 
   public String getTargetColor() {
     return DriverStation.getInstance().getGameSpecificMessage();
+  }
+
+  public void testMethod(int direction) {
+    if (direction > 0) {
+      System.out.println("Moving Right");
+    }
+    if (direction < 0) {
+      System.out.println("Moving Left");
+    }
+    if (direction == 0) {
+      System.out.println("Is There");
+    }
   }
 
   public class ColorValues {

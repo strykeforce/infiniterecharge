@@ -13,10 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.controls.Controls;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.MagazineSubsystem;
+import frc.robot.subsystems.*;
 import org.strykeforce.thirdcoast.telemetry.TelemetryController;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 
@@ -35,6 +32,7 @@ public class RobotContainer {
   public static MagazineSubsystem MAGAZINE;
   public static Controls CONTROLS;
   public static IntakeSubsystem INTAKE;
+  public static ColorSensorSubsystem COLORSENSOR;
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
