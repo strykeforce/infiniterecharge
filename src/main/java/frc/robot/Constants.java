@@ -7,7 +7,12 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -81,6 +86,11 @@ public final class Constants {
     public static final double kDeadbandXLock = 0.2;
   }
 
+  public static final class AutoConstants {
+    public static final Pose2d START_PATH = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+    public static final Pose2d END_PATH = new Pose2d(4.0, 0.0, new Rotation2d(0.0));
+    public static final List<Translation2d> INTERNAL_POINTS = List.of();
+  }
   public static class CompConstants {}
 
   public static class ProtoConstants {}
