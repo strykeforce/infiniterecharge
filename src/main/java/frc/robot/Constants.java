@@ -146,7 +146,7 @@ public final class Constants {
     public static final double kMinStringPotZero = 13;
 
     // Hood
-    public static final int kHoodZeroTicks = 3236; // 3153
+    public static final int kHoodZeroTicks = 3475; // 3236
 
     // Camera
     public static final String kCameraId = "A0";
