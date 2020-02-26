@@ -39,6 +39,11 @@ public class ShooterTrackingCommand extends CommandBase {
     return !VISION.isTrackingEnabled();
   }
 
+  @Override
+  public void end(boolean interrupted) {
+    VISION.setCameraEnabled(false);
+  }
+
   private double getStrafeAdjustment() {
     double strafe = DRIVER_CONTROLS.getStrafe();
     if (Math.abs(strafe) > .2) {
