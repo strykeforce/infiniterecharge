@@ -6,8 +6,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.MagazineSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MagazineSmartFeedCommand extends CommandBase {
   private MagazineSubsystem MAGAZINE = RobotContainer.MAGAZINE;
@@ -60,7 +58,7 @@ public class MagazineSmartFeedCommand extends CommandBase {
   }
 
   private boolean isMoving() {
-    return TURRET.getTurretSpeed() > Constants.TurretConstants.kMaxShootSpeed;
+    return TURRET.getTurretError() > Constants.TurretConstants.kMaxShootError;
   }
 
   private enum FeedStates {

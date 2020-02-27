@@ -8,16 +8,16 @@ import frc.robot.subsystems.VisionSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShooterTrackingCommand extends CommandBase {
+public class TurretTrackingCommand extends CommandBase {
   private static final TurretSubsystem TURRET = RobotContainer.TURRET;
   private static final VisionSubsystem VISION = RobotContainer.VISION;
   private static DriverControls DRIVER_CONTROLS;
 
   double strafeFactor = 5.45; // theoretical 7.45
 
-  public Logger logger = LoggerFactory.getLogger("Track Command");
+  public Logger logger = LoggerFactory.getLogger("Turret Track Command");
 
-  public ShooterTrackingCommand() {
+  public TurretTrackingCommand() {
     addRequirements(TURRET);
   }
 

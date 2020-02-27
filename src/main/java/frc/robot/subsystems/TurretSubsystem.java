@@ -151,8 +151,8 @@ public class TurretSubsystem extends SubsystemBase {
     return turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
   }
 
-  public int getTurretSpeed() {
-    return turret.getSelectedSensorVelocity();
+  public int getTurretError() {
+    return turret.getClosedLoopError();
   }
 
   public boolean turretInRange(int targetCounts) {

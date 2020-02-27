@@ -2,7 +2,7 @@ package frc.robot.commands.sequences;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.QuickLockDriveCommand;
-import frc.robot.commands.turret.AimShooterCommand;
+import frc.robot.commands.turret.TurretAimCommand;
 import frc.robot.commands.vision.StopVisionTrackingCommand;
 
 public class OneFrameShootCommandGroup extends SequentialCommandGroup {
@@ -10,7 +10,7 @@ public class OneFrameShootCommandGroup extends SequentialCommandGroup {
     addCommands(
         new QuickLockDriveCommand(),
         new StopVisionTrackingCommand(),
-        new AimShooterCommand(),
+        new TurretAimCommand(),
         new ArmedShootSequenceCommand());
   }
 }

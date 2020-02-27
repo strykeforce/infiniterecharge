@@ -39,16 +39,22 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static Camera<MinAreaRectTargetData> shooterCamera;
   private static MinAreaRectTargetData targetData;
 
-  private static String path = "table.csv"; // FIXME
   private static Scanner tableFile;
-  private static double[][] lookupTable;
+  private static String[][] lookupTable;
 
   private static boolean trackingEnabled;
   private static double initOffset = 0;
   private static int visionStableCounts;
 
   public static String kCameraID;
-  public static double kTurretDeadband;
+  public static String kTablePath;
+  public static int kStableRange;
+  public static int kStableCounts;
+  public static int kTableMin;
+  public static int kTableMax;
+  public static int kTableRes;
+  public static int kHoodIndex;
+  public static int kShooterIndex;
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -60,7 +66,14 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     TARGET_WIDTH_IN = Constants.VisionConstants.TARGET_WIDTH_IN;
     TARGET_HEIGHT = Constants.VisionConstants.TARGET_HEIGHT;
     kCameraID = Constants.VisionConstants.kCameraID;
-    kTurretDeadband = Constants.VisionConstants.kTurretDeadband;
+    kTablePath = Constants.VisionConstants.kTablePath;
+    kStableRange = Constants.VisionConstants.kStableRange;
+    kStableCounts = Constants.VisionConstants.kStableCounts;
+    kTableMin = Constants.VisionConstants.kTableMin;
+    kTableMax = Constants.VisionConstants.kTableMax;
+    kTableRes = Constants.VisionConstants.kTableRes;
+    kHoodIndex = Constants.VisionConstants.kHoodIndex;
+    kShooterIndex = Constants.VisionConstants.kShooterIndex;
 
     deadeye = RobotContainer.DEADEYE;
     turret = RobotContainer.TURRET;
@@ -77,6 +90,12 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     telService.register(this);
     telService.start();
     shooterCamera.setEnabled(true);
+
+    try {
+      readTable();
+    } catch (Exception exception) {
+      logger.error("Could not read table at {}", kTablePath);
+    }
   }
 
   public void configureProcess() {
@@ -149,13 +168,13 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public boolean isStable() {
     double currentOffset = getPixOffset();
-    if (Math.abs(initOffset - currentOffset) > Constants.VisionConstants.kStableRange) {
+    if (Math.abs(initOffset - currentOffset) > kStableRange) {
       visionStableCounts = 0;
       initOffset = currentOffset;
     } else {
       visionStableCounts++;
     }
-    if (visionStableCounts >= Constants.VisionConstants.kStableCounts) {
+    if (visionStableCounts >= kStableCounts) {
       visionStableCounts = 0;
       return true;
     } else {
@@ -163,21 +182,33 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     }
   }
 
+  public int getBestTableIndex() {
+    double width = getCorrectedWidth();
+    if (width > kTableMax || width < kTableMin) {
+      logger.warn("Error retrieving table entry for {}", width);
+      return 0;
+    } else return (int) (Math.round(width / kTableRes));
+  }
+
+  public double getHoodSetpoint(int lookupIndex) {
+    logger.info("Hood setpoint = {}", lookupTable[lookupIndex][kHoodIndex]);
+    return Double.parseDouble(lookupTable[lookupIndex][kHoodIndex]);
+  }
+
+  public double getShooterSetpoint(int lookupIndex) {
+    logger.info("Shooter setpoint = {}", lookupTable[lookupIndex][kShooterIndex]);
+    return Double.parseDouble(lookupTable[lookupIndex][kShooterIndex]);
+  }
+
   private void readTable() throws Exception {
-    CSVReader csvReader = new CSVReader(new FileReader(new File(path)));
+    CSVReader csvReader = new CSVReader(new FileReader(new File(kTablePath)));
 
     List<String[]> list = csvReader.readAll();
 
     // Convert to 2D array
     String[][] strArr = new String[list.size()][];
-    strArr = list.toArray(strArr);
-    lookupTable = new double[strArr.length][strArr[0].length];
-
-    for (int j = 0; j < strArr.length; j++) {
-      for (int i = 0; i < strArr[0].length; i++) {
-        lookupTable[j][i] = Double.parseDouble(strArr[j][i]);
-      }
-    }
+    lookupTable = list.toArray(strArr);
+    lookupTable = new String[strArr.length][strArr[0].length];
   }
 
   @NotNull

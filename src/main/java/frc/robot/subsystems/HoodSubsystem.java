@@ -92,6 +92,10 @@ public class HoodSubsystem extends SubsystemBase {
     hood.set(ControlMode.MotionMagic, position);
   }
 
+  public int getHoodPosition() {
+    return hood.getSelectedSensorPosition();
+  }
+
   public void hoodOpenLoop(double output) {
     hood.set(ControlMode.PercentOutput, output);
   }

@@ -105,7 +105,7 @@ public final class Constants {
     public static double kMinStringPotZero = 1000;
 
     public static final int kCloseEnoughTurret = 40;
-    public static final int kMaxShootSpeed = 5000;
+    public static final int kMaxShootError = 5000;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
   }
@@ -131,12 +131,17 @@ public final class Constants {
     public static final double TARGET_WIDTH_IN = 34.65;
     public static final double CAMERA_HEIGHT = 22;
     public static final double TARGET_HEIGHT = 98.25;
-
     public static String kCameraID = "A0";
-    public static final double kTurretDeadband = 3;
 
     public static final int kStableRange = 20;
     public static final int kStableCounts = 5;
+
+    public static final String kTablePath = "";
+    public static final int kTableMin = 48; // FIXME
+    public static final int kTableMax = 215; // FIXME
+    public static final int kTableRes = 3; // FIXME
+    public static final int kShooterIndex = 2; // FIXME
+    public static final int kHoodIndex = 3; // FIXME
   }
 
   public static class CompConstants {
@@ -146,7 +151,7 @@ public final class Constants {
     public static final double kMinStringPotZero = 13;
 
     // Hood
-    public static final int kHoodZeroTicks = 3475; // 3236
+    public static final int kHoodZeroTicks = 3774; // 3475
 
     // Camera
     public static final String kCameraId = "A0";
