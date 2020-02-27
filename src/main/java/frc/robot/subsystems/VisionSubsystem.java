@@ -23,6 +23,8 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static final String RANGE = "RANGE";
   private static final String BEARING = "BEARING";
   private static final String X_OFFSET = "X_OFFSET";
+  private static final String RAW_WIDTH = "RAW_WIDTH";
+  private static final String CORRECTED_WIDTH = "CORRECTED_WIDTH";
 
   public static double VERTICAL_FOV;
   public static double HORIZ_FOV;
@@ -37,7 +39,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static Camera<MinAreaRectTargetData> shooterCamera;
   private static MinAreaRectTargetData targetData;
 
-  private static String path = "table.xlsx"; // FIXME
+  private static String path = "table.csv"; // FIXME
   private static Scanner tableFile;
   private static double[][] lookupTable;
 
@@ -121,7 +123,9 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public double getRawWidth() {
-    return getTargetData().getBottomRightX() - getTargetData().getTopRightY();
+    if (getTargetData().getValid()) {
+      return Math.max(getTargetData().getHeight(), getTargetData().getWidth());
+    } else return -1;
   }
 
   public double getCorrectedWidth() {
@@ -130,7 +134,9 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
             - (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
                 + (270 - turret.getTurretAngle())
                 + getOffsetAngle());
-    return getRawWidth() / Math.sin(Math.toRadians(fieldOrientedOffset));
+    if (getTargetData().getValid()) {
+      return getRawWidth() / Math.sin(Math.toRadians(fieldOrientedOffset));
+    } else return -1;
   }
 
   public boolean isTargetValid() {
@@ -158,7 +164,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   private void readTable() throws Exception {
-    CSVReader csvReader = new CSVReader(new FileReader(new File("table.csv")));
+    CSVReader csvReader = new CSVReader(new FileReader(new File(path)));
 
     List<String[]> list = csvReader.readAll();
 
@@ -191,7 +197,9 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     return Set.of(
         new Measure(RANGE, "Raw Range"),
         new Measure(BEARING, "Bearing"),
-        new Measure(X_OFFSET, "Pixel offset"));
+        new Measure(X_OFFSET, "Pixel offset"),
+        new Measure(RAW_WIDTH, "Raw Pixel Width"),
+        new Measure(CORRECTED_WIDTH, "Corrected Pixel Width"));
   }
 
   @NotNull
@@ -215,6 +223,10 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
         return this::getOffsetAngle;
       case X_OFFSET:
         return this::getPixOffset;
+      case RAW_WIDTH:
+        return this::getRawWidth;
+      case CORRECTED_WIDTH:
+        return this::getCorrectedWidth;
       default:
         return () -> 2767;
     }
