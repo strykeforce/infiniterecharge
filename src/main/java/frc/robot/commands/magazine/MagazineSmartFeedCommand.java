@@ -13,7 +13,6 @@ public class MagazineSmartFeedCommand extends CommandBase {
   private MagazineSubsystem MAGAZINE = RobotContainer.MAGAZINE;
   private IntakeSubsystem INTAKE = RobotContainer.INTAKE;
   private TurretSubsystem TURRET = RobotContainer.TURRET;
-  public Logger logger = LoggerFactory.getLogger("Smart Feed Command");
   private FeedStates state;
   private double timerStart;
 
@@ -36,7 +35,6 @@ public class MagazineSmartFeedCommand extends CommandBase {
         }
         break;
       case START_MAG:
-        logger.info("Starting magazine");
         MAGAZINE.runTalon(Constants.MagazineConstants.kOpenloopShoot);
         timerStart = System.currentTimeMillis();
         state = FeedStates.WAIT;
@@ -48,13 +46,11 @@ public class MagazineSmartFeedCommand extends CommandBase {
         }
         break;
       case START_INTAKE:
-        logger.info("Starting intake");
         INTAKE.runIntake(Constants.IntakeConstants.kIntakeSpeed);
         state = FeedStates.RUNNING;
         break;
       case RUNNING:
         if (isMoving()) {
-          logger.info("Restarting load sequence");
           INTAKE.runIntake(0);
           MAGAZINE.runTalon(0);
           state = FeedStates.STOPPED;
