@@ -91,11 +91,11 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     telService.start();
     shooterCamera.setEnabled(true);
 
-    try {
+    /* try {
       readTable();
     } catch (Exception exception) {
       logger.error("Could not read table at {}", kTablePath);
-    }
+    }*/
   }
 
   public void configureProcess() {
@@ -135,7 +135,8 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public double getDistance() {
-    double enclosedAngle = HORIZ_FOV * getTargetData().getWidth() / HORIZ_RES;
+    double enclosedAngle =
+        HORIZ_FOV * Math.max(getTargetData().getWidth(), getTargetData().getHeight()) / HORIZ_RES;
     if (getTargetData().getValid())
       return TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
     return -1;
