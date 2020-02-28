@@ -6,16 +6,17 @@ import frc.robot.Constants.MagazineConstants;
 import frc.robot.commands.magazine.RunMagazineCommand;
 import frc.robot.commands.magazine.WaitForMagazineBeamCommand;
 import frc.robot.commands.shooter.ArmShooterCommand;
-import frc.robot.commands.shooter.SafeShooterReverseCommand;
-import frc.robot.commands.turret.ShooterTrackingCommand;
+import frc.robot.commands.turret.TurretTrackingCommand;
+import frc.robot.commands.vision.SetLightStateCommand;
 
 public class ArmSequenceCommand extends SequentialCommandGroup {
   public ArmSequenceCommand() {
     addCommands(
         // put in track start
+        new SetLightStateCommand(true),
         new RunMagazineCommand(MagazineConstants.kOpenloopArmReverse),
-        new SafeShooterReverseCommand(),
+        // new SafeShooterReverseCommand(),
         new WaitForMagazineBeamCommand(),
-        new ParallelCommandGroup(new ShooterTrackingCommand(), new ArmShooterCommand()));
+        new ParallelCommandGroup(new TurretTrackingCommand(), new ArmShooterCommand()));
   }
 }

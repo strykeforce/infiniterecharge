@@ -1,7 +1,7 @@
 {
     "fileName": "deadeye.json",
     "name": "StrykeForce-Deadeye",
-    "version": "20.5.0",
+    "version": "20.7.0",
     "uuid": "a8620993-3ffc-425e-95d9-a5e73eabef40",
     "mavenUrls": [
         "http://maven.strykeforce.org/repo"
@@ -11,7 +11,7 @@
         {
             "groupId": "org.strykeforce",
             "artifactId": "deadeye",
-            "version": "20.5.0"
+            "version": "20.7.0"
         }
     ],
     "jniDependencies": [],

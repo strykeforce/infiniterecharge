@@ -8,7 +8,6 @@ import frc.robot.RobotContainer;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +20,11 @@ import org.strykeforce.thirdcoast.telemetry.item.Measure;
 
 public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static final String RANGE = "RANGE";
+  private static final String GROUND_RANGE = "GROUND_RANGE";
   private static final String BEARING = "BEARING";
   private static final String X_OFFSET = "X_OFFSET";
+  private static final String RAW_WIDTH = "RAW_WIDTH";
+  private static final String CORRECTED_WIDTH = "CORRECTED_WIDTH";
 
   public static double VERTICAL_FOV;
   public static double HORIZ_FOV;
@@ -37,16 +39,21 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static Camera<MinAreaRectTargetData> shooterCamera;
   private static MinAreaRectTargetData targetData;
 
-  private static String path = "table.xlsx"; // FIXME
-  private static Scanner tableFile;
-  private static double[][] lookupTable;
+  private static String[][] lookupTable;
 
   private static boolean trackingEnabled;
   private static double initOffset = 0;
   private static int visionStableCounts;
 
   public static String kCameraID;
-  public static double kTurretDeadband;
+  public static String kTablePath;
+  public static int kStableRange;
+  public static int kStableCounts;
+  public static int kTableMin;
+  public static int kTableMax;
+  public static int kTableRes;
+  public static int kHoodIndex;
+  public static int kShooterIndex;
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -58,7 +65,14 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     TARGET_WIDTH_IN = Constants.VisionConstants.TARGET_WIDTH_IN;
     TARGET_HEIGHT = Constants.VisionConstants.TARGET_HEIGHT;
     kCameraID = Constants.VisionConstants.kCameraID;
-    kTurretDeadband = Constants.VisionConstants.kTurretDeadband;
+    kTablePath = Constants.VisionConstants.kTablePath;
+    kStableRange = Constants.VisionConstants.kStableRange;
+    kStableCounts = Constants.VisionConstants.kStableCounts;
+    kTableMin = Constants.VisionConstants.kTableMin;
+    kTableMax = Constants.VisionConstants.kTableMax;
+    kTableRes = Constants.VisionConstants.kTableRes;
+    kHoodIndex = Constants.VisionConstants.kHoodIndex;
+    kShooterIndex = Constants.VisionConstants.kShooterIndex;
 
     deadeye = RobotContainer.DEADEYE;
     turret = RobotContainer.TURRET;
@@ -66,7 +80,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
     shooterCamera = deadeye.getCamera(kCameraID);
 
-    if (shooterCamera.getEnabled()) shooterCamera.setEnabled(false);
+    shooterCamera.setLightEnabled(false);
 
     configureProcess();
 
@@ -75,6 +89,12 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     telService.register(this);
     telService.start();
     shooterCamera.setEnabled(true);
+
+    try {
+      readTable();
+    } catch (Exception exception) {
+      logger.error("Could not read table at {}", kTablePath);
+    }
   }
 
   public void configureProcess() {
@@ -110,29 +130,27 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public double getPixOffset() {
-    MinAreaRectTargetData targetData = getTargetData();
-    return targetData.getCenterOffsetX();
+    return getTargetData().getCenterOffsetX();
   }
 
   public double getDistance() {
-    MinAreaRectTargetData targetData = getTargetData();
-    double enclosedAngle = HORIZ_FOV * targetData.getWidth() / HORIZ_RES;
-    if (targetData.getValid())
+    double enclosedAngle =
+        HORIZ_FOV * Math.max(getTargetData().getWidth(), getTargetData().getHeight()) / HORIZ_RES;
+    if (getTargetData().getValid())
       return TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
     return -1;
-    // angle from field square to center of target
-    // double fieldOrientedOffset = 90 - (Math.IEEEremainder(drive.getGyro().getAngle(), 360) +
-    // (270 - shooter.getTurretAngle()) + getOffsetAngle());
+  }
 
-    // angle from field square to edge of target
-    // double gamma = fieldOrientedOffset + enclosedAngle / 2;
-    // return TARGET_WIDTH_IN / 2 * (Math.sin(Math.toRadians(gamma)) /
-    // Math.tan(Math.toRadians(enclosedAngle / 2)) + Math.cos(Math.toRadians(gamma)));
+  public double getGroundDistance() {
+    if (getTargetData().getValid())
+      return Math.sqrt(Math.pow(getDistance(), 2) - Math.pow(TARGET_HEIGHT - CAMERA_HEIGHT, 2));
+    else return -1;
   }
 
   public double getRawWidth() {
-    MinAreaRectTargetData targetData = getTargetData();
-    return targetData.getBottomRightX() - targetData.getTopRightY();
+    if (getTargetData().getValid()) {
+      return Math.max(getTargetData().getHeight(), getTargetData().getWidth());
+    } else return -1;
   }
 
   public double getCorrectedWidth() {
@@ -141,22 +159,28 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
             - (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
                 + (270 - turret.getTurretAngle())
                 + getOffsetAngle());
-    return getRawWidth() / Math.sin(Math.toRadians(fieldOrientedOffset));
+    if (getTargetData().getValid()) {
+      return getRawWidth() / Math.sin(Math.toRadians(fieldOrientedOffset));
+    } else return -1;
   }
 
-  public void setCameraEnabled(boolean enabled) {
-    shooterCamera.setEnabled(enabled);
+  public boolean isTargetValid() {
+    return getTargetData().getValid();
+  }
+
+  public void setLightsEnabled(boolean enabled) {
+    shooterCamera.setLightEnabled(enabled);
   }
 
   public boolean isStable() {
     double currentOffset = getPixOffset();
-    if (Math.abs(initOffset - currentOffset) > Constants.VisionConstants.kStableRange) {
+    if (Math.abs(initOffset - currentOffset) > kStableRange) {
       visionStableCounts = 0;
       initOffset = currentOffset;
     } else {
       visionStableCounts++;
     }
-    if (visionStableCounts >= Constants.VisionConstants.kStableCounts) {
+    if (visionStableCounts >= kStableCounts) {
       visionStableCounts = 0;
       return true;
     } else {
@@ -164,21 +188,49 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     }
   }
 
+  public int getBestTableIndex() {
+    double distance = getGroundDistance();
+    if (distance > kTableMax) {
+      logger.warn(
+          "Error retrieving table entry for {}, using MAX distance in table {}",
+          distance,
+          kTableMax);
+      return lookupTable.length;
+    }
+    if (distance < kTableMin) {
+      logger.warn(
+          "Error retrieving table entry for {}, using MIN distance in table {}",
+          distance,
+          kTableMin);
+      return 1;
+    } else {
+      int index = (int) (Math.round(distance / kTableRes)) + 1 - kTableMin;
+      logger.info("Selected table row = {}", index);
+      return index;
+    }
+  }
+
+  public double getHoodSetpoint(int lookupIndex) {
+    logger.info("Hood setpoint = {}", lookupTable[lookupIndex][kHoodIndex]);
+    return Double.parseDouble(lookupTable[lookupIndex][kHoodIndex]);
+  }
+
+  public double getShooterSetpoint(int lookupIndex) {
+    logger.info("Shooter setpoint = {}", lookupTable[lookupIndex][kShooterIndex]);
+    return Double.parseDouble(lookupTable[lookupIndex][kShooterIndex]);
+  }
+
   private void readTable() throws Exception {
-    CSVReader csvReader = new CSVReader(new FileReader(new File("table.csv")));
+    CSVReader csvReader = new CSVReader(new FileReader(new File(kTablePath)));
 
     List<String[]> list = csvReader.readAll();
 
     // Convert to 2D array
     String[][] strArr = new String[list.size()][];
-    strArr = list.toArray(strArr);
-    lookupTable = new double[strArr.length][strArr[0].length];
+    lookupTable = list.toArray(strArr);
 
-    for (int j = 0; j < strArr.length; j++) {
-      for (int i = 0; i < strArr[0].length; i++) {
-        lookupTable[j][i] = Double.parseDouble(strArr[j][i]);
-      }
-    }
+    logger.info("First cell = {}" + lookupTable[1][0]);
+    logger.info("Second cell = {}" + lookupTable[2][0]);
   }
 
   @NotNull
@@ -197,8 +249,11 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   public Set<Measure> getMeasures() {
     return Set.of(
         new Measure(RANGE, "Raw Range"),
+        new Measure(GROUND_RANGE, "Ground Range"),
         new Measure(BEARING, "Bearing"),
-        new Measure(X_OFFSET, "Pixel offset"));
+        new Measure(X_OFFSET, "Pixel offset"),
+        new Measure(RAW_WIDTH, "Raw Pixel Width"),
+        new Measure(CORRECTED_WIDTH, "Corrected Pixel Width"));
   }
 
   @NotNull
@@ -218,10 +273,16 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     switch (measure.getName()) {
       case RANGE:
         return this::getDistance;
+      case GROUND_RANGE:
+        return this::getGroundDistance;
       case BEARING:
         return this::getOffsetAngle;
       case X_OFFSET:
         return this::getPixOffset;
+      case RAW_WIDTH:
+        return this::getRawWidth;
+      case CORRECTED_WIDTH:
+        return this::getCorrectedWidth;
       default:
         return () -> 2767;
     }

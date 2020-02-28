@@ -8,15 +8,15 @@ import frc.robot.commands.WaitCommand;
 import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.magazine.RunMagazineCommand;
 import frc.robot.commands.magazine.WaitForMagazineBeamCommand;
-import frc.robot.commands.shooter.RunShooterCommand;
+import frc.robot.commands.shooter.ShooterOpenLoopCommand;
 
 public class OpenLoopShootCommand extends SequentialCommandGroup {
   public OpenLoopShootCommand() {
     addCommands(
         new RunMagazineCommand(MagazineConstants.kOpenloopArmReverse),
-        new RunShooterCommand(ShooterConstants.kOpenloopArmReverse),
+        new ShooterOpenLoopCommand(ShooterConstants.kOpenloopArmReverse),
         new WaitForMagazineBeamCommand(),
-        new RunShooterCommand(ShooterConstants.kOpenloopShoot),
+        new ShooterOpenLoopCommand(ShooterConstants.kOpenloopShoot),
         new WaitCommand(ShooterConstants.kArmTimeToAccelerate),
         new RunMagazineCommand(MagazineConstants.kOpenloopShoot),
         new WaitCommand(IntakeConstants.kShootDelayIntake),
