@@ -132,8 +132,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public boolean turretAtTarget() {
     double currentTurretPosition = turret.getSelectedSensorPosition();
-    if (Math.abs(targetTurretPosition - currentTurretPosition)
-        > Constants.TurretConstants.kCloseEnoughTurret) {
+    if (!Constants.isCompBot
+        || Math.abs(targetTurretPosition - currentTurretPosition)
+            > Constants.TurretConstants.kCloseEnoughTurret) {
       turretStableCounts = 0;
     } else {
       turretStableCounts++;
@@ -148,6 +149,10 @@ public class TurretSubsystem extends SubsystemBase {
 
   public double getTurretAngle() {
     return turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
+  }
+
+  public int getTurretError() {
+    return turret.getClosedLoopError();
   }
 
   public boolean turretInRange(int targetCounts) {

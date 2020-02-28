@@ -7,12 +7,12 @@ import frc.robot.subsystems.VisionSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AimShooterCommand extends CommandBase {
+public class TurretAimCommand extends CommandBase {
   private VisionSubsystem VISION = RobotContainer.VISION;
   private TurretSubsystem TURRET = RobotContainer.TURRET;
   public Logger logger = LoggerFactory.getLogger("Aim Shooter Command");
 
-  public AimShooterCommand() {
+  public TurretAimCommand() {
     addRequirements(TURRET);
     addRequirements(VISION);
   }
