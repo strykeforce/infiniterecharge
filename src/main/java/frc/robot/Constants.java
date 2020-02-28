@@ -66,7 +66,7 @@ public final class Constants {
 
     // Command Specific
     public static final long kTimeFullIntake = 1000;
-    public static final long kShootDelayIntake = 250;
+    public static final long kShootDelayIntake = 0;
     public static final long kReverseTime = 500;
     public static final double kStallCount = 5;
   }

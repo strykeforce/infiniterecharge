@@ -190,9 +190,19 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public int getBestTableIndex() {
     double distance = getGroundDistance();
-    if (distance > kTableMax || distance < kTableMin) {
-      logger.warn("Error retrieving table entry for {}", distance);
-      return 0;
+    if (distance > kTableMax) {
+      logger.warn(
+          "Error retrieving table entry for {}, using MAX distance in table {}",
+          distance,
+          kTableMax);
+      return lookupTable.length;
+    }
+    if (distance < kTableMin) {
+      logger.warn(
+          "Error retrieving table entry for {}, using MIN distance in table {}",
+          distance,
+          kTableMin);
+      return 1;
     } else {
       int index = (int) (Math.round(distance / kTableRes)) + 1 - kTableMin;
       logger.info("Selected table row = {}", index);
