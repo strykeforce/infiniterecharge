@@ -8,7 +8,6 @@ import frc.robot.RobotContainer;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +20,7 @@ import org.strykeforce.thirdcoast.telemetry.item.Measure;
 
 public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static final String RANGE = "RANGE";
+  private static final String GROUND_RANGE = "GROUND_RANGE";
   private static final String BEARING = "BEARING";
   private static final String X_OFFSET = "X_OFFSET";
   private static final String RAW_WIDTH = "RAW_WIDTH";
@@ -39,7 +39,6 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static Camera<MinAreaRectTargetData> shooterCamera;
   private static MinAreaRectTargetData targetData;
 
-  private static Scanner tableFile;
   private static String[][] lookupTable;
 
   private static boolean trackingEnabled;
@@ -91,11 +90,11 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     telService.start();
     shooterCamera.setEnabled(true);
 
-    /* try {
+    try {
       readTable();
     } catch (Exception exception) {
       logger.error("Could not read table at {}", kTablePath);
-    }*/
+    }
   }
 
   public void configureProcess() {
@@ -142,6 +141,12 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     return -1;
   }
 
+  public double getGroundDistance() {
+    if (getTargetData().getValid())
+      return Math.sqrt(Math.pow(getDistance(), 2) - Math.pow(TARGET_HEIGHT - CAMERA_HEIGHT, 2));
+    else return -1;
+  }
+
   public double getRawWidth() {
     if (getTargetData().getValid()) {
       return Math.max(getTargetData().getHeight(), getTargetData().getWidth());
@@ -184,11 +189,15 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public int getBestTableIndex() {
-    double width = getCorrectedWidth();
-    if (width > kTableMax || width < kTableMin) {
-      logger.warn("Error retrieving table entry for {}", width);
+    double distance = getGroundDistance();
+    if (distance > kTableMax || distance < kTableMin) {
+      logger.warn("Error retrieving table entry for {}", distance);
       return 0;
-    } else return (int) (Math.round(width / kTableRes));
+    } else {
+      int index = (int) (Math.round(distance / kTableRes)) + 1 - kTableMin;
+      logger.info("Selected table row = {}", index);
+      return index;
+    }
   }
 
   public double getHoodSetpoint(int lookupIndex) {
@@ -209,7 +218,9 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     // Convert to 2D array
     String[][] strArr = new String[list.size()][];
     lookupTable = list.toArray(strArr);
-    lookupTable = new String[strArr.length][strArr[0].length];
+
+    logger.info("First cell = {}" + lookupTable[1][0]);
+    logger.info("Second cell = {}" + lookupTable[2][0]);
   }
 
   @NotNull
@@ -228,6 +239,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   public Set<Measure> getMeasures() {
     return Set.of(
         new Measure(RANGE, "Raw Range"),
+        new Measure(GROUND_RANGE, "Ground Range"),
         new Measure(BEARING, "Bearing"),
         new Measure(X_OFFSET, "Pixel offset"),
         new Measure(RAW_WIDTH, "Raw Pixel Width"),
@@ -251,6 +263,8 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     switch (measure.getName()) {
       case RANGE:
         return this::getDistance;
+      case GROUND_RANGE:
+        return this::getGroundDistance;
       case BEARING:
         return this::getOffsetAngle;
       case X_OFFSET:

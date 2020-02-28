@@ -114,7 +114,7 @@ public final class Constants {
     // Subsystem Specific
     public static final double HOOD_TICKS_PER_DEGREE = 572;
     public static final int kCloseEnoughHood = 100;
-    public static int kHoodZeroTicks = 1347;
+    public static int kHoodZeroTicks; // gut check: 149
     public static final int kForwardSoftLimit = 9000; // 10000
     public static final int kReverseSoftLimit = 0; // 0
     public static final int kOffsetZeroTicks = 1820;
@@ -126,22 +126,22 @@ public final class Constants {
 
   public static final class VisionConstants {
     public static final double VERTICAL_FOV = 48.8;
-    public static final double HORIZ_FOV = 55.4; // 50.8 //146
+    public static final double HORIZ_FOV = 57.999; // 50.8 //146
     public static final double HORIZ_RES = 640; // 1280
     public static final double TARGET_WIDTH_IN = 39.5; // 34.6
-    public static final double CAMERA_HEIGHT = 22;
-    public static final double TARGET_HEIGHT = 98.25;
+    public static final double CAMERA_HEIGHT = 20.75;
+    public static final double TARGET_HEIGHT = 98.5;
     public static String kCameraID = "A0";
 
     public static final int kStableRange = 20;
     public static final int kStableCounts = 5;
 
-    public static final String kTablePath = "Lookup_Table.csv";
-    public static final int kTableMin = 48; // FIXME
-    public static final int kTableMax = 215; // FIXME
-    public static final int kTableRes = 3; // FIXME
-    public static final int kShooterIndex = 2; // FIXME
-    public static final int kHoodIndex = 3; // FIXME
+    public static final String kTablePath = "/home/lvuser/deploy/Lookup_Table.csv";
+    public static final int kTableMin = 96;
+    public static final int kTableMax = 360;
+    public static final int kTableRes = 1;
+    public static final int kShooterIndex = 2;
+    public static final int kHoodIndex = 3;
   }
 
   public static class CompConstants {
@@ -151,7 +151,7 @@ public final class Constants {
     public static final double kMinStringPotZero = 13;
 
     // Hood
-    public static final int kHoodZeroTicks = 3774; // 3475
+    public static final int kHoodZeroTicks = 2008; // gut check: 162
 
     // Camera
     public static final String kCameraId = "A0";

@@ -20,9 +20,8 @@ public class HoodAimCommand extends CommandBase {
   @Override
   public void initialize() {
     VISION.setTrackingEnabled(true);
-    int sam = (int) VISION.getHoodSetpoint(VISION.getBestTableIndex());
     if (VISION.isTargetValid()) {
-      //    HOOD.setHoodPosition((int) VISION.getHoodSetpoint(VISION.getBestTableIndex()));
+      HOOD.setHoodPosition((int) VISION.getHoodSetpoint(VISION.getBestTableIndex()));
     }
   }
 

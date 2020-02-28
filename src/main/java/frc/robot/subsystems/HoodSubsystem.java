@@ -90,6 +90,7 @@ public class HoodSubsystem extends SubsystemBase {
 
   public void setHoodPosition(int position) {
     hood.set(ControlMode.MotionMagic, position);
+    targetHoodPosition = position;
   }
 
   public int getHoodPosition() {

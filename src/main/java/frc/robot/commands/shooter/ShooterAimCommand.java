@@ -20,9 +20,8 @@ public class ShooterAimCommand extends CommandBase {
   @Override
   public void initialize() {
     VISION.setTrackingEnabled(true);
-    int sam = (int) VISION.getShooterSetpoint(VISION.getBestTableIndex());
     if (VISION.isTargetValid()) {
-      //    SHOOTER.run((int) VISION.getShooterSetpoint(VISION.getBestTableIndex()));
+      SHOOTER.run((int) VISION.getShooterSetpoint(VISION.getBestTableIndex()));
     }
   }
 
