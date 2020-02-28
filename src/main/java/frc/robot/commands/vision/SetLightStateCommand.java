@@ -14,6 +14,6 @@ public class SetLightStateCommand extends InstantCommand {
 
   @Override
   public void initialize() {
-    VISION.setCameraEnabled(enabled);
+    VISION.setLightsEnabled(enabled);
   }
 }

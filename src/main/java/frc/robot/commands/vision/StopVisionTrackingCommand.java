@@ -10,6 +10,6 @@ public class StopVisionTrackingCommand extends InstantCommand {
   @Override
   public void initialize() {
     VISION.setTrackingEnabled(false);
-    VISION.setCameraEnabled(false);
+    VISION.setLightsEnabled(false);
   }
 }

@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
     RobotContainer.DRIVE.zeroGyro();
     RobotContainer.HOOD.zeroHood();
     RobotContainer.TURRET.zeroTurret();
-    RobotContainer.VISION.setCameraEnabled(false);
+    RobotContainer.VISION.setLightsEnabled(false);
   }
 
   /**

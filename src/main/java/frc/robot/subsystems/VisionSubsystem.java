@@ -80,7 +80,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
     shooterCamera = deadeye.getCamera(kCameraID);
 
-    if (shooterCamera.getEnabled()) shooterCamera.setEnabled(false);
+    shooterCamera.setLightEnabled(false);
 
     configureProcess();
 
@@ -168,8 +168,8 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     return getTargetData().getValid();
   }
 
-  public void setCameraEnabled(boolean enabled) {
-    shooterCamera.setEnabled(enabled);
+  public void setLightsEnabled(boolean enabled) {
+    shooterCamera.setLightEnabled(enabled);
   }
 
   public boolean isStable() {
