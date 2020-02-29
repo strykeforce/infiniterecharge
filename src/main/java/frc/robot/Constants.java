@@ -93,6 +93,7 @@ public final class Constants {
     // Command Specific
     public static final long kArmTimeToAccelerate = 1500;
     public static final int kArmSpeed = 10000;
+    public static final int kBatterShotVelocity = 10000;
   }
 
   public static final class TurretConstants {
@@ -109,6 +110,7 @@ public final class Constants {
     public static final double kSweepRange = 20;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
+    public static final int kBatterShotTicks = 1; // FIXME
   }
 
   public static final class HoodConstants {
@@ -119,6 +121,7 @@ public final class Constants {
     public static final int kForwardSoftLimit = 9000; // 10000
     public static final int kReverseSoftLimit = 0; // 0
     public static final int kOffsetZeroTicks = 1820;
+    public static final int kBatterShotTicks = 0; //FIXME
   }
 
   public static final class DriveConstants {
