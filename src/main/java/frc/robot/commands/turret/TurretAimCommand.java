@@ -1,5 +1,6 @@
 package frc.robot.commands.turret;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.TurretSubsystem;
@@ -28,6 +29,7 @@ public class TurretAimCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
+    SmartDashboard.putBoolean("Match/Locked On", true);
     return TURRET.turretAtTarget() && VISION.isStable();
   }
 }
