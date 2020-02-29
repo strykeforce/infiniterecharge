@@ -34,6 +34,10 @@ public class Robot extends TimedRobot {
     RobotContainer.DRIVE.zeroGyro();
     RobotContainer.HOOD.zeroHood();
     RobotContainer.TURRET.zeroTurret();
+    RobotContainer.DRIVE.calculateTrajctory(
+        Constants.AutoConstants.START_PATH,
+        Constants.AutoConstants.END_PATH,
+        Constants.AutoConstants.INTERNAL_POINTS);
   }
 
   /**

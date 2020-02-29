@@ -137,26 +137,17 @@ public final class Constants {
     public static String kCameraID = "A0";
     public static final double kTurretDeadband = 3;
 
-    public static final class AutoConstants {
-      public static final Pose2d START_PATH = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
-      public static final Pose2d END_PATH = new Pose2d(4.0, 0.0, new Rotation2d(0.0));
-      public static final List<Translation2d> INTERNAL_POINTS = List.of();
-    }
-
-    public static class CompConstants {}
-
     public static final int kStableRange = 20;
     public static final int kStableCounts = 5;
   }
 
   public static final class AutoConstants {
-    public static final Pose2d START_PATH = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
-    public static final Pose2d END_PATH = new Pose2d(4.0, 0.0, new Rotation2d(0.0));
-    public static final List<Translation2d> INTERNAL_POINTS = List.of();
+    public static final Pose2d START_PATH = new Pose2d(0.0, 0.0, new Rotation2d(0.0)); // FIXME
+    public static final Pose2d END_PATH = new Pose2d(4.0, 0.0, new Rotation2d(0.0)); // FIXME
+    public static final List<Translation2d> INTERNAL_POINTS = List.of(); // FIXME
   }
 
   public static class CompConstants {
-
     // Turret
     public static final int kTurretZeroTicks = 1486;
     public static final double kMaxStringPotZero = 95;

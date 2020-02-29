@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
@@ -76,6 +77,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void zeroAzimuths() {
     swerve.zeroAzimuthEncoders();
+  }
+
+  public void setDriveMode(DriveMode mode) {
+    swerve.setDriveMode(mode);
   }
 
   private Wheel[] getWheels() {
@@ -160,29 +165,18 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // Pathfinder Stuff
-  public void calculateTrajctory() {
-    List<Translation2d> path = Constants.AutoConstants.INTERNAL_POINTS;
+  public void calculateTrajctory(Pose2d startPos, Pose2d endPos, List<Translation2d> path) {
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(MAX_VELOCITY_MPS, MAX_ACCELERATION);
-
     trajectoryGenerated =
-        TrajectoryGenerator.generateTrajectory(
-            Constants.AutoConstants.START_PATH,
-            path,
-            Constants.AutoConstants.END_PATH,
-            trajectoryConfig);
+        TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
   }
 
-  // Manual Methods
-
   public void startPath() {
-    // follower.setTrajectory(trajectoryGenerated);
     talonPosition = Math.abs(swerve.getWheels()[0].getDriveTalon().getSelectedSensorPosition());
     lastPosition = Constants.AutoConstants.START_PATH.getTranslation();
     estimatedDistanceTraveled = 0;
     desiredDistance = 0;
     error = 0.0;
-    // follower.configureEncoder(talonPosition, TICKS_PER_REV, WHEEL_DIAMETER);
-    // follower.configurePIDVA(1.0, 0.0, 0.0, 1 / MAX_VELOCITY, 0);
     swerve.setDriveMode(DriveMode.CLOSED_LOOP);
   }
 
@@ -196,9 +190,6 @@ public class DriveSubsystem extends SubsystemBase {
     System.out.println("Desired dist: " + desiredDistance + " Current dist: " + currentDistance);
     error = desiredDistance - currentDistance;
     double rawOutput = kP_PATH * error + kV_PATH * currentState.velocityMetersPerSecond;
-    // double rawOutput =
-    // follower.calculate(Math.abs(swerve.getWheels()[0].getDriveTalon().getSelectedSensorPosition()
-    // - talonPosition)); // Meters per second
     double output = (rawOutput * TICKS_PER_METER) / (MAX_VELOCITY * 10); // Ticks per 100ms
     double heading = currentState.poseMeters.getRotation().getRadians();
     double forward = Math.cos(heading) * output, strafe = Math.sin(heading) * output;
