@@ -149,8 +149,8 @@ public final class Constants {
   public static class CompConstants {
     // Turret
     public static final int kTurretZeroTicks = 1486;
-    public static final double kMaxStringPotZero = 95;
-    public static final double kMinStringPotZero = 13;
+    public static final double kMaxStringPotZero = 138;
+    public static final double kMinStringPotZero = 52;
 
     // Hood
     public static final int kHoodZeroTicks = 2008; // gut check: 162
