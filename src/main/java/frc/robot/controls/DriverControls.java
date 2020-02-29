@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.XLockCommand;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.auto.PathDriveCommand;
 import frc.robot.commands.hood.HoodOpenLoopCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.vision.StopVisionTrackingCommand;
@@ -29,6 +30,8 @@ public class DriverControls {
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenReleased(new HoodOpenLoopCommand(0));
 
     new JoystickButton(joystick, Trim.RIGHT_Y_NEG.id).whenPressed(new StopVisionTrackingCommand());
+
+    new JoystickButton(joystick, Button.HAMBURGER.id).whenPressed(new PathDriveCommand("TestPath"));
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {

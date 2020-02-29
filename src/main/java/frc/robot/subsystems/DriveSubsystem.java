@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
@@ -17,7 +18,13 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
+import net.consensys.cava.toml.Toml;
+import net.consensys.cava.toml.TomlArray;
+import net.consensys.cava.toml.TomlParseResult;
+import net.consensys.cava.toml.TomlTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.swerve.SwerveDrive;
@@ -51,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private Trajectory trajectoryGenerated;
-  private int talonPosition;
+  private int startEncoderPosition;
   private double estimatedDistanceTraveled;
   private Translation2d lastPosition;
   private double currentDistance;
@@ -165,28 +172,70 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // Pathfinder Stuff
-  public void calculateTrajctory(Pose2d startPos, Pose2d endPos, List<Translation2d> path) {
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(MAX_VELOCITY_MPS, MAX_ACCELERATION);
-    trajectoryGenerated =
-        TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
+  public Trajectory calculateTrajctory(String name) {
+    // Take name and parse
+    try {
+      TomlParseResult parseResult = Toml.parse(Paths.get("paths/" + name + ".toml"));
+
+      Pose2d startPos =
+          new Pose2d(
+              parseResult.getTable("start_pose").getDouble("x"),
+              parseResult.getTable("start_pose").getDouble("y"),
+              new Rotation2d(parseResult.getTable("start_pose").getDouble("angle")));
+      Pose2d endPos =
+          new Pose2d(
+              parseResult.getTable("end_pose").getDouble("x"),
+              parseResult.getTable("end_pose").getDouble("y"),
+              new Rotation2d(parseResult.getTable("end_pose").getDouble("angle")));
+      TomlArray internalPointsToml = parseResult.getArray("internalPoints");
+      List<Translation2d> path = List.of();
+
+      for (int i = 0; i < internalPointsToml.size(); i++) {
+        TomlTable pointToml = internalPointsToml.getTable(i);
+        Translation2d point = new Translation2d(pointToml.getDouble("x"), pointToml.getDouble("y"));
+        path.add(point);
+      }
+
+      TrajectoryConfig trajectoryConfig =
+          new TrajectoryConfig(
+              parseResult.getDouble("max_velocity"), parseResult.getDouble("max_acceleration"));
+      trajectoryConfig.setReversed(parseResult.getBoolean("is_reversed"));
+      trajectoryConfig.setStartVelocity(parseResult.getDouble("start_velocity"));
+      trajectoryConfig.setEndVelocity(parseResult.getDouble("end_velocity"));
+      trajectoryGenerated =
+          TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
+    } catch (IOException error) {
+      logger.error(error.toString());
+      logger.error("Path {} not found", name);
+    }
+    return trajectoryGenerated;
   }
 
-  public void startPath() {
-    talonPosition = Math.abs(swerve.getWheels()[0].getDriveTalon().getSelectedSensorPosition());
+  public void startPath(Trajectory trajectoryGenerated) {
+    this.trajectoryGenerated = trajectoryGenerated;
+    for (int i = 0; i < 4; i++) {
+      startEncoderPosition +=
+          Math.abs(swerve.getWheels()[0].getDriveTalon().getSelectedSensorPosition());
+    }
+    startEncoderPosition = startEncoderPosition / 4;
     lastPosition = Constants.AutoConstants.START_PATH.getTranslation();
     estimatedDistanceTraveled = 0;
     desiredDistance = 0;
     error = 0.0;
-    swerve.setDriveMode(DriveMode.CLOSED_LOOP);
+    // swerve.setDriveMode(DriveMode.CLOSED_LOOP);
   }
 
   public void updatePathOutput(double timeSeconds) {
     Trajectory.State currentState = trajectoryGenerated.sample(timeSeconds);
     estimatedDistanceTraveled += currentState.poseMeters.getTranslation().getDistance(lastPosition);
     desiredDistance = estimatedDistanceTraveled;
-    currentDistance =
-        Math.abs(swerve.getWheels()[0].getDriveTalon().getSelectedSensorPosition() - talonPosition)
-            / TICKS_PER_METER;
+    int currentEncoderPosition = 0;
+    for (int i = 0; i < 4; i++) {
+      currentEncoderPosition +=
+          Math.abs(swerve.getWheels()[0].getDriveTalon().getSelectedSensorPosition());
+    }
+    currentEncoderPosition = currentEncoderPosition / 4;
+    currentDistance = (currentEncoderPosition - startEncoderPosition) / TICKS_PER_METER;
     System.out.println("Desired dist: " + desiredDistance + " Current dist: " + currentDistance);
     error = desiredDistance - currentDistance;
     double rawOutput = kP_PATH * error + kV_PATH * currentState.velocityMetersPerSecond;

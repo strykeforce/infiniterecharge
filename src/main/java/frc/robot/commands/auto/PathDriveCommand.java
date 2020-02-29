@@ -1,6 +1,7 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
@@ -9,18 +10,20 @@ import org.strykeforce.thirdcoast.swerve.SwerveDrive.DriveMode;
 public class PathDriveCommand extends CommandBase {
 
   private DriveSubsystem driveSubsystem = RobotContainer.DRIVE;
+  private Trajectory trajectory;
   private double startTimeSeconds;
   private double timeElapsed;
   private boolean isFirstExecute;
 
-  public PathDriveCommand() {
+  public PathDriveCommand(String trajectoryName) {
     addRequirements(driveSubsystem);
+    trajectory = driveSubsystem.calculateTrajctory(trajectoryName);
   }
 
   @Override
   public void initialize() {
     isFirstExecute = true;
-    driveSubsystem.startPath();
+    driveSubsystem.startPath(trajectory);
     System.out.println("Starting pathing...");
   }
 
