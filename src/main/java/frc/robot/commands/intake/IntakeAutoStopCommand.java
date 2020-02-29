@@ -59,6 +59,7 @@ public class IntakeAutoStopCommand extends CommandBase {
           logger.debug("intake stalled");
           reverseTime = currentTime;
           intakeSubsystem.runIntake(IntakeConstants.kEjectSpeed);
+          SmartDashboard.putBoolean("Match/Intake Stalled", true);
         }
         break;
       case REVERSING:
@@ -66,6 +67,7 @@ public class IntakeAutoStopCommand extends CommandBase {
           state = IntakeStates.INTAKING;
           logger.debug("unjammed, running intake");
           intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
+          SmartDashboard.putBoolean("Match/Intake Stalled", false);
         }
         break;
     }

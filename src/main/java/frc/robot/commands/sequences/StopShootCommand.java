@@ -1,5 +1,6 @@
 package frc.robot.commands.sequences;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.hood.HoodPositionCommand;
@@ -18,5 +19,6 @@ public class StopShootCommand extends ParallelCommandGroup {
         new StopVisionTrackingCommand(),
         new TurretPositionCommand(Constants.TurretConstants.stopShootDegrees),
         new HoodPositionCommand(500));
+    SmartDashboard.putBoolean("Match/Magazine Full", false);
   }
 }
