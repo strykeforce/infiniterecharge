@@ -106,6 +106,7 @@ public final class Constants {
 
     public static final int kCloseEnoughTurret = 40;
     public static final int kMaxShootError = 5000;
+    public static final double kSweepRange = 20;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
   }

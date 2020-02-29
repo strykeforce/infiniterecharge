@@ -172,6 +172,10 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     shooterCamera.setLightEnabled(enabled);
   }
 
+  public void setCameraEnabled(boolean enabled) {
+    shooterCamera.setEnabled(enabled);
+  }
+
   public boolean isStable() {
     double currentOffset = getPixOffset();
     if (Math.abs(initOffset - currentOffset) > kStableRange) {
