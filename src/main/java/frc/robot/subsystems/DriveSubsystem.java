@@ -175,7 +175,8 @@ public class DriveSubsystem extends SubsystemBase {
   public Trajectory calculateTrajctory(String name) {
     // Take name and parse
     try {
-      TomlParseResult parseResult = Toml.parse(Paths.get("paths/" + name + ".toml"));
+      TomlParseResult parseResult =
+          Toml.parse(Paths.get("/home/lvuser/deploy/paths/" + name + ".toml"));
 
       Pose2d startPos =
           new Pose2d(
