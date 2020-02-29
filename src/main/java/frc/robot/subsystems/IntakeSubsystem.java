@@ -12,6 +12,8 @@ import org.strykeforce.thirdcoast.talon.TalonFXItem;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 
 public class IntakeSubsystem extends SubsystemBase {
+  public static double lastIntakePressedTime = 0;
+
   public static int TALON_ID = 20;
 
   public static TalonFX intakeDrive;

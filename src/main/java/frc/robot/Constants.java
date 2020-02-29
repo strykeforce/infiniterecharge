@@ -63,10 +63,11 @@ public final class Constants {
     public static final double kIntakeSpeed = -0.5;
     public static final double kEjectSpeed = 0.25;
     public static final int kStallVelocity = 100;
+    public static final double kDoublePressMaxTime = 0.5; // Timer class returns time in seconds
 
     // Command Specific
     public static final long kTimeFullIntake = 1000;
-    public static final long kShootDelayIntake = 500;
+    public static final long kShootDelayIntake = 0;
     public static final long kReverseTime = 500;
     public static final double kStallCount = 5;
   }
@@ -105,17 +106,21 @@ public final class Constants {
     public static double kMinStringPotZero = 1000;
 
     public static final int kCloseEnoughTurret = 40;
+    public static final int kMaxShootError = 5000;
+    public static final double kSweepRange = 20;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
+    public static final double loadAngle = 135;
   }
 
   public static final class HoodConstants {
     // Subsystem Specific
     public static final double HOOD_TICKS_PER_DEGREE = 572;
     public static final int kCloseEnoughHood = 100;
-    public static int kHoodZeroTicks = 1347;
-    public static final int kForwardSoftLimit = 8190; // 10000
-    public static final int kReverseSoftLimit = -1800; // 0
+    public static int kHoodZeroTicks; // gut check: 149
+    public static final int kForwardSoftLimit = 9000; // 10000
+    public static final int kReverseSoftLimit = 0; // 0
+    public static final int kOffsetZeroTicks = 1820;
   }
 
   public static final class DriveConstants {
@@ -124,27 +129,32 @@ public final class Constants {
 
   public static final class VisionConstants {
     public static final double VERTICAL_FOV = 48.8;
-    public static final double HORIZ_FOV = 62.2;
-    public static final double HORIZ_RES = 1280;
-    public static final double TARGET_WIDTH_IN = 34.65;
-    public static final double CAMERA_HEIGHT = 22;
-    public static final double TARGET_HEIGHT = 98.25;
-
+    public static final double HORIZ_FOV = 57.999; // 50.8 //146
+    public static final double HORIZ_RES = 640; // 1280
+    public static final double TARGET_WIDTH_IN = 39.5; // 34.6
+    public static final double CAMERA_HEIGHT = 20.75;
+    public static final double TARGET_HEIGHT = 98.5;
     public static String kCameraID = "A0";
-    public static final double kTurretDeadband = 3;
 
     public static final int kStableRange = 20;
     public static final int kStableCounts = 5;
+
+    public static final String kTablePath = "/home/lvuser/deploy/Lookup_Table.csv";
+    public static final int kTableMin = 96;
+    public static final int kTableMax = 360;
+    public static final int kTableRes = 1;
+    public static final int kShooterIndex = 2;
+    public static final int kHoodIndex = 3;
   }
 
   public static class CompConstants {
     // Turret
     public static final int kTurretZeroTicks = 1486;
-    public static final double kMaxStringPotZero = 95;
-    public static final double kMinStringPotZero = 13;
+    public static final double kMaxStringPotZero = 138;
+    public static final double kMinStringPotZero = 52;
 
     // Hood
-    public static final int kHoodZeroTicks = 3153;
+    public static final int kHoodZeroTicks = 2008; // gut check: 162
 
     // Camera
     public static final String kCameraId = "A0";
