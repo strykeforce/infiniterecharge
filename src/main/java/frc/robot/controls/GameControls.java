@@ -57,19 +57,13 @@ public class GameControls {
           @Override
           public boolean get() {
 
-            int returnValue = 0;
-            if (controller.getPOV(0) == 315) {
-              returnValue = 315;
-            }
-            if (controller.getPOV(0) == 0) {
-              returnValue = 0;
+            boolean on = false;
+            int position = controller.getPOV(0);
+            if (position == 315 || position == 0 || position == 45) {
+              on = true;
             }
 
-            if (controller.getPOV(0) == 45) {
-              returnValue = 45;
-            }
-
-            return controller.getPOV(0) == returnValue;
+            return on;
           }
         };
 
@@ -78,19 +72,13 @@ public class GameControls {
           @Override
           public boolean get() {
 
-            int returnValue = 0;
-            if (controller.getPOV(0) == 135) {
-              returnValue = 135;
-            }
-            if (controller.getPOV(0) == 180) {
-              returnValue = 180;
+            boolean on = false;
+            int position = controller.getPOV(0);
+            if (position == 135 || position == 180 || position == 225) {
+              on = true;
             }
 
-            if (controller.getPOV(0) == 225) {
-              returnValue = 225;
-            }
-
-            return controller.getPOV(0) == returnValue;
+            return on;
           }
         };
 
