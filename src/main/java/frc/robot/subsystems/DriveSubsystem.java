@@ -25,10 +25,10 @@ public class DriveSubsystem extends SubsystemBase {
   private static final double ROBOT_LENGTH = 25.5;
   private static final double ROBOT_WIDTH = 21.5;
   private static final double DRIVE_SETPOINT_MAX = 0.0;
-  private static final Double XLOCK_FL_RATIO = Math.atan2(ROBOT_WIDTH, ROBOT_LENGTH) / Math.PI;
-  private static final Double XLOCK_FL_TICKS = XLOCK_FL_RATIO * (4096 / 2);
-  private static final Double XLOCK_FR_RATIO = -XLOCK_FL_RATIO;
-  private static final Double XLOCK_FR_TICKS = XLOCK_FR_RATIO * (4096 / 2);
+  private static final double XLOCK_FL_RATIO = Math.atan2(ROBOT_WIDTH, ROBOT_LENGTH) / Math.PI;
+  private static final int FL_TICKS_TARGET = 567;
+  private static final double XLOCK_FR_RATIO = -XLOCK_FL_RATIO;
+  private static final int XLOCK_FR_TICKS = 1481;
 
   private final SwerveDrive swerve = configSwerve();
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -125,29 +125,55 @@ public class DriveSubsystem extends SubsystemBase {
   public void xLockSwerveDrive() {
     int angle = 0;
 
-    System.out.println("FrontLeft: " + XLOCK_FL_TICKS + ", FrontRight: " + XLOCK_FR_TICKS);
+    System.out.println("FrontLeft: " + FL_TICKS_TARGET + ", FrontRight: " + XLOCK_FR_TICKS);
     Wheel[] swerveWheels = swerve.getWheels();
 
     for (int i = 0; i < 4; i++) {
-      angle = swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition() % 4096;
-      // Calculate directional ticks offset to nearest X-lock position
-      switch (angle / 1024) {
-        case 0:  //quadrant 1 - closest X-lock angle is XLOCK_FL_TICKS
-          angle = XLOCK_FL_TICKS.intValue() - angle;
-          break;
-        case 1: // quadrant 2 - closest X-lock angle is 180 deg - XLOCK_FL_TICKS
-          angle = (4096 / 2) - XLOCK_FL_TICKS.intValue() - angle;
-          break;
-        case 2: //quadrant 3 - closest X-lock angle is 180 deg + XLOCK_FL_TICKS
-          angle = (4096 / 2) + XLOCK_FL_TICKS.intValue() - angle;
-          break; 
-        case 3: //quadrant 4 - closest X-lock angle is 360 deg - XLOCK_FL_TICKS
-          angle = 4096 - XLOCK_FL_TICKS.intValue() - angle;
-          break;
+
+      int position = swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
+      int TARGET = FL_TICKS_TARGET;
+      angle = position % 4096;
+      if (i == 1 || i == 2) {
+        TARGET = XLOCK_FR_TICKS;
       }
-      angle += swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
-      swerveWheels[0].setAzimuthPosition(angle);
-    }
+
+      if (angle >= 0) {
+        int delta = TARGET - angle;
+        if (Math.abs(delta) > 1024) {
+          delta = (TARGET + 2048) - angle;
+        }
+        System.out.println("The angle is" + angle);
+        System.out.println("The delta is" + delta);
+        swerveWheels[i].setAzimuthPosition(position + delta);
+      } else {
+        int delta = (TARGET - 2048) - angle;
+        if (Math.abs(delta) > 1024) {
+          delta = (TARGET - 4096) - angle;
+        }
+        swerveWheels[i].setAzimuthPosition(position + delta);
+        System.out.println("The angle is" + angle);
+        System.out.println("The delta is" + delta);
+      }
+
+      // Calculate directional ticks offset to nearest X-lock position
+      /*switch (angle / 512) {
+          case 0: // quadrant 1 - closest X-lock angle is XLOCK_FL_TICKS
+            angle = XLOCK_FL_TICKS.intValue() - angle;
+            break;
+          case 1: // quadrant 2 - closest X-lock angle is 180 deg - XLOCK_FL_TICKS
+            angle = (4096 / 2) - XLOCK_FL_TICKS.intValue() - angle;
+            break;
+          case 2: // quadrant 3 - closest X-lock angle is 180 deg + XLOCK_FL_TICKS
+            angle = (4096 / 2) + XLOCK_FL_TICKS.intValue() - angle;
+            break;
+          case 3: // quadrant 4 - closest X-lock angle is 360 deg - XLOCK_FL_TICKS
+            angle = 4096 - XLOCK_FL_TICKS.intValue() - angle;
+            break;
+        }
+        angle += swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
+        swerveWheels[i].setAzimuthPosition(angle);
+
+      */ }
     /*
         swerveWheels[0].setAzimuthPosition(XLOCK_FL_TICKS.intValue());
         swerveWheels[1].setAzimuthPosition(XLOCK_FR_TICKS.intValue());
