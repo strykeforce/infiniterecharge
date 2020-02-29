@@ -9,14 +9,12 @@ import frc.robot.commands.shooter.ShooterVelocityCommand;
 import frc.robot.commands.turret.TurretPositionCommand;
 
 public class BatterShotCommandGroup extends SequentialCommandGroup {
-  public BatterShotCommandGroup () {
+  public BatterShotCommandGroup() {
     addCommands(
         new ParallelCommandGroup(
             new ShooterVelocityCommand(Constants.ShooterConstants.kBatterShotVelocity),
             new TurretPositionCommand(Constants.TurretConstants.kBatterShotTicks),
-            new HoodPositionCommand(Constants.HoodConstants.kBatterShotTicks)
-        ),
-        new MagazineSmartFeedCommand()
-    );
+            new HoodPositionCommand(Constants.HoodConstants.kBatterShotTicks)),
+        new MagazineSmartFeedCommand());
   }
 }

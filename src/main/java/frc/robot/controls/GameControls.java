@@ -93,7 +93,8 @@ public class GameControls {
 
     dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
 
-    new JoystickButton(controller, Button.kX.value).whenPressed(new StopShootCommand());
+    new JoystickButton(controller, Button.kX.value).whenPressed(new BatterShotCommandGroup());
+    new JoystickButton(controller, Button.kA.value).whenPressed(new StopShootCommand());
 
     LeftStickLeft.whenActive(new TurretOpenLoopCommand(0.3));
     LeftStickRight.whenActive(new TurretOpenLoopCommand(-0.3));
