@@ -109,6 +109,7 @@ public final class Constants {
     public static final double kSweepRange = 20;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
+    public static final double stopShootDegrees = 135;
   }
 
   public static final class HoodConstants {
