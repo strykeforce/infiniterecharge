@@ -31,4 +31,10 @@ public class SmartDashboardControls {
     SmartDashboard.putData("Tuning/StartVolley", new ArmedShootSequenceCommand());
     SmartDashboard.putData("Tuning/StopFiring", new StopShootCommand());
   }
+
+  public void addMatchCommands() {
+    SmartDashboard.putBoolean("Match/Magazine Full", false);
+    SmartDashboard.putBoolean("Match/Ball Chambered", false);
+    SmartDashboard.putBoolean("Match/Intake Stalled", false);
+  }
 }

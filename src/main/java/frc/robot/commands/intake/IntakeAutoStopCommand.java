@@ -1,5 +1,6 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
@@ -43,6 +44,7 @@ public class IntakeAutoStopCommand extends CommandBase {
           if (currentTime - breakTime >= Constants.IntakeConstants.kTimeFullIntake) {
             state = IntakeStates.DONE;
             logger.debug("intake stopping");
+            SmartDashboard.putBoolean("Match/Magazine Full", true);
             intakeSubsystem.stopIntake();
           }
         } else {
