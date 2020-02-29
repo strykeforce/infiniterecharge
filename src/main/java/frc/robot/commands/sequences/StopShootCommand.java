@@ -1,7 +1,6 @@
 package frc.robot.commands.sequences;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.Constants;
 import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.intake.IntakeStopCommand;
 import frc.robot.commands.magazine.StopMagazineCommand;
@@ -16,7 +15,7 @@ public class StopShootCommand extends ParallelCommandGroup {
         new StopMagazineCommand(),
         new ShooterClosedLoopStopCommand(),
         new StopVisionTrackingCommand(),
-        new TurretPositionCommand(Constants.TurretConstants.stopShootDegrees),
+        new TurretPositionCommand(0),
         new HoodPositionCommand(500));
   }
 }
