@@ -27,8 +27,14 @@ public class IntakeAutoStopCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
-    state = IntakeStates.INTAKING;
+    if (!magazine.isIntakeBeamBroken()) {
+      intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
+      state = IntakeStates.INTAKING;
+      timerOn = false;
+
+    } else {
+      state = IntakeStates.DONE;
+    }
   }
 
   @Override

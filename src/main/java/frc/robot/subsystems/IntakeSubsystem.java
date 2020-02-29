@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -13,7 +12,7 @@ import org.strykeforce.thirdcoast.talon.TalonFXItem;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 
 public class IntakeSubsystem extends SubsystemBase {
-  public static Timer doublePressTimer = new Timer();
+  public static double lastIntakePressedTime = 0;
 
   public static int TALON_ID = 20;
 
