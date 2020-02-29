@@ -31,5 +31,4 @@ public class SmartDashboardControls {
     SmartDashboard.putData("Tuning/StartVolley", new ArmedShootSequenceCommand());
     SmartDashboard.putData("Tuning/StopFiring", new StopShootCommand());
   }
-  
 }
