@@ -40,7 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
     lMasterConfig.slot0.kD = 5;
     lMasterConfig.slot0.kF = 0.048;
     lMasterConfig.peakOutputForward = 1.0;
-    lMasterConfig.peakOutputReverse = -0.2;
+    lMasterConfig.peakOutputReverse = 0.0;
     lMasterConfig.velocityMeasurementPeriod = VelocityMeasPeriod.Period_20Ms;
     lMasterConfig.velocityMeasurementWindow = 16;
     leftMaster = new TalonFX(L_MASTER_ID);

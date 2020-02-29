@@ -13,7 +13,7 @@ public class SeekTargetCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    TURRET.seekTarget();
+    TURRET.seekTarget(0);
   }
 
   @Override
