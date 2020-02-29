@@ -63,6 +63,7 @@ public final class Constants {
     public static final double kIntakeSpeed = -0.5;
     public static final double kEjectSpeed = 0.25;
     public static final int kStallVelocity = 100;
+    public static final double kDoublePressMaxTime = 0.1; //Timer class returns time in seconds
 
     // Command Specific
     public static final long kTimeFullIntake = 1000;

@@ -82,7 +82,7 @@ public class GameControls {
           }
         };
 
-    new JoystickButton(controller, Button.kB.value).whenPressed(new AutoIntakeCmdGroup());
+    new JoystickButton(controller, Button.kB.value).whenPressed(new AutoIntakeCmdGroupController());
     new JoystickButton(controller, Button.kB.value)
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
     new JoystickButton(controller, Button.kY.value).whenPressed(new ArmSequenceCommand());
