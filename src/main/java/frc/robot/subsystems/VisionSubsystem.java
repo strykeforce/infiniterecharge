@@ -130,7 +130,12 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public double getPixOffset() {
-    return getTargetData().getCenterOffsetX();
+    MinAreaRectTargetData targetData = getTargetData();
+    double center =
+        (targetData.getWidth() > targetData.getHeight())
+            ? (targetData.getTopLeftX() + targetData.getTopRightX()) / 2
+            : (targetData.getTopRightX() + targetData.getBottomRightX()) / 2;
+    return center - HORIZ_RES / 2;
   }
 
   public double getDistance() {
