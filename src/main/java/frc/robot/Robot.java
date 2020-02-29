@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
     RobotContainer.DRIVE.zeroGyro();
     RobotContainer.HOOD.zeroHood();
     RobotContainer.TURRET.zeroTurret();
-    RobotContainer.VISION.setLightsEnabled(false);
+    RobotContainer.VISION.setCameraEnabled(true);
   }
 
   /**
@@ -55,7 +55,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    RobotContainer.VISION.setCameraEnabled(false);
+  }
 
   @Override
   public void disabledPeriodic() {}

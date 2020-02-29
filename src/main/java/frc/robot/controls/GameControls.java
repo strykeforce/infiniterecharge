@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.hood.HoodPositionCommand;
+import frc.robot.Constants;
+import frc.robot.commands.climber.ClimberOpenLoopCommand;
 import frc.robot.commands.sequences.*;
-import frc.robot.commands.turret.SeekTargetCommand;
 import frc.robot.commands.turret.TurretOpenLoopCommand;
 
 public class GameControls {
@@ -50,15 +50,21 @@ public class GameControls {
           }
         };
 
+    dPad.whenActive(new ReverseIntakeAndMagazineCommandGroup());
+    dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
+
     new JoystickButton(controller, Button.kB.value).whenPressed(new AutoIntakeCmdGroup());
     new JoystickButton(controller, Button.kB.value)
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
     new JoystickButton(controller, Button.kY.value).whenPressed(new ArmSequenceCommand());
-    new JoystickButton(controller, Button.kStart.value).whenPressed(new SeekTargetCommand());
-    new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(5000));
-    dPad.whenActive(new ReverseIntakeAndMagazineCommandGroup());
-    dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
     new JoystickButton(controller, Button.kX.value).whenPressed(new StopShootCommand());
+
+    new JoystickButton(controller, Button.kStart.value)
+        .whenPressed(new ClimberOpenLoopCommand(Constants.ClimberConstants.kUpOutput));
+    new JoystickButton(controller, Button.kStart.value).whenReleased(new ClimberOpenLoopCommand(0));
+    new JoystickButton(controller, Button.kBack.value)
+        .whenPressed(new ClimberOpenLoopCommand(Constants.ClimberConstants.kDownOutput));
+    new JoystickButton(controller, Button.kBack.value).whenReleased(new ClimberOpenLoopCommand(0));
 
     LeftStickLeft.whenActive(new TurretOpenLoopCommand(0.3));
     LeftStickRight.whenActive(new TurretOpenLoopCommand(-0.3));

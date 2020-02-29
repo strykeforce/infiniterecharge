@@ -120,6 +120,11 @@ public final class Constants {
     public static final int kOffsetZeroTicks = 1820;
   }
 
+  public static final class ClimberConstants {
+    public static final double kUpOutput = 0.5;
+    public static final double kDownOutput = 0.5;
+  }
+
   public static final class DriveConstants {
     public static final double kDeadbandXLock = 0.2;
   }
