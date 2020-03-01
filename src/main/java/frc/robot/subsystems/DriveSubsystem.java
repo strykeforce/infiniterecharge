@@ -20,7 +20,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.ArrayList;
 import net.consensys.cava.toml.Toml;
 import net.consensys.cava.toml.TomlArray;
 import net.consensys.cava.toml.TomlParseResult;
@@ -188,13 +188,14 @@ public class DriveSubsystem extends SubsystemBase {
               parseResult.getTable("end_pose").getDouble("x"),
               parseResult.getTable("end_pose").getDouble("y"),
               new Rotation2d(parseResult.getTable("end_pose").getDouble("angle")));
-      TomlArray internalPointsToml = parseResult.getArray("internalPoints");
-      List<Translation2d> path = List.of();
+      TomlArray internalPointsToml = parseResult.getArray("internal_points");
+      ArrayList<Translation2d> path = new ArrayList<>(internalPointsToml.size());
+      logger.info("Toml Array Size: {}", internalPointsToml.size());
 
       for (int i = 0; i < internalPointsToml.size(); i++) {
         TomlTable pointToml = internalPointsToml.getTable(i);
         Translation2d point = new Translation2d(pointToml.getDouble("x"), pointToml.getDouble("y"));
-        path.add(point);
+        path.set(i, point);
       }
 
       TrajectoryConfig trajectoryConfig =
