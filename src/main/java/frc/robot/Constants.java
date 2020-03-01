@@ -63,6 +63,7 @@ public final class Constants {
     public static final double kIntakeSpeed = -0.5;
     public static final double kEjectSpeed = 0.25;
     public static final int kStallVelocity = 100;
+    public static final double kDoublePressMaxTime = 0.5; // Timer class returns time in seconds
 
     // Command Specific
     public static final long kTimeFullIntake = 1000;
@@ -106,8 +107,10 @@ public final class Constants {
 
     public static final int kCloseEnoughTurret = 40;
     public static final int kMaxShootError = 5000;
+    public static final double kSweepRange = 20;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 1; // FIXME
+    public static final double loadAngle = 135;
   }
 
   public static final class HoodConstants {
@@ -152,8 +155,8 @@ public final class Constants {
   public static class CompConstants {
     // Turret
     public static final int kTurretZeroTicks = 1486;
-    public static final double kMaxStringPotZero = 95;
-    public static final double kMinStringPotZero = 13;
+    public static final double kMaxStringPotZero = 138;
+    public static final double kMinStringPotZero = 52;
 
     // Hood
     public static final int kHoodZeroTicks = 2008; // gut check: 162
