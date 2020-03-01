@@ -21,10 +21,14 @@ import frc.robot.RobotContainer;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.DoubleSupplier;
 import net.consensys.cava.toml.Toml;
 import net.consensys.cava.toml.TomlArray;
 import net.consensys.cava.toml.TomlParseResult;
 import net.consensys.cava.toml.TomlTable;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.swerve.SwerveDrive;
@@ -33,9 +37,11 @@ import org.strykeforce.thirdcoast.swerve.SwerveDriveConfig;
 import org.strykeforce.thirdcoast.swerve.Wheel;
 import org.strykeforce.thirdcoast.talon.TalonFXItem;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
+import org.strykeforce.thirdcoast.telemetry.item.Measurable;
+import org.strykeforce.thirdcoast.telemetry.item.Measure;
 import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
 
-public class DriveSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase implements Measurable {
 
   private static final double ROBOT_LENGTH = 25.5;
   private static final double ROBOT_WIDTH = 21.5;
@@ -60,9 +66,9 @@ public class DriveSubsystem extends SubsystemBase {
   private int startEncoderPosition;
   private double estimatedDistanceTraveled;
   private Translation2d lastPosition;
-  private double currentDistance;
-  private double desiredDistance;
-  private double error;
+  private double currentDistance = 0;
+  private double desiredDistance = 0;
+  private double error = 0;
 
   public DriveSubsystem() {
     swerve.setFieldOriented(true);
@@ -140,6 +146,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       wheels[i] = new Wheel(azimuthTalon, driveTalon, DRIVE_SETPOINT_MAX);
     }
+    telemetryService.register(this);
     telemetryService.start();
 
     return wheels;
@@ -211,13 +218,14 @@ public class DriveSubsystem extends SubsystemBase {
               parseResult.getTable("end_pose").getDouble("y"),
               new Rotation2d(parseResult.getTable("end_pose").getDouble("angle")));
       TomlArray internalPointsToml = parseResult.getArray("internal_points");
-      ArrayList<Translation2d> path = new ArrayList<>(internalPointsToml.size());
+      ArrayList<Translation2d> path = new ArrayList<>();
       logger.info("Toml Array Size: {}", internalPointsToml.size());
 
       for (int i = 0; i < internalPointsToml.size(); i++) {
         TomlTable pointToml = internalPointsToml.getTable(i);
         Translation2d point = new Translation2d(pointToml.getDouble("x"), pointToml.getDouble("y"));
-        path.set(i, point);
+        //        path.set(i, point);
+        path.add(point);
       }
 
       TrajectoryConfig trajectoryConfig =
@@ -228,6 +236,9 @@ public class DriveSubsystem extends SubsystemBase {
       trajectoryConfig.setEndVelocity(parseResult.getDouble("end_velocity"));
       trajectoryGenerated =
           TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
+
+      List<Trajectory.State> states = trajectoryGenerated.getStates();
+      logger.info(states.toString());
     } catch (IOException error) {
       logger.error(error.toString());
       logger.error("Path {} not found", name);
@@ -237,9 +248,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void startPath(Trajectory trajectoryGenerated) {
     this.trajectoryGenerated = trajectoryGenerated;
+    startEncoderPosition = 0;
     for (int i = 0; i < 4; i++) {
       startEncoderPosition +=
-          Math.abs(swerve.getWheels()[0].getDriveTalon().getSelectedSensorPosition());
+          Math.abs(swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition());
     }
     startEncoderPosition = startEncoderPosition / 4;
     lastPosition = Constants.AutoConstants.START_PATH.getTranslation();
@@ -256,7 +268,7 @@ public class DriveSubsystem extends SubsystemBase {
     int currentEncoderPosition = 0;
     for (int i = 0; i < 4; i++) {
       currentEncoderPosition +=
-          Math.abs(swerve.getWheels()[0].getDriveTalon().getSelectedSensorPosition());
+          Math.abs(swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition());
     }
     currentEncoderPosition = currentEncoderPosition / 4;
     currentDistance = (currentEncoderPosition - startEncoderPosition) / TICKS_PER_METER;
@@ -272,5 +284,56 @@ public class DriveSubsystem extends SubsystemBase {
 
   public boolean isPathDone(double timePassedSeconds) {
     return timePassedSeconds >= trajectoryGenerated.getTotalTimeSeconds();
+  }
+
+  // GRAPHER METHODS
+  private static final String DESIRED_DISTANCE = "desired distance";
+  private static final String ACTUAL_DISTANCE = "actual distance";
+  private static final String DISTANCE_ERROR = "distance error";
+
+  @NotNull
+  @Override
+  public String getDescription() {
+    return "drive subsystem";
+  }
+
+  @Override
+  public int getDeviceId() {
+    return 0;
+  }
+
+  @NotNull
+  @Override
+  public Set<Measure> getMeasures() {
+    return Set.of(
+        new Measure(DESIRED_DISTANCE, "desired distance"),
+        new Measure(ACTUAL_DISTANCE, "actual distance"),
+        new Measure(DISTANCE_ERROR, "distance error"));
+  }
+
+  @NotNull
+  @Override
+  public String getType() {
+    return "drive subsystem";
+  }
+
+  @Override
+  public int compareTo(@NotNull Measurable measurable) {
+    return 0;
+  }
+
+  @NotNull
+  @Override
+  public DoubleSupplier measurementFor(@NotNull Measure measure) {
+    switch (measure.getName()) {
+      case DESIRED_DISTANCE:
+        return () -> desiredDistance;
+      case ACTUAL_DISTANCE:
+        return () -> currentDistance;
+      case DISTANCE_ERROR:
+        return () -> error;
+      default:
+        return () -> 2767;
+    }
   }
 }

@@ -1,4 +1,10 @@
 
+max_velocity = 2.0 # m/s
+max_acceleration = 2.0 # m/s/s
+start_velocity = 0.0 # m/s
+end_velocity = 0.0 # m/s
+is_reversed = true
+
 [start_pose]
     x = 0.0
     y = 0.0
@@ -11,9 +17,3 @@
 [[internal_points]]
     x = -2.0
     y = 0.0
-
-max_velocity = 2.0 # m/s
-max_acceleration = 2.0 # m/s/s
-start_velocity = 0.0 # m/s
-end_velocity = 0.0 # m/s
-is_reversed = false
