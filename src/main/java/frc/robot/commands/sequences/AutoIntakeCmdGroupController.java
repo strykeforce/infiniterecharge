@@ -6,7 +6,7 @@ import frc.robot.Constants.MagazineConstants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.intake.IntakeAutoStopCommandController;
 import frc.robot.commands.magazine.LimitMagazineCommand;
-import frc.robot.commands.turret.TurretPositionCommand;
+import frc.robot.commands.turret.TurretAngleCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class AutoIntakeCmdGroupController extends ParallelCommandGroup {
@@ -16,6 +16,6 @@ public class AutoIntakeCmdGroupController extends ParallelCommandGroup {
     addCommands(
         new LimitMagazineCommand(MagazineConstants.kOpenLoopLoad),
         new IntakeAutoStopCommandController(),
-        new TurretPositionCommand(Constants.TurretConstants.loadAngle));
+        new TurretAngleCommand(Constants.TurretConstants.loadAngle));
   }
 }
