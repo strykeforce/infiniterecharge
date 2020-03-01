@@ -4,18 +4,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretPositionCommand extends CommandBase {
+public class TurretAngleCommand extends CommandBase {
   private static final TurretSubsystem TURRET = RobotContainer.TURRET;
-  private double position;
+  private double angle;
 
-  public TurretPositionCommand(double position) {
+  public TurretAngleCommand(double angle) {
     addRequirements(TURRET);
-    this.position = position;
+    this.angle = angle;
   }
 
   @Override
   public void initialize() {
-    TURRET.setTurret(position);
+    TURRET.setTurretAngle(angle);
   }
 
   @Override

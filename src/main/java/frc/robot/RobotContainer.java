@@ -36,6 +36,7 @@ public class RobotContainer {
   public static ShooterSubsystem SHOOTER;
   public static HoodSubsystem HOOD;
   public static TurretSubsystem TURRET;
+  public static ClimberSubsystem CLIMBER;
   public static Deadeye DEADEYE;
   public static VisionSubsystem VISION;
 
@@ -48,10 +49,11 @@ public class RobotContainer {
     MAGAZINE = new MagazineSubsystem();
     INTAKE = new IntakeSubsystem();
     SHOOTER = new ShooterSubsystem();
-    DEADEYE = Deadeye.INSTANCE;
-    VISION = new VisionSubsystem();
     HOOD = new HoodSubsystem();
     TURRET = new TurretSubsystem();
+    CLIMBER = new ClimberSubsystem();
+    DEADEYE = Deadeye.INSTANCE;
+    VISION = new VisionSubsystem();
 
     // Create Controls last so all subsystems exist
     CONTROLS = new Controls();

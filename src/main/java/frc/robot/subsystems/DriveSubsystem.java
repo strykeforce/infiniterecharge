@@ -40,10 +40,9 @@ public class DriveSubsystem extends SubsystemBase {
   private static final double ROBOT_LENGTH = 25.5;
   private static final double ROBOT_WIDTH = 21.5;
   private static final double DRIVE_SETPOINT_MAX = 0.0;
-  private static final Double XLOCK_FL_RATIO = Math.atan2(ROBOT_WIDTH, ROBOT_LENGTH) / Math.PI;
-  private static final Double XLOCK_FL_TICKS = XLOCK_FL_RATIO * (4096 / 2);
-  private static final Double XLOCK_FR_RATIO = -XLOCK_FL_RATIO;
-  private static final Double XLOCK_FR_TICKS = XLOCK_FR_RATIO * (4096 / 2);
+  private static final int XLOCK_FL_TICKS_TARGET = 567;
+  private static final int XLOCK_FR_TICKS_TARGET = 1481;
+  private static final int AZIMUTH_TICKS = 4096;
 
   private static final double MAX_VELOCITY = 10000; // FIXME
   private static final double MAX_ACCELERATION = 2.0; // FIXME
@@ -159,12 +158,35 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void xLockSwerveDrive() {
-    System.out.println("FrontLeft: " + XLOCK_FL_TICKS + ", FrontRight: " + XLOCK_FR_TICKS);
+    int angle = 0;
+
+    System.out.println(
+        "FrontLeft: " + XLOCK_FL_TICKS_TARGET + ", FrontRight: " + XLOCK_FR_TICKS_TARGET);
     Wheel[] swerveWheels = swerve.getWheels();
-    swerveWheels[0].setAzimuthPosition(XLOCK_FL_TICKS.intValue());
-    swerveWheels[1].setAzimuthPosition(XLOCK_FR_TICKS.intValue());
-    swerveWheels[2].setAzimuthPosition(XLOCK_FR_TICKS.intValue());
-    swerveWheels[3].setAzimuthPosition(XLOCK_FL_TICKS.intValue());
+
+    for (int i = 0; i < 4; i++) {
+
+      int position = swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
+      int TARGET = XLOCK_FL_TICKS_TARGET;
+      angle = position % AZIMUTH_TICKS;
+      if (i == 1 || i == 2) {
+        TARGET = XLOCK_FR_TICKS_TARGET;
+      }
+
+      if (angle >= 0) {
+        int delta = TARGET - angle;
+        if (Math.abs(delta) > AZIMUTH_TICKS / 4) {
+          delta = (TARGET + AZIMUTH_TICKS / 2) - angle;
+        }
+        swerveWheels[i].setAzimuthPosition(position + delta);
+      } else {
+        int delta = (TARGET - AZIMUTH_TICKS / 2) - angle;
+        if (Math.abs(delta) > AZIMUTH_TICKS / 4) {
+          delta = (TARGET - AZIMUTH_TICKS) - angle;
+        }
+        swerveWheels[i].setAzimuthPosition(position + delta);
+      }
+    }
   }
 
   public AHRS getGyro() {

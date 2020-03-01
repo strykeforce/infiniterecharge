@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -72,7 +73,7 @@ public class HoodSubsystem extends SubsystemBase {
     if (!hood.getSensorCollection().isRevLimitSwitchClosed()) {
       int absPos = hood.getSensorCollection().getPulseWidthPosition() & 0xFFF;
       int offset = (int) (absPos - kHoodZeroTicks);
-      hood.setSelectedSensorPosition(offset);
+      hood.setSelectedSensorPosition(offset + Constants.HoodConstants.kOffsetZeroTicks);
       didZero = true;
       logger.info(
           "Hood zeroed; offset: {} zeroTicks: {} absPosition: {}", offset, kHoodZeroTicks, absPos);
@@ -89,7 +90,12 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   public void setHoodPosition(int position) {
-    hood.set(ControlMode.Position, position);
+    hood.set(ControlMode.MotionMagic, position);
+    targetHoodPosition = position;
+  }
+
+  public int getHoodPosition() {
+    return hood.getSelectedSensorPosition();
   }
 
   public void hoodOpenLoop(double output) {
@@ -114,5 +120,14 @@ public class HoodSubsystem extends SubsystemBase {
 
   public boolean isMagazineBeamBroken() {
     return hood.getSensorCollection().isFwdLimitSwitchClosed();
+  }
+
+  @Override
+  public void periodic() {
+    if (isMagazineBeamBroken()) {
+      SmartDashboard.putBoolean("Match/Ball Chambered", true);
+    } else {
+      SmartDashboard.putBoolean("Match/Ball Chambered", false);
+    }
   }
 }

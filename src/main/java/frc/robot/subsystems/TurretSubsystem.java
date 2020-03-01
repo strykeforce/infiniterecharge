@@ -112,12 +112,10 @@ public class TurretSubsystem extends SubsystemBase {
     setTurret(setPoint);
   }
 
-  public void seekTarget() {
-    double bearing = (DRIVE.getGyro().getAngle() + 270) % 360;
+  public void seekTarget(double angleOffset) {
+    double bearing = (DRIVE.getGyro().getAngle() + 270 + angleOffset) % 360;
     if (bearing < 0) bearing += 360;
     double setPoint = bearing * TURRET_TICKS_PER_DEGREE;
-    logger.info("Seeking Target at angle = {}", bearing);
-    logger.info("Seeking Target at position = {}", setPoint);
     setTurret(setPoint);
   }
 
@@ -132,8 +130,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public boolean turretAtTarget() {
     double currentTurretPosition = turret.getSelectedSensorPosition();
-    if (Math.abs(targetTurretPosition - currentTurretPosition)
-        > Constants.TurretConstants.kCloseEnoughTurret) {
+    if (!Constants.isCompBot
+        || Math.abs(targetTurretPosition - currentTurretPosition)
+            > Constants.TurretConstants.kCloseEnoughTurret) {
       turretStableCounts = 0;
     } else {
       turretStableCounts++;
@@ -148,6 +147,10 @@ public class TurretSubsystem extends SubsystemBase {
 
   public double getTurretAngle() {
     return turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
+  }
+
+  public int getTurretError() {
+    return turret.getClosedLoopError();
   }
 
   public boolean turretInRange(int targetCounts) {

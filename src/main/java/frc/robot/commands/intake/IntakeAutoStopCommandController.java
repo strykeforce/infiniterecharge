@@ -1,6 +1,6 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
@@ -10,30 +10,37 @@ import frc.robot.subsystems.MagazineSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IntakeAutoStopCommand extends CommandBase {
+public class IntakeAutoStopCommandController extends CommandBase {
 
   private IntakeSubsystem intakeSubsystem = RobotContainer.INTAKE;
   private MagazineSubsystem magazine = RobotContainer.MAGAZINE;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private long breakTime;
   private boolean timerOn;
+  private boolean doublePressed;
   private IntakeStates state;
   private long reverseTime;
   private int stallCount = 0;
 
-  public IntakeAutoStopCommand() {
+  public IntakeAutoStopCommandController() {
     addRequirements(intakeSubsystem);
   }
 
   @Override
   public void initialize() {
-    if (!magazine.isIntakeBeamBroken()) {
-      intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
+
+    doublePressed =
+        (Timer.getFPGATimestamp() - intakeSubsystem.lastIntakePressedTime)
+            <= IntakeConstants.kDoublePressMaxTime;
+    if (doublePressed || !magazine.isIntakeBeamBroken()) {
       state = IntakeStates.INTAKING;
+      intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
+      intakeSubsystem.lastIntakePressedTime = Timer.getFPGATimestamp();
       timerOn = false;
 
     } else {
       state = IntakeStates.DONE;
+      intakeSubsystem.lastIntakePressedTime = Timer.getFPGATimestamp();
     }
   }
 
@@ -50,7 +57,6 @@ public class IntakeAutoStopCommand extends CommandBase {
           if (currentTime - breakTime >= Constants.IntakeConstants.kTimeFullIntake) {
             state = IntakeStates.DONE;
             logger.debug("intake stopping");
-            SmartDashboard.putBoolean("Match/Magazine Full", true);
             intakeSubsystem.stopIntake();
           }
         } else {
@@ -65,7 +71,6 @@ public class IntakeAutoStopCommand extends CommandBase {
           logger.debug("intake stalled");
           reverseTime = currentTime;
           intakeSubsystem.runIntake(IntakeConstants.kEjectSpeed);
-          SmartDashboard.putBoolean("Match/Intake Stalled", true);
         }
         break;
       case REVERSING:
@@ -73,7 +78,6 @@ public class IntakeAutoStopCommand extends CommandBase {
           state = IntakeStates.INTAKING;
           logger.debug("unjammed, running intake");
           intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
-          SmartDashboard.putBoolean("Match/Intake Stalled", false);
         }
         break;
     }

@@ -4,9 +4,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.hood.HoodPositionCommand;
+import frc.robot.Constants;
+import frc.robot.commands.climber.ClimberOpenLoopCommand;
+import frc.robot.commands.climber.FastClimbRatchetCommand;
+import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.sequences.*;
-import frc.robot.commands.turret.SeekTargetCommand;
 import frc.robot.commands.turret.TurretOpenLoopCommand;
 
 public class GameControls {
@@ -50,16 +52,66 @@ public class GameControls {
           }
         };
 
-    new JoystickButton(controller, Button.kB.value).whenPressed(new AutoIntakeCmdGroup());
+    Trigger UpDPAD =
+        new Trigger() {
+          @Override
+          public boolean get() {
+
+            boolean on = false;
+            int position = controller.getPOV(0);
+            if (position == 315 || position == 0 || position == 45) {
+              on = true;
+            }
+
+            return on;
+          }
+        };
+
+    Trigger DownDPAD =
+        new Trigger() {
+          @Override
+          public boolean get() {
+
+            boolean on = false;
+            int position = controller.getPOV(0);
+            if (position == 135 || position == 180 || position == 225) {
+              on = true;
+            }
+
+            return on;
+          }
+        };
+
+    // Intake Commands
+    UpDPAD.whenActive(new ReverseIntakeAndMagazineCommandGroup());
+    DownDPAD.whenActive(new IntakeRunCommand(Constants.IntakeConstants.kEjectSpeed));
+    dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
+
+    new JoystickButton(controller, Button.kB.value).whenPressed(new AutoIntakeCmdGroupController());
     new JoystickButton(controller, Button.kB.value)
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
-    new JoystickButton(controller, Button.kY.value).whenPressed(new ArmSequenceCommand());
-    new JoystickButton(controller, Button.kStart.value).whenPressed(new SeekTargetCommand());
-    new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(5000));
-    dPad.whenActive(new ReverseIntakeAndMagazineCommandGroup());
-    dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
-    new JoystickButton(controller, Button.kX.value).whenPressed(new StopShootCommand());
 
+    // Climb Commands
+    new JoystickButton(controller, Button.kStart.value)
+        .whenPressed(new ClimberOpenLoopCommand(Constants.ClimberConstants.kFastUpOutput));
+    new JoystickButton(controller, Button.kStart.value).whenReleased(new ClimberOpenLoopCommand(0));
+    new JoystickButton(controller, Button.kBack.value).whenPressed(new FastClimbRatchetCommand());
+    new JoystickButton(controller, Button.kBack.value).whenReleased(new ClimberOpenLoopCommand(0));
+    new JoystickButton(controller, Button.kBumperLeft.value)
+        .whenPressed(new ClimberOpenLoopCommand(Constants.ClimberConstants.kSlowDownOutput));
+    new JoystickButton(controller, Button.kBumperLeft.value)
+        .whenReleased(new ClimberOpenLoopCommand(0));
+    new JoystickButton(controller, Button.kBumperRight.value)
+        .whenPressed(new ClimberOpenLoopCommand(Constants.ClimberConstants.kSlowUpOutput));
+    new JoystickButton(controller, Button.kBumperRight.value)
+        .whenReleased(new ClimberOpenLoopCommand(0));
+
+    // Shooter Commands
+    new JoystickButton(controller, Button.kX.value).whenPressed(new BatterShotCommandGroup());
+    new JoystickButton(controller, Button.kA.value).whenPressed(new StopShootCommand());
+    new JoystickButton(controller, Button.kY.value).whenPressed(new ArmSequenceCommand());
+
+    // Turret Commands
     LeftStickLeft.whenActive(new TurretOpenLoopCommand(0.3));
     LeftStickRight.whenActive(new TurretOpenLoopCommand(-0.3));
     LeftStickOff.whenActive(new TurretOpenLoopCommand(0));
