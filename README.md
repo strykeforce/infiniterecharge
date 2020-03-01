@@ -27,3 +27,9 @@ Climb        | SRX  | climb       | 50 | 14
 
 * Intake beam break routed to reverse limit switch on magazine
 * Magazine beam break routed to forward limit switch on hood
+
+## Servos
+
+Subsystem    | Servo       | ID  
+------------ | ----------- | -- 
+Climb        | ratchet     | 0  
