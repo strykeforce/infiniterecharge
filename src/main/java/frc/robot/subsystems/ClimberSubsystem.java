@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj.Servo;
@@ -21,6 +22,10 @@ public class ClimberSubsystem extends SubsystemBase {
   private static TalonSRX climb;
   private static Servo ratchet;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private SupplyCurrentLimitConfiguration holdingCurrent =
+      new SupplyCurrentLimitConfiguration(true, 10, 15, 0.04);
+  private SupplyCurrentLimitConfiguration runningCurrent =
+      new SupplyCurrentLimitConfiguration(true, 40, 45, 0.04);
 
   public ClimberSubsystem() {
     climb = new TalonSRX(TALON_ID);
@@ -29,13 +34,14 @@ public class ClimberSubsystem extends SubsystemBase {
     TalonSRXConfiguration talonConfig = new TalonSRXConfiguration(); // FIXME
     climb.configAllSettings(talonConfig);
     climb.setNeutralMode(NeutralMode.Brake);
-    climb.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 45, 0.04));
+    climb.configSupplyCurrentLimit(holdingCurrent);
 
     TelemetryService telemetryService = RobotContainer.TELEMETRY;
     telemetryService.stop();
     telemetryService.register(new TalonSRXItem(climb, "Climb"));
     telemetryService.start();
     engageRatchet(false);
+    holdClimb();
   }
 
   public void stopClimb() {
@@ -45,7 +51,14 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void runOpenLoop(double setpoint) {
     logger.info("run Climb");
+    climb.configSupplyCurrentLimit(runningCurrent);
     climb.set(ControlMode.PercentOutput, setpoint);
+  }
+
+  public void holdClimb() {
+    climb.configSupplyCurrentLimit(holdingCurrent);
+    climb.set(TalonSRXControlMode.PercentOutput, Constants.ClimberConstants.kHoldOutput);
+    logger.info("holding climb");
   }
 
   public void engageRatchet(boolean enable) {

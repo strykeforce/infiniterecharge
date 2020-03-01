@@ -1,6 +1,7 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.magazine.MagazineSmartFeedCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.shooter.ActuateTuningCommand;
 import frc.robot.commands.vision.UpdateWidthsCommand;
@@ -29,7 +30,7 @@ public class SmartDashboardControls {
     SmartDashboard.putData("Tuning/setPositions", new ActuateTuningCommand());
 
     SmartDashboard.putData("Tuning/Intake", new AutoIntakeCmdGroup());
-    SmartDashboard.putData("Tuning/StartVolley", new ArmedShootSequenceCommand());
+    SmartDashboard.putData("Tuning/StartVolley", new MagazineSmartFeedCommand());
     SmartDashboard.putData("Tuning/StopFiring", new StopShootCommand());
   }
 

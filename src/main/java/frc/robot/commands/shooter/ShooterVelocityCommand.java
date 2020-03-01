@@ -1,10 +1,10 @@
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterVelocityCommand extends InstantCommand {
+public class ShooterVelocityCommand extends CommandBase {
   private ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
 
   private int velocity;
@@ -17,5 +17,10 @@ public class ShooterVelocityCommand extends InstantCommand {
   @Override
   public void initialize() {
     SHOOTER.run(velocity);
+  }
+
+  @Override
+  public boolean isFinished() {
+    return SHOOTER.atTargetSpeed();
   }
 }

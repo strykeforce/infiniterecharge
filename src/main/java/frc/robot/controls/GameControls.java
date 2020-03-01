@@ -107,7 +107,8 @@ public class GameControls {
         .whenReleased(new ClimberOpenLoopCommand(0));
 
     // Shooter Commands
-    new JoystickButton(controller, Button.kX.value).whenPressed(new StopShootCommand());
+    new JoystickButton(controller, Button.kX.value).whenPressed(new BatterShotCommandGroup());
+    new JoystickButton(controller, Button.kA.value).whenPressed(new StopShootCommand());
     new JoystickButton(controller, Button.kY.value).whenPressed(new ArmSequenceCommand());
 
     // Turret Commands

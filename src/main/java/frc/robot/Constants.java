@@ -94,6 +94,7 @@ public final class Constants {
     // Command Specific
     public static final long kArmTimeToAccelerate = 1500;
     public static final int kArmSpeed = 10000;
+    public static final int kBatterShotVelocity = 11000; // 12-27 inches (2 feet)
   }
 
   public static final class TurretConstants {
@@ -111,6 +112,7 @@ public final class Constants {
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 13_000; // FIXME
     public static final double loadAngle = 25;
+    public static final int kBatterShotTicks = 19550; // FIXME
   }
 
   public static final class HoodConstants {
@@ -121,6 +123,7 @@ public final class Constants {
     public static final int kForwardSoftLimit = 9000; // 10000
     public static final int kReverseSoftLimit = 0; // 0
     public static final int kOffsetZeroTicks = 1820;
+    public static final int kBatterShotTicks = 0; // FIXME
   }
 
   public static final class ClimberConstants {
@@ -128,6 +131,7 @@ public final class Constants {
     public static final double kSlowDownOutput = -0.25;
     public static final double kFastUpOutput = 1.0;
     public static final double kFastDownOutput = -1.0;
+    public static final double kHoldOutput = -0.05;
 
     public static final double kRatchetEngage = 0.5;
     public static final double kRatchetDisable = 0.15;
