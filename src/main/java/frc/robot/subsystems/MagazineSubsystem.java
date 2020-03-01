@@ -26,6 +26,7 @@ public class MagazineSubsystem extends SubsystemBase {
     config.slot0.kP = 0.15;
     config.slot0.kI = 0.0;
     config.slot0.kD = 8.0;
+    config.slot0.kF = 2.0;
     config.slot0.integralZone = 0;
     config.slot0.maxIntegralAccumulator = 0;
     config.velocityMeasurementWindow = 64;
