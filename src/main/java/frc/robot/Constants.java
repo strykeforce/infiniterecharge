@@ -109,8 +109,8 @@ public final class Constants {
     public static final int kMaxShootError = 5000;
     public static final double kSweepRange = 20;
     public static final double kWrapRange = 1; // FIXME
-    public static final double kTurretMidpoint = 1; // FIXME
-    public static final double loadAngle = 135;
+    public static final double kTurretMidpoint = 13_000; // FIXME
+    public static final double loadAngle = 25;
   }
 
   public static final class HoodConstants {
@@ -121,6 +121,16 @@ public final class Constants {
     public static final int kForwardSoftLimit = 9000; // 10000
     public static final int kReverseSoftLimit = 0; // 0
     public static final int kOffsetZeroTicks = 1820;
+  }
+
+  public static final class ClimberConstants {
+    public static final double kSlowUpOutput = 0.25;
+    public static final double kSlowDownOutput = -0.25;
+    public static final double kFastUpOutput = 1.0;
+    public static final double kFastDownOutput = -1.0;
+
+    public static final double kRatchetEngage = 0.5;
+    public static final double kRatchetDisable = 0.15;
   }
 
   public static final class DriveConstants {
