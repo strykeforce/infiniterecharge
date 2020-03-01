@@ -13,6 +13,7 @@ public class SmartDashboardControls {
 
   public SmartDashboardControls() {
     addTuningCommands();
+    addMatchCommands();
   }
 
   public void addTuningCommands() {
@@ -31,5 +32,12 @@ public class SmartDashboardControls {
     SmartDashboard.putData("Tuning/Intake", new AutoIntakeCmdGroup());
     SmartDashboard.putData("Tuning/StartVolley", new MagazineSmartFeedCommand());
     SmartDashboard.putData("Tuning/StopFiring", new StopShootCommand());
+  }
+
+  public void addMatchCommands() {
+    SmartDashboard.putBoolean("Match/Magazine Full", false);
+    SmartDashboard.putBoolean("Match/Ball Chambered", false);
+    SmartDashboard.putBoolean("Match/Intake Stalled", false);
+    SmartDashboard.putBoolean("Match/Locked On", false);
   }
 }

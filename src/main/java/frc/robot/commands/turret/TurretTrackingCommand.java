@@ -1,5 +1,6 @@
 package frc.robot.commands.turret;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -31,6 +32,7 @@ public class TurretTrackingCommand extends CommandBase {
     attemptNum = 1;
     VISION.setTrackingEnabled(true);
     DRIVER_CONTROLS = RobotContainer.CONTROLS.getDriverControls();
+    SmartDashboard.putBoolean("Match/Locked On", false);
   }
 
   @Override
@@ -79,8 +81,10 @@ public class TurretTrackingCommand extends CommandBase {
         attemptNum = 1;
         if (VISION.isTargetValid()) {
           TURRET.rotateTurret(-0.95 * VISION.getOffsetAngle() + getStrafeAdjustment());
+          SmartDashboard.putBoolean("Match/Locked On", true);
         } else {
           state = TrackingState.SEEK_LEFT;
+          SmartDashboard.putBoolean("Match/Locked On", false);
         }
         break;
     }
