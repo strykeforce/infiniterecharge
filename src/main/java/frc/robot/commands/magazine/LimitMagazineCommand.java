@@ -20,7 +20,7 @@ public class LimitMagazineCommand extends CommandBase {
   @Override
   public void initialize() {
     if (!hoodSubsystem.isMagazineBeamBroken()) {
-      magazineSubsystem.runTalon(setSpeed);
+      magazineSubsystem.runOpenLoop(setSpeed);
       magazineSubsystem.enableLimitSwitch(true);
     }
   }

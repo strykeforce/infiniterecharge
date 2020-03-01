@@ -23,19 +23,34 @@ public class MagazineSubsystem extends SubsystemBase {
     config.continuousCurrentLimit = 30;
     config.peakCurrentDuration = 40;
     config.peakCurrentLimit = 35;
+    config.slot0.kP = 0.15;
+    config.slot0.kI = 0.0;
+    config.slot0.kD = 8.0;
+    config.slot0.integralZone = 0;
+    config.slot0.maxIntegralAccumulator = 0;
+    config.velocityMeasurementWindow = 64;
+    config.velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
+    config.voltageCompSaturation = 12;
+    config.voltageMeasurementFilter = 32;
     magazineTalon.configAllSettings(config);
     magazineTalon.enableCurrentLimit(true);
     magazineTalon.configForwardLimitSwitchSource(
         RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, 43);
     magazineTalon.setNeutralMode(NeutralMode.Brake);
+    magazineTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 10, 30, 1));
+    magazineTalon.enableVoltageCompensation(true);
     TelemetryService telemetry = RobotContainer.TELEMETRY;
     telemetry.stop();
     telemetry.register(new TalonSRXItem(magazineTalon, "Magazine"));
     telemetry.start();
   }
 
-  public void runTalon(double speed) {
-    magazineTalon.set(ControlMode.PercentOutput, speed);
+  public void runOpenLoop(double percent) {
+    magazineTalon.set(ControlMode.PercentOutput, percent);
+  }
+
+  public void runSpeed(double velocity) {
+    magazineTalon.set(ControlMode.Velocity, velocity);
   }
 
   public void stopTalon() {

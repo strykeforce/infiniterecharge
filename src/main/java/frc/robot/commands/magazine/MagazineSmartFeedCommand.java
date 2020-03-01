@@ -33,7 +33,7 @@ public class MagazineSmartFeedCommand extends CommandBase {
         }
         break;
       case START_MAG:
-        MAGAZINE.runTalon(Constants.MagazineConstants.kOpenloopShoot);
+        MAGAZINE.runSpeed(Constants.MagazineConstants.kClosedLoopShoot);
         timerStart = System.currentTimeMillis();
         state = FeedStates.WAIT;
         break;
@@ -50,7 +50,7 @@ public class MagazineSmartFeedCommand extends CommandBase {
       case RUNNING:
         if (isMoving()) {
           INTAKE.runIntake(0);
-          MAGAZINE.runTalon(0);
+          MAGAZINE.runOpenLoop(0);
           state = FeedStates.STOPPED;
         }
         break;
