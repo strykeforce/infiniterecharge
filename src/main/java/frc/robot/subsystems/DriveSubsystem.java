@@ -50,25 +50,33 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
   private static final int XLOCK_FR_TICKS_TARGET = 1481;
   private static final int AZIMUTH_TICKS = 4096;
 
-  private static final double MAX_VELOCITY = 10000; // FIXME
+  private static final double MAX_VELOCITY = 40000; // FIXME
   private static final double MAX_ACCELERATION = 2.0; // FIXME
   private static final int TICKS_PER_REV = 9011; // FIXME
   private static final double WHEEL_DIAMETER = 0.0635; // In meters
   private static final double TICKS_PER_METER = TICKS_PER_REV / (WHEEL_DIAMETER * Math.PI);
-  private static final double kP_PATH = 0.7; // FIXME?
+  private static final double kP_PATH = 10; // FIXME?
   private static final double MAX_VELOCITY_MPS = (MAX_VELOCITY * 10) / TICKS_PER_METER;
   private static final double kV_PATH = 1 / MAX_VELOCITY_MPS;
+  private static final double kP_YAW = 0.01;
 
   private final SwerveDrive swerve = configSwerve();
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private Trajectory trajectoryGenerated;
-  private int startEncoderPosition;
+  private int[] startEncoderPosition = new int[4];
   private double estimatedDistanceTraveled;
   private Translation2d lastPosition;
+  private double targetYaw;
   private double currentDistance = 0;
   private double desiredDistance = 0;
-  private double error = 0;
+  private double distError = 0;
+  private double yawError = 0;
+  private double pathVelocity = 0;
+  private double desiredPathVelocity = 0;
+  private double fwdPath = 0;
+  private double strPath = 0;
+  private double yawPath = 0;
 
   public DriveSubsystem() {
     swerve.setFieldOriented(true);
@@ -200,10 +208,12 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     return swerve.getGyro();
   }
 
-  // Pathfinder Stuff
+  // ----------------------------------Path
+  // Methods--------------------------------------------------
   public Trajectory calculateTrajctory(String name) {
     // Take name and parse
     try {
+      // Parse Toml File
       TomlParseResult parseResult =
           Toml.parse(Paths.get("/home/lvuser/deploy/paths/" + name + ".toml"));
 
@@ -228,6 +238,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
         path.add(point);
       }
 
+      // Create Trajectory
       TrajectoryConfig trajectoryConfig =
           new TrajectoryConfig(
               parseResult.getDouble("max_velocity"), parseResult.getDouble("max_acceleration"));
@@ -238,7 +249,9 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
           TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
 
       List<Trajectory.State> states = trajectoryGenerated.getStates();
-      logger.info(states.toString());
+      for (int i = 0; i < states.size(); i++) {
+        logger.info(states.get(i).toString());
+      }
     } catch (IOException error) {
       logger.error(error.toString());
       logger.error("Path {} not found", name);
@@ -246,39 +259,68 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     return trajectoryGenerated;
   }
 
-  public void startPath(Trajectory trajectoryGenerated) {
+  public void startPath(Trajectory trajectoryGenerated, double targetYaw) {
     this.trajectoryGenerated = trajectoryGenerated;
-    startEncoderPosition = 0;
+    this.targetYaw = targetYaw;
     for (int i = 0; i < 4; i++) {
-      startEncoderPosition +=
-          Math.abs(swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition());
+      startEncoderPosition[i] = swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition();
     }
-    startEncoderPosition = startEncoderPosition / 4;
+
+    // Reset State Variables
     lastPosition = Constants.AutoConstants.START_PATH.getTranslation();
     estimatedDistanceTraveled = 0;
     desiredDistance = 0;
-    error = 0.0;
-    // swerve.setDriveMode(DriveMode.CLOSED_LOOP);
+    distError = 0.0;
+    // swerve.setDriveMode(DriveMode.CLOSED_LOOP); //FIXME
   }
 
   public void updatePathOutput(double timeSeconds) {
     Trajectory.State currentState = trajectoryGenerated.sample(timeSeconds);
+
+    // Calculate Desired Distance
     estimatedDistanceTraveled += currentState.poseMeters.getTranslation().getDistance(lastPosition);
     desiredDistance = estimatedDistanceTraveled;
+
+    // Get Current Distance Travelled
     int currentEncoderPosition = 0;
     for (int i = 0; i < 4; i++) {
       currentEncoderPosition +=
-          Math.abs(swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition());
+          Math.abs(
+              swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition()
+                  - startEncoderPosition[i]);
     }
     currentEncoderPosition = currentEncoderPosition / 4;
-    currentDistance = (currentEncoderPosition - startEncoderPosition) / TICKS_PER_METER;
-    System.out.println("Desired dist: " + desiredDistance + " Current dist: " + currentDistance);
-    error = desiredDistance - currentDistance;
-    double rawOutput = kP_PATH * error + kV_PATH * currentState.velocityMetersPerSecond;
-    double output = (rawOutput * TICKS_PER_METER) / (MAX_VELOCITY * 10); // Ticks per 100ms
+    currentDistance = currentEncoderPosition / TICKS_PER_METER;
+
+    // Calculate Output Velocity
+    distError = desiredDistance - currentDistance;
+    desiredPathVelocity = currentState.velocityMetersPerSecond / MAX_VELOCITY_MPS;
+    double rawOutput =
+        Math.copySign(1, currentState.velocityMetersPerSecond) * kP_PATH * distError
+            + currentState.velocityMetersPerSecond / MAX_VELOCITY_MPS;
+    pathVelocity =
+        rawOutput / MAX_VELOCITY_MPS; // * TICKS_PER_METER)/(MAX_VELOCITY * 10); // Ticks per 100ms
+    // //FIXME
     double heading = currentState.poseMeters.getRotation().getRadians();
-    double forward = Math.cos(heading) * output, strafe = Math.sin(heading) * output;
-    drive(forward, strafe, 0.0);
+
+    // Convert to FWD/STR Components
+    fwdPath = Math.cos(heading) * pathVelocity;
+    strPath = Math.sin(heading) * pathVelocity;
+    if (targetYaw == 180 || targetYaw == -180) {
+      double currentGyro = Math.IEEEremainder(swerve.getGyro().getAngle(), 360);
+      double posError = currentGyro - 180;
+      double negError = currentGyro + 180;
+      if (Math.abs(posError) < Math.abs(negError)) yawError = posError;
+      else yawError = negError;
+    } else {
+      yawError = Math.IEEEremainder(swerve.getGyro().getAngle(), 360) - targetYaw;
+    }
+    if (Math.abs(yawError) < 1) {
+      yawPath = 0.0;
+    } else {
+      yawPath = -yawError * kP_YAW;
+    }
+    drive(-fwdPath, -strPath, -yawPath);
     lastPosition = currentState.poseMeters.getTranslation();
   }
 
@@ -286,10 +328,18 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     return timePassedSeconds >= trajectoryGenerated.getTotalTimeSeconds();
   }
 
-  // GRAPHER METHODS
+  // -----------------------------------GRAPHER
+  // METHODS---------------------------------------------------
   private static final String DESIRED_DISTANCE = "desired distance";
   private static final String ACTUAL_DISTANCE = "actual distance";
   private static final String DISTANCE_ERROR = "distance error";
+  private static final String PATH_VELOCITY = "path velocity";
+  private static final String DESIRED_VELOCITY = "desired path velocity";
+  private static final String FWD_PATH = "forward path";
+  private static final String STR_PATH = "strafe path";
+  private static final String YAW_PATH = "yaw path";
+  private static final String YAW_ERROR = "yaw error";
+  private static final String YAW = "yaw";
 
   @NotNull
   @Override
@@ -308,7 +358,14 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     return Set.of(
         new Measure(DESIRED_DISTANCE, "desired distance"),
         new Measure(ACTUAL_DISTANCE, "actual distance"),
-        new Measure(DISTANCE_ERROR, "distance error"));
+        new Measure(DISTANCE_ERROR, "distance error"),
+        new Measure(PATH_VELOCITY, "path velocity"),
+        new Measure(DESIRED_VELOCITY, "desired path velocity"),
+        new Measure(FWD_PATH, "forward path"),
+        new Measure(STR_PATH, "strafe path"),
+        new Measure(YAW_PATH, "yaw path"),
+        new Measure(YAW_ERROR, "yaw_error"),
+        new Measure(YAW, "yaw"));
   }
 
   @NotNull
@@ -331,7 +388,21 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
       case ACTUAL_DISTANCE:
         return () -> currentDistance;
       case DISTANCE_ERROR:
-        return () -> error;
+        return () -> distError;
+      case PATH_VELOCITY:
+        return () -> pathVelocity;
+      case DESIRED_VELOCITY:
+        return () -> desiredPathVelocity;
+      case FWD_PATH:
+        return () -> fwdPath;
+      case STR_PATH:
+        return () -> strPath;
+      case YAW_PATH:
+        return () -> yawPath;
+      case YAW_ERROR:
+        return () -> yawError;
+      case YAW:
+        return () -> Math.IEEEremainder(swerve.getGyro().getAngle(), 360);
       default:
         return () -> 2767;
     }

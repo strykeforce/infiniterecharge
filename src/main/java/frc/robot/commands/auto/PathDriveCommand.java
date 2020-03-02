@@ -23,7 +23,7 @@ public class PathDriveCommand extends CommandBase {
   @Override
   public void initialize() {
     isFirstExecute = true;
-    driveSubsystem.startPath(trajectory);
+    driveSubsystem.startPath(trajectory, 180);
     System.out.println("Starting pathing...");
   }
 

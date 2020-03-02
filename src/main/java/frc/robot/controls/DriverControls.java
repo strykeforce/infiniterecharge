@@ -17,6 +17,7 @@ public class DriverControls {
     // Drive Commands
     new JoystickButton(joystick, Button.RESET.id).whenPressed(new ZeroGyroCommand());
     new JoystickButton(joystick, Button.HAMBURGER.id).whenPressed(new PathDriveCommand("TestPath"));
+    // new JoystickButton(joystick, Button.HAMBURGER.id).whenPressed(new AutoIntakeCmdGroup());
     new JoystickButton(joystick, Button.X.id).whenPressed(new XLockCommand());
 
     // Shoot Commands
