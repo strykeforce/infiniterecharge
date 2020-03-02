@@ -1,5 +1,6 @@
 package frc.robot
 
+import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj2.command.CommandBase
 import mu.KotlinLogging
 
@@ -292,6 +293,50 @@ class HealthCheckCommand : CommandBase() {
 
             }
 
+            //Hood Tests
+            talonCheck {
+                name = "hood tests"
+                talons = RobotContainer.HOOD.talons
+
+                val supplyCurrent = 0.375..1.0
+                val statorCurrent = 0.375..1.0
+
+                positionTalon {
+                    encoderTarget = 500
+                    encoderGoodEnough = 100
+                }
+
+                positionTest {
+                    percentOutput = 0.25
+                    encoderChangeTarget = 7000
+                    encoderGoodEnough = 500
+                    encoderTimeCount = 500
+
+                    supplyCurrentRange = supplyCurrent
+                    statorCurrentRange = statorCurrent
+                }
+
+                positionTest {
+                    percentOutput = -0.25
+                    encoderChangeTarget = 7000
+                    encoderGoodEnough = 500
+                    encoderTimeCount = 500
+
+                    supplyCurrentRange = supplyCurrent
+                    statorCurrentRange = statorCurrent
+                }
+            }
+
         }
+    }
+
+    override fun execute() {
+        healthCheck.execute()
+    }
+
+    override fun isFinished() = healthCheck.isFinised()
+
+    override fun end(interrupted: Boolean) {
+        healthCheck.report()
     }
 }
