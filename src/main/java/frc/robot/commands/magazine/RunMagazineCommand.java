@@ -17,6 +17,6 @@ public class RunMagazineCommand extends InstantCommand {
   public void initialize() {
     magazineSubsystem.enableLimitSwitch(false);
     magazineSubsystem.disableReverseLimitSwitch();
-    magazineSubsystem.runTalon(setSpeed);
+    magazineSubsystem.runOpenLoop(setSpeed);
   }
 }

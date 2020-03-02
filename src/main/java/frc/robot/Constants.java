@@ -78,6 +78,7 @@ public final class Constants {
     public static final double kOpenloopShoot = 1.0;
     public static final double kOpenloopReverse = -0.25;
     public static final double kOpenloopArmReverse = -0.2;
+    public static final double kClosedLoopShoot = 4800;
 
     // Command Specific
     public static final long kArmTimeToShooterOn = 500;
