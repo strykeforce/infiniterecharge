@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.talon.TalonFXItem;
@@ -34,6 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
     telemetryService.stop();
     telemetryService.register(new TalonFXItem(intakeDrive, "Intake"));
     telemetryService.start();
+  }
+
+  public List<BaseTalon> getTalons() {
+    return List.of(intakeDrive);
   }
 
   public void stopIntake() {

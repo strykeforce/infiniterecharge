@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
@@ -66,6 +68,10 @@ public class TurretSubsystem extends SubsystemBase {
     telService.stop();
     telService.register(new TalonSRXItem(turret, "ShooterTurret"));
     telService.start();
+  }
+
+  public List<BaseTalon> getTalons() {
+    return List.of(turret);
   }
 
   public boolean zeroTurret() {
