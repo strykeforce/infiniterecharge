@@ -33,3 +33,16 @@ Climb        | SRX  | climb       | 50 | 14
 Subsystem    | Servo       | ID  
 ------------ | ----------- | -- 
 Climb        | ratchet     | 0  
+
+## DIO
+
+Subsystem  | DIO      | ID
+---------- | -------- | --
+AutoSwitch | 0        | 0
+AutoSwitch | 1        | 1
+AutoSwitch | 2        | 2
+AutoSwitch | 3        | 3
+AutoSwitch | 4        | 4
+AutoSwitch | 5        | 5
+EventFlag  | flag     | 8
+Constants  | protoBot | 9 
