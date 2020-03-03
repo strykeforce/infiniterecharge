@@ -13,6 +13,6 @@ public class ZeroDriveWheelsCommand extends InstantCommand {
 
   @Override
   public void initialize() {
-    driveSubsystem.ZeroSwerve();
+    driveSubsystem.zeroSwerve();
   }
 }
