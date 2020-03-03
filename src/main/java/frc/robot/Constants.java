@@ -8,6 +8,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,6 +164,12 @@ public final class Constants {
     public static final int kTableRes = 1;
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
+  }
+
+  public static final class AutoConstants {
+    public static final Pose2d START_PATH = new Pose2d(0.0, 0.0, new Rotation2d(0.0)); // FIXME
+    public static final Pose2d END_PATH = new Pose2d(4.0, 0.0, new Rotation2d(0.0)); // FIXME
+    public static final List<Translation2d> INTERNAL_POINTS = List.of(); // FIXME
   }
 
   public static class CompConstants {

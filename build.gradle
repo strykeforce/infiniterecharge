@@ -72,6 +72,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi:1.9.2"
 
     implementation 'com.opencsv:opencsv:5.1'
+    
+    implementation 'net.consensys.cava:cava-toml:0.5.0'
 
     // Enable simulation gui support. Must check the box in vscode to enable support
     // upon debugging

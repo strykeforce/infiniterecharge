@@ -7,10 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.controls.AutoChooser;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.*;
 import org.strykeforce.deadeye.Deadeye;
@@ -39,6 +41,10 @@ public class RobotContainer {
   public static ClimberSubsystem CLIMBER;
   public static Deadeye DEADEYE;
   public static VisionSubsystem VISION;
+  public static AutoChooser AUTO;
+
+  public static DigitalInput eventFlag = new DigitalInput(8);
+  public static boolean isEvent;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -57,7 +63,11 @@ public class RobotContainer {
 
     // Create Controls last so all subsystems exist
     CONTROLS = new Controls();
+
+    AUTO = new AutoChooser();
+
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
+    isEvent = eventFlag.get();
     TELEMETRY.start();
 
     // Configure the button bindings
