@@ -137,6 +137,7 @@ public final class Constants {
     public static final double kFastUpOutput = 1.0;
     public static final double kFastDownOutput = -1.0;
     public static final double kHoldOutput = -0.05;
+    public static final double kReleaseRatchetOutput = -0.4;
 
     public static final double kRatchetEngage = 0.5;
     public static final double kRatchetDisable = 0.15;

@@ -38,7 +38,7 @@ public class ClimberSubsystem extends SubsystemBase {
     TalonSRXConfiguration talonConfig = new TalonSRXConfiguration(); // FIXME
     talonConfig.forwardSoftLimitThreshold = Constants.ClimberConstants.kForwardSoftLimit;
     talonConfig.forwardSoftLimitEnable = true;
-    talonConfig.reverseSoftLimitThreshold = Constants.ClimberConstants.kForwardSoftLimit;
+    talonConfig.reverseSoftLimitThreshold = Constants.ClimberConstants.kReverseSoftLimit;
     talonConfig.reverseSoftLimitEnable = true;
     climb.configAllSettings(talonConfig);
     climb.setNeutralMode(NeutralMode.Brake);
@@ -51,12 +51,10 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void stopClimb() {
-    logger.info("stop Climb");
     climb.set(ControlMode.PercentOutput, 0.0);
   }
 
   public void runOpenLoop(double setpoint) {
-    logger.info("run Climb");
     climb.set(ControlMode.PercentOutput, setpoint);
   }
 
