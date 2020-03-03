@@ -1,6 +1,5 @@
 package frc.robot
 
-import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj2.command.CommandBase
 import mu.KotlinLogging
 
@@ -140,38 +139,22 @@ class HealthCheckCommand : CommandBase() {
                 name = "intake tests"
                 talons = RobotContainer.INTAKE.talons
 
-                val volt3supplycurrentRange = 1.0..4.0
-                val volt12supplyCurrentRange = 13.0..17.0
+                val volt6supplycurrentRange = 1.0..4.0
 
-                val volt3statorCurrentRange = 1.0..4.0
-                val volt12statorCurrentRange = 13.0..17.0
+                val volt6statorCurrentRange = 1.0..4.0
 
                 timedTest {
-                    percentOutput = 0.25
-                    supplyCurrentRange = volt3supplycurrentRange
-                    statorCurrentRange = volt3statorCurrentRange
+                    percentOutput = 0.5
+                    supplyCurrentRange = volt6supplycurrentRange
+                    statorCurrentRange = volt6statorCurrentRange
                     speedRange = 3500..4500
                 }
 
                 timedTest {
-                    percentOutput = -0.25
-                    supplyCurrentRange = volt3supplycurrentRange
-                    statorCurrentRange = volt3statorCurrentRange
+                    percentOutput = -0.5
+                    supplyCurrentRange = volt6supplycurrentRange
+                    statorCurrentRange = volt6statorCurrentRange
                     speedRange = -4500..-3500
-                }
-
-                timedTest {
-                    percentOutput = 1.0
-                    supplyCurrentRange = volt12supplyCurrentRange
-                    statorCurrentRange = volt12statorCurrentRange
-                    speedRange = 16000..19000
-                }
-
-                timedTest {
-                    percentOutput = -1.0
-                    supplyCurrentRange = volt12supplyCurrentRange
-                    statorCurrentRange = volt12statorCurrentRange
-                    speedRange = -19000..-16000
                 }
             }
 
@@ -180,38 +163,38 @@ class HealthCheckCommand : CommandBase() {
                 name = "magazine tests"
                 talons = RobotContainer.MAGAZINE.talons
 
-                val volt3supplyCurrentRange = 1.0..4.0
+                val volt6supplyCurrentRange = 1.0..4.0
                 val volt12supplyCurrentRange = 13.0..17.0
 
-                val volt3statorCurrentRange = 1.0..4.0
+                val volt6statorCurrentRange = 1.0..4.0
                 val volt12statorCurrentRange = 13.0..17.0
 
                 timedTest {
-                    percentOutput = 0.25
-                    supplyCurrentRange = volt3supplyCurrentRange
-                    statorCurrentRange = volt3statorCurrentRange
-                    speedRange = 3500..4500
+                    percentOutput = 0.5
+                    supplyCurrentRange = volt6supplyCurrentRange
+                    statorCurrentRange = volt6statorCurrentRange
+                    speedRange = 2000..3000
                 }
 
                 timedTest {
-                    percentOutput = -0.25
-                    supplyCurrentRange = volt3supplyCurrentRange
-                    statorCurrentRange = volt3statorCurrentRange
-                    speedRange = -4500..-3500
+                    percentOutput = -0.5
+                    supplyCurrentRange = volt6supplyCurrentRange
+                    statorCurrentRange = volt6statorCurrentRange
+                    speedRange = -3000..-2000
                 }
 
                 timedTest {
                     percentOutput = 1.0
                     supplyCurrentRange = volt12supplyCurrentRange
                     statorCurrentRange = volt12statorCurrentRange
-                    speedRange = 16000..19000
+                    speedRange = 3500..5000
                 }
 
                 timedTest {
                     percentOutput = -1.0
                     supplyCurrentRange = volt12supplyCurrentRange
                     statorCurrentRange = volt12statorCurrentRange
-                    speedRange = -19000..16000
+                    speedRange = -5000..-3500
                 }
             }
 
@@ -220,39 +203,26 @@ class HealthCheckCommand : CommandBase() {
                 name = "shooter tests"
                 talons = RobotContainer.SHOOTER.talons
 
-                val volt3supplyCurrentRange = 1.0..4.0
-                val volt12supplyCurrentRange = 13.0..17.0
+                val volt10_000supplyCurrentRange = 1.0..4.0
+                val volt16_000supplyCurrentRange = 13.0..17.0
 
-                val volt3statorCurrentRange = 1.0..4.0
-                val volt12statorCurrentRange = 13.0..17.0
+                val volt10_000statorCurrentRange = 1.0..4.0
+                val volt16_000statorCurrentRange = 13.0..17.0
 
                 followerTimedTest {
-                    percentOutput = 0.25
-                    supplyCurrentRange = volt3supplyCurrentRange
-                    statorCurrentRange = volt3statorCurrentRange
-                    speedRange = 3500..4500
+                    percentOutput = 0.53
+                    supplyCurrentRange = volt10_000supplyCurrentRange
+                    statorCurrentRange = volt10_000statorCurrentRange
+                    speedRange = 8_000..12_000
                 }
 
                 followerTimedTest {
-                    percentOutput = -0.25
-                    supplyCurrentRange = volt3supplyCurrentRange
-                    statorCurrentRange = volt3statorCurrentRange
-                    speedRange = -4500..-3500
+                    percentOutput = 0.84
+                    supplyCurrentRange = volt16_000supplyCurrentRange
+                    statorCurrentRange = volt16_000statorCurrentRange
+                    speedRange = 14_000..19_000
                 }
 
-                followerTimedTest {
-                    percentOutput = 1.0
-                    supplyCurrentRange = volt12supplyCurrentRange
-                    statorCurrentRange = volt12statorCurrentRange
-                    speedRange = 16000..19000
-                }
-
-                followerTimedTest {
-                    percentOutput = -1.0
-                    supplyCurrentRange = volt12supplyCurrentRange
-                    statorCurrentRange = volt12statorCurrentRange
-                    speedRange = -19000..16000
-                }
             }
 
             //Turret Tests
@@ -270,8 +240,8 @@ class HealthCheckCommand : CommandBase() {
                 }
 
                 positionTest {
-                    percentOutput = 0.25
-                    encoderChangeTarget = 26_000
+                    percentOutput = 0.2
+                    encoderChangeTarget = 25_000
                     encoderGoodEnough = 500
                     encoderTimeCount = 500
 
@@ -281,8 +251,8 @@ class HealthCheckCommand : CommandBase() {
                 }
 
                 positionTest {
-                    percentOutput = -0.25
-                    encoderChangeTarget = 26_000
+                    percentOutput = -0.2
+                    encoderChangeTarget = 25_000
                     encoderGoodEnough = 500
                     encoderTimeCount = 500
 
@@ -302,12 +272,12 @@ class HealthCheckCommand : CommandBase() {
                 val statorCurrent = 0.375..1.0
 
                 positionTalon {
-                    encoderTarget = 500
+                    encoderTarget = 0
                     encoderGoodEnough = 100
                 }
 
                 positionTest {
-                    percentOutput = 0.25
+                    percentOutput = 0.2
                     encoderChangeTarget = 7000
                     encoderGoodEnough = 500
                     encoderTimeCount = 500
@@ -317,7 +287,7 @@ class HealthCheckCommand : CommandBase() {
                 }
 
                 positionTest {
-                    percentOutput = -0.25
+                    percentOutput = -0.2
                     encoderChangeTarget = 7000
                     encoderGoodEnough = 500
                     encoderTimeCount = 500

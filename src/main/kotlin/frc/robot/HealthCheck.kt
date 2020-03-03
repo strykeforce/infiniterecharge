@@ -57,7 +57,7 @@ class HealthCheck{
             tagConsumer.html {
                 attributes["lang"] = "en"
                 head {
-                    title { +"Health Check"}
+                    title { +"Health Check" }
                     style {
                         unsafe {
                             raw(HealthCheck::class.java.getResource("/healthcheck.css").readText())
@@ -65,14 +65,14 @@ class HealthCheck{
                     }
                 }
                 body {
-                    h1 { +"Health Check ${SimpleDateFormat("HH:mm:ss").format(Date())}" }
-                    testGroups.forEach{ it.report(tagConsumer)}
+                    h1 { +"Health Check  ${SimpleDateFormat("HH:mm:ss").format(Date())}" }
+                    testGroups.forEach { it.report(tagConsumer) }
                 }
             }
-
-            }
-        logger.info { "health check report: http://10.27.67.2/healthcheck/index.html" }
         }
+        logger.info { "health check report: http://10.27.67.2/healthcheck/index.html" }
+
+    }
 
     override fun toString(): String{
         return "HealthCheck(testGroups=$testGroups)"

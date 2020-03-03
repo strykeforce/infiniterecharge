@@ -188,8 +188,8 @@ public final class Constants {
   public static class ProtoConstants {
     // Turret
     public static final int kTurretZeroTicks = 2488;
-    public static final double kMaxStringPotZero = 95;
-    public static final double kMinStringPotZero = 13;
+    public static final double kMaxStringPotZero = 100;
+    public static final double kMinStringPotZero = -1;
 
     // Hood
     public static final int kHoodZeroTicks = 2650;

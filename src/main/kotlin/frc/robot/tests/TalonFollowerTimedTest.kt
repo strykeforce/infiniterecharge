@@ -23,7 +23,7 @@ class TalonFollowerTimedTest(private val group: TalonGroup) : Test, Reportable {
     var supplyCurrentRange = 0.0..0.0
     var statorCurrentRange = 0.0..0.0
     var speedRange = 0..0
-    var warmUp = 0.25
+    var warmUp = 1.0
     var duration = 2.0
 
     private var state = State.STARTING
