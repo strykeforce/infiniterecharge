@@ -24,7 +24,7 @@ class TalonTimedTest(private val group: TalonGroup) : Test, Reportable {
     var supplyCurrentRange = 0.0..0.0
     var statorCurrentRange = 0.0..0.0
     var speedRange = 0..0
-    var warmUp = 0.25
+    var warmUp = 0.5
     var duration = 2.0
 
     private var state = State.STARTING
@@ -44,7 +44,10 @@ class TalonTimedTest(private val group: TalonGroup) : Test, Reportable {
                 talonSupplyCurrents = group.talons.associateWith { mutableListOf<Double>() }
                 talonStatorCurrents = group.talons.associateWith { mutableListOf<Double>() }
                 talonSpeeds = group.talons.associateWith { mutableListOf<Int>() }
-                group.talons.forEach { it.set(ControlMode.PercentOutput, percentOutput) }
+                group.talons.forEach {
+                    it.configOpenloopRamp(0.75*warmUp)
+                    it.set(ControlMode.PercentOutput, percentOutput)
+                }
                 startTime = Timer.getFPGATimestamp()
                 state = State.WARMING
             }
@@ -58,7 +61,10 @@ class TalonTimedTest(private val group: TalonGroup) : Test, Reportable {
                 if(++iteration == iterations) state = State.STOPPING
             }
             State.STOPPING -> {
-                group.talons.forEach { it.set(ControlMode.PercentOutput, 0.0) }
+                group.talons.forEach {
+                    it.set(ControlMode.PercentOutput, 0.0)
+                    it.configOpenloopRamp(0.0);
+                }
 
                 talonSupplyCurrents.forEach{ talon, supplyCurrents ->
                     logger.info { "talon ${talon.deviceID} average supply current = ${supplyCurrents.average()}" }

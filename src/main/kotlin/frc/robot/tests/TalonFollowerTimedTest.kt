@@ -48,6 +48,7 @@ class TalonFollowerTimedTest(private val group: TalonGroup) : Test, Reportable {
                 talonSupplyCurrents = group.talons.associateWith { mutableListOf<Double>() }
                 talonStatorCurrents = group.talons.associateWith { mutableListOf<Double>() }
                 talonSpeeds = group.talons.associateWith { mutableListOf<Int>() }
+                group.talons.forEach { it.configOpenloopRamp(0.75*warmUp) }
                 group.talons[1].follow(group.talons[0])
                 group.talons[0].set(ControlMode.PercentOutput, percentOutput)
                 startTime = Timer.getFPGATimestamp()
@@ -65,6 +66,7 @@ class TalonFollowerTimedTest(private val group: TalonGroup) : Test, Reportable {
             State.STOPPING -> {
                 group.talons[1].follow(group.talons[0])
                 group.talons[0].set(ControlMode.PercentOutput, 0.0)
+                group.talons.forEach { it.configOpenloopRamp(0.0) }
 
                 talonSupplyCurrents.forEach{ talon, supplyCurrents ->
                     logger.info { "talon ${talon.deviceID} average supply current = ${supplyCurrents.average()}" }

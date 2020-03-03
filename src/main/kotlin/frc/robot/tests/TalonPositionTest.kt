@@ -23,7 +23,7 @@ class TalonPositionTest(private val group: TalonGroup): Test, Reportable {
     var supplyCurrentRange = 0.0..0.0
     var statorCurrentRange = 0.0..0.0
     var speedRange = 0..0
-    var warmUp = 0.25
+    var warmUp = 0.5
     var peakVoltage = 12.0
 
     var encoderChangeTarget = 0
@@ -52,6 +52,7 @@ class TalonPositionTest(private val group: TalonGroup): Test, Reportable {
                 logger.info { "$name starting" }
                 talon = group.talons.first()
                 startingPosition = talon.selectedSensorPosition
+                talon.configOpenloopRamp(0.75*warmUp)
                 talon.set(ControlMode.PercentOutput, percentOutput)
                 startTime = Timer.getFPGATimestamp()
                 state = State.WARMING
@@ -74,6 +75,7 @@ class TalonPositionTest(private val group: TalonGroup): Test, Reportable {
                 if(iteration++ > encoderTimeCount){
                     logger.warn { "timed out waiting for encoder count, failing test" }
                     talon.set(ControlMode.PercentOutput, 0.0)
+                    talon.configOpenloopRamp(0.0)
                     state = State.STOPPED
                 }
             }
