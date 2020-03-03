@@ -14,7 +14,8 @@ public class AutoSwitch {
   public AutoSwitch() {
     logger.debug("initializing auton switch");
     for (int i = 0; i < BITS; i++) {
-      digitalInputs.add(i, new DigitalInput(i));
+      if (i == 5) digitalInputs.add(i, new DigitalInput(i + 1));
+      else digitalInputs.add(i, new DigitalInput(i));
     }
   }
 

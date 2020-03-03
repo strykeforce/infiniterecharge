@@ -95,6 +95,14 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     logger.info("resetting gyro: ({})", adj);
   }
 
+  public void offsetGyro(double offset) {
+    AHRS gyro = swerve.getGyro();
+    gyro.setAngleAdjustment(0);
+    double adj = gyro.getAngle() % 360;
+    gyro.setAngleAdjustment(-adj - offset);
+    logger.info("offsetting gyro: ({})", offset);
+  }
+
   public void zeroAzimuths() {
     swerve.zeroAzimuthEncoders();
   }
@@ -250,7 +258,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
 
       List<Trajectory.State> states = trajectoryGenerated.getStates();
       for (int i = 0; i < states.size(); i++) {
-        logger.info(states.get(i).toString());
+        //        logger.info(states.get(i).toString());
       }
     } catch (IOException error) {
       logger.error(error.toString());
