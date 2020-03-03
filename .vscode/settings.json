@@ -1,3 +1,4 @@
 {
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "afterDelay",
+    "java.configuration.updateBuildConfiguration": "disabled"
 }
