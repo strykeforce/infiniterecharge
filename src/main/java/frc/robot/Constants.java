@@ -160,6 +160,12 @@ public final class Constants {
     public static final int kTableRes = 1;
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
+
+    public static final double kHorizAngleCorrection = 0;
+    public static final int kHoodTicksCorrectionR1 = 0; // 8-15 feet
+    public static final int kHoodTicksCorrectionR2 = 0; // 15-19 feet
+    public static final int kHoodTicksCorrectionR3 = 0; // 19-25 feet
+    public static final int kHoodTicksCorrectionR4 = 0; // 25+ feet
   }
 
   public static class CompConstants {

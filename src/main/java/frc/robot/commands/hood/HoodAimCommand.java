@@ -21,7 +21,9 @@ public class HoodAimCommand extends CommandBase {
   public void initialize() {
     VISION.setTrackingEnabled(true);
     if (VISION.isTargetValid()) {
-      HOOD.setHoodPosition((int) VISION.getHoodSetpoint(VISION.getBestTableIndex()));
+      HOOD.setHoodPosition(
+          (int) VISION.getHoodSetpoint(VISION.getBestTableIndex())
+              + VISION.getHoodTicksAdjustment());
     }
   }
 

@@ -125,6 +125,19 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     return HORIZ_FOV * getPixOffset() / HORIZ_RES;
   }
 
+  public double getHorizAngleAdjustment() {
+    return Constants.VisionConstants.kHorizAngleCorrection;
+  }
+
+  public int getHoodTicksAdjustment() {
+    double distance = getGroundDistance();
+    if (distance > 96 && distance <= 180) return Constants.VisionConstants.kHoodTicksCorrectionR1;
+    if (distance > 180 && distance <= 228) return Constants.VisionConstants.kHoodTicksCorrectionR2;
+    if (distance > 228 && distance <= 300) return Constants.VisionConstants.kHoodTicksCorrectionR3;
+    if (distance > 300) return Constants.VisionConstants.kHoodTicksCorrectionR4;
+    return 0;
+  }
+
   public double getElevationAngle() {
     return Math.toDegrees(Math.atan((TARGET_HEIGHT - CAMERA_HEIGHT) / getDistance()));
   }

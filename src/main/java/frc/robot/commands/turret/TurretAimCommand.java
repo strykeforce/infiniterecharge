@@ -22,7 +22,7 @@ public class TurretAimCommand extends CommandBase {
   public void initialize() {
     if (VISION.getTargetData().getValid()) {
       double offset = VISION.getOffsetAngle();
-      TURRET.rotateTurret(-1.015 * offset);
+      TURRET.rotateTurret(-1.015 * offset + VISION.getHorizAngleAdjustment());
       logger.info("Single correction: offset angle {}, correction: {}", offset, 1.015 * offset);
     }
   }
