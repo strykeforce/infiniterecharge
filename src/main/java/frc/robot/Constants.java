@@ -140,6 +140,13 @@ public final class Constants {
 
     public static final double kRatchetEngage = 0.5;
     public static final double kRatchetDisable = 0.15;
+    public static final double kServoMoveTime = 0.05;
+
+    public static final int kReverseSoftLimit = -300;
+    public static final int kForwardSoftLimit = 10_000;
+    public static final int kCheckRatchetTicks = 4_000;
+    public static final double kTimeoutRatchetCheck = 2;
+    public static final int kCloseEnoughTicks = 10;
   }
 
   public static final class DriveConstants {

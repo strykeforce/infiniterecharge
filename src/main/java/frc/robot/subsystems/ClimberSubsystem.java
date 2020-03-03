@@ -27,11 +27,19 @@ public class ClimberSubsystem extends SubsystemBase {
   private SupplyCurrentLimitConfiguration runningCurrent =
       new SupplyCurrentLimitConfiguration(true, 40, 45, 0.04);
 
+  public State currentState = State.STOWED;
+  public double ratchetReleaseTime;
+  public double servoMoveTime;
+
   public ClimberSubsystem() {
     climb = new TalonSRX(TALON_ID);
     ratchet = new Servo(RATCHET_ID);
 
     TalonSRXConfiguration talonConfig = new TalonSRXConfiguration(); // FIXME
+    talonConfig.forwardSoftLimitThreshold = Constants.ClimberConstants.kForwardSoftLimit;
+    talonConfig.forwardSoftLimitEnable = true;
+    talonConfig.reverseSoftLimitThreshold = Constants.ClimberConstants.kForwardSoftLimit;
+    talonConfig.reverseSoftLimitEnable = true;
     climb.configAllSettings(talonConfig);
     climb.setNeutralMode(NeutralMode.Brake);
     climb.configSupplyCurrentLimit(holdingCurrent);
@@ -40,8 +48,6 @@ public class ClimberSubsystem extends SubsystemBase {
     telemetryService.stop();
     telemetryService.register(new TalonSRXItem(climb, "Climb"));
     telemetryService.start();
-    engageRatchet(false);
-    holdClimb();
   }
 
   public void stopClimb() {
@@ -51,8 +57,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void runOpenLoop(double setpoint) {
     logger.info("run Climb");
-    climb.configSupplyCurrentLimit(runningCurrent);
     climb.set(ControlMode.PercentOutput, setpoint);
+  }
+
+  public void setClimbCurrentLimit() {
+    climb.configSupplyCurrentLimit(runningCurrent);
   }
 
   public void holdClimb() {
@@ -69,5 +78,30 @@ public class ClimberSubsystem extends SubsystemBase {
       ratchet.set(Constants.ClimberConstants.kRatchetDisable);
       logger.info("Disabling Ratchet");
     }
+  }
+
+  public double getClimbPosition() {
+    return climb.getSelectedSensorPosition();
+  }
+
+  public void zeroClimb() {
+    logger.info("Zeroing Climber");
+    climb.setSelectedSensorPosition(0);
+  }
+
+  public void disableClimb() {
+    climb.set(TalonSRXControlMode.PercentOutput, 0.0);
+    climb.configPeakOutputForward(0.0);
+    climb.configPeakOutputReverse(0.0);
+    logger.error("Ratchet did not disengage, disabling climb");
+  }
+
+  public enum State {
+    STOWED,
+    SERVO_ENGAGE,
+    RELEASING_RATCHET,
+    CHECK_RATCHET,
+    CLIMBING,
+    LOCKED_OUT
   }
 }
