@@ -1,6 +1,9 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
+import frc.robot.commands.ZeroDriveWheelsCommand;
+import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.magazine.MagazineSmartFeedCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.shooter.ActuateTuningCommand;
@@ -14,6 +17,7 @@ public class SmartDashboardControls {
   public SmartDashboardControls() {
     addTuningCommands();
     addMatchCommands();
+    addPitCommands();
   }
 
   public void addTuningCommands() {
@@ -39,5 +43,12 @@ public class SmartDashboardControls {
     SmartDashboard.putBoolean("Match/Ball Chambered", false);
     SmartDashboard.putBoolean("Match/Intake Stalled", false);
     SmartDashboard.putBoolean("Match/Locked On", false);
+  }
+
+  public void addPitCommands() {
+    SmartDashboard.putData("Pit/Zero Hood", new HoodPositionCommand(0));
+    SmartDashboard.putData(
+        "Pit/Offset Zero Hood", new HoodPositionCommand(Constants.HoodConstants.kOffsetZeroTicks));
+    SmartDashboard.putData("Pit/Zero Wheels", new ZeroDriveWheelsCommand());
   }
 }
