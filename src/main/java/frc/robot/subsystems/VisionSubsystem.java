@@ -124,7 +124,29 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public double getOffsetAngle() {
-    return HORIZ_FOV * getPixOffset() / HORIZ_RES;
+    if (getTargetData().getValid()) return HORIZ_FOV * getPixOffset() / HORIZ_RES;
+    return 2767;
+  }
+
+  public double getHorizAngleAdjustment() {
+    return Constants.VisionConstants.kHorizAngleCorrection;
+  }
+
+  public int getHoodTicksAdjustment() {
+    double distance = getGroundDistance();
+    if (distance > 96 && distance <= 180)
+      return Constants.VisionConstants.kHoodInchesCorrectionR1
+          * Constants.VisionConstants.kHoodTicksPerInchR1;
+    if (distance > 180 && distance <= 228)
+      return Constants.VisionConstants.kHoodInchesCorrectionR2
+          * Constants.VisionConstants.kHoodTicksPerInchR2;
+    if (distance > 228 && distance <= 300)
+      return Constants.VisionConstants.kHoodInchesCorrectionR3
+          * Constants.VisionConstants.kHoodTicksPerInchR3;
+    if (distance > 300)
+      return Constants.VisionConstants.kHoodInchesCorrectionR4
+          * Constants.VisionConstants.kHoodTicksPerInchR4;
+    return 0;
   }
 
   public double getElevationAngle() {
@@ -133,11 +155,14 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public double getPixOffset() {
     MinAreaRectTargetData targetData = getTargetData();
-    double center =
-        (targetData.getWidth() > targetData.getHeight())
-            ? (targetData.getTopLeftX() + targetData.getTopRightX()) / 2
-            : (targetData.getTopRightX() + targetData.getBottomRightX()) / 2;
-    return center - HORIZ_RES / 2;
+    if (targetData.getValid()) {
+      double center =
+          (targetData.getWidth() > targetData.getHeight())
+              ? (targetData.getTopLeftX() + targetData.getTopRightX()) / 2
+              : (targetData.getTopRightX() + targetData.getBottomRightX()) / 2;
+      return center - HORIZ_RES / 2;
+    }
+    return 2767;
   }
 
   public double getDistance() {

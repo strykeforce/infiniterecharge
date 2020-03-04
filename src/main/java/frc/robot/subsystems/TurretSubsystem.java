@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
@@ -30,6 +32,7 @@ public class TurretSubsystem extends SubsystemBase {
   private static final double kWrapRange = Constants.TurretConstants.kWrapRange;
   private static final double kTurretMidpoint = Constants.TurretConstants.kTurretMidpoint;
   TelemetryService telService;
+  public static boolean talonReset;
 
   public TurretSubsystem() {
     kTurretZeroTicks = Constants.TurretConstants.kTurretZeroTicks;
@@ -70,6 +73,10 @@ public class TurretSubsystem extends SubsystemBase {
     }
   }
 
+  public List<BaseTalon> getTalons() {
+    return List.of(turret);
+  }
+
   public boolean zeroTurret() {
     boolean didZero = false;
     double stringPotPosition = turret.getSensorCollection().getAnalogInRaw();
@@ -91,12 +98,14 @@ public class TurretSubsystem extends SubsystemBase {
       logger.error("Turret zero failed. Killing turret...");
     }
 
+    turret.clearStickyFaults();
+
     return didZero;
   }
 
   public void rotateTurret(double offset) {
     double currentAngle = turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
-    double targetAngle = currentAngle + offset;
+    double targetAngle = currentAngle + offset + Constants.VisionConstants.kHorizAngleCorrection;
     if (targetAngle <= kWrapRange && turret.getSelectedSensorPosition() > kTurretMidpoint
         || targetAngle < 0) {
       targetAngle += 360;
@@ -122,8 +131,11 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void setTurret(double setPoint) {
-    targetTurretPosition = setPoint;
-    turret.set(ControlMode.MotionMagic, setPoint);
+    if (turret.hasResetOccurred()) talonReset = true;
+    else {
+      targetTurretPosition = setPoint;
+      turret.set(ControlMode.MotionMagic, setPoint);
+    }
   }
 
   public void turretOpenLoop(double output) {
@@ -169,5 +181,9 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       return false;
     }
+  }
+
+  public double getStringPot() {
+    return turret.getSensorCollection().getAnalogInRaw();
   }
 }

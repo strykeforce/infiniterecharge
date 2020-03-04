@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.talon.TalonFXItem;
@@ -63,6 +64,10 @@ public class ShooterSubsystem extends SubsystemBase {
       telService.register(new TalonFXItem(rightSlave, "ShooterRightSlave"));
       telService.start();
     }
+  }
+
+  public List<BaseTalon> getTalons() {
+    return List.of(leftMaster, rightSlave);
   }
 
   public void run(int velocity) {
