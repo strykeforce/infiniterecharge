@@ -31,6 +31,7 @@ public class TurretSubsystem extends SubsystemBase {
   private static int kTurretZeroTicks;
   private static final double kWrapRange = Constants.TurretConstants.kWrapRange;
   private static final double kTurretMidpoint = Constants.TurretConstants.kTurretMidpoint;
+  public static boolean talonReset;
 
   public TurretSubsystem() {
     kTurretZeroTicks = Constants.TurretConstants.kTurretZeroTicks;
@@ -95,6 +96,8 @@ public class TurretSubsystem extends SubsystemBase {
       logger.error("Turret zero failed. Killing turret...");
     }
 
+    turret.clearStickyFaults();
+
     return didZero;
   }
 
@@ -126,8 +129,11 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void setTurret(double setPoint) {
-    targetTurretPosition = setPoint;
-    turret.set(ControlMode.MotionMagic, setPoint);
+    if (turret.hasResetOccurred()) talonReset = true;
+    else {
+      targetTurretPosition = setPoint;
+      turret.set(ControlMode.MotionMagic, setPoint);
+    }
   }
 
   public void turretOpenLoop(double output) {
@@ -173,5 +179,9 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       return false;
     }
+  }
+
+  public double getStringPot() {
+    return turret.getSensorCollection().getAnalogInRaw();
   }
 }
