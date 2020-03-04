@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import java.util.List;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
 
@@ -44,6 +46,10 @@ public class MagazineSubsystem extends SubsystemBase {
     telemetry.stop();
     telemetry.register(new TalonSRXItem(magazineTalon, "Magazine"));
     telemetry.start();
+  }
+
+  public List<BaseTalon> getTalons() {
+    return List.of(magazineTalon);
   }
 
   public void runOpenLoop(double percent) {

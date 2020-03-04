@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.HealthCheckCommand;
 import frc.robot.commands.ZeroDriveWheelsCommand;
 import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.magazine.MagazineSmartFeedCommand;
@@ -38,17 +39,18 @@ public class SmartDashboardControls {
     SmartDashboard.putData("Tuning/StopFiring", new StopShootCommand());
   }
 
+  public void addPitCommands() {
+    SmartDashboard.putData("Pit/HealthCheck", new HealthCheckCommand());
+    SmartDashboard.putData("Pit/Zero Hood", new HoodPositionCommand(0));
+    SmartDashboard.putData(
+        "Pit/Offset Zero Hood", new HoodPositionCommand(Constants.HoodConstants.kOffsetZeroTicks));
+    SmartDashboard.putData("Pit/Zero Wheels", new ZeroDriveWheelsCommand());
+  }
+
   public void addMatchCommands() {
     SmartDashboard.putBoolean("Match/Magazine Full", false);
     SmartDashboard.putBoolean("Match/Ball Chambered", false);
     SmartDashboard.putBoolean("Match/Intake Stalled", false);
     SmartDashboard.putBoolean("Match/Locked On", false);
-  }
-
-  public void addPitCommands() {
-    SmartDashboard.putData("Pit/Zero Hood", new HoodPositionCommand(0));
-    SmartDashboard.putData(
-        "Pit/Offset Zero Hood", new HoodPositionCommand(Constants.HoodConstants.kOffsetZeroTicks));
-    SmartDashboard.putData("Pit/Zero Wheels", new ZeroDriveWheelsCommand());
   }
 }
