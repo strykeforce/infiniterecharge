@@ -94,7 +94,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void rotateTurret(double offset) {
     double currentAngle = turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
-    double targetAngle = currentAngle + offset;
+    double targetAngle = currentAngle + offset + Constants.VisionConstants.kHorizAngleCorrection;
     if (targetAngle <= kWrapRange && turret.getSelectedSensorPosition() > kTurretMidpoint
         || targetAngle < 0) {
       targetAngle += 360;
