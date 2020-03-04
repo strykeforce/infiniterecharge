@@ -27,6 +27,8 @@ public class HoodSubsystem extends SubsystemBase {
 
   private static int kHoodZeroTicks;
 
+  TelemetryService telService;
+
   public HoodSubsystem() {
     kHoodZeroTicks = Constants.HoodConstants.kHoodZeroTicks;
     configTalons();
@@ -60,11 +62,12 @@ public class HoodSubsystem extends SubsystemBase {
     hood.enableCurrentLimit(false);
     hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 30, 0.5));
     hood.enableVoltageCompensation(true);
-
-    TelemetryService telService = RobotContainer.TELEMETRY;
-    telService.stop();
-    telService.register(new TalonSRXItem(hood, "ShooterHood"));
-    telService.start();
+    if (!RobotContainer.isEvent) {
+      TelemetryService telService = RobotContainer.TELEMETRY;
+      telService.stop();
+      telService.register(new TalonSRXItem(hood, "ShooterHood"));
+      telService.start();
+    }
   }
 
   public boolean zeroHood() {

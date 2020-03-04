@@ -24,6 +24,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final int L_MASTER_ID = 40;
   private static final int R_SLAVE_ID = 41;
 
+  TelemetryService telService;
+
   public ShooterSubsystem() {
     configTalons();
   }
@@ -54,12 +56,13 @@ public class ShooterSubsystem extends SubsystemBase {
     rightSlave.setInverted(true);
     rightSlave.enableVoltageCompensation(false);
     rightSlave.follow(leftMaster);
-
-    TelemetryService telService = RobotContainer.TELEMETRY;
-    telService.stop();
-    telService.register(new TalonFXItem(leftMaster, "ShooterLeftMaster"));
-    telService.register(new TalonFXItem(rightSlave, "ShooterRightSlave"));
-    telService.start();
+    if (!RobotContainer.isEvent) {
+      TelemetryService telService = RobotContainer.TELEMETRY;
+      telService.stop();
+      telService.register(new TalonFXItem(leftMaster, "ShooterLeftMaster"));
+      telService.register(new TalonFXItem(rightSlave, "ShooterRightSlave"));
+      telService.start();
+    }
   }
 
   public void run(int velocity) {

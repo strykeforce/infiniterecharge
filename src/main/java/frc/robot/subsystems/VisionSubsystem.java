@@ -38,6 +38,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static TurretSubsystem turret;
   private static Camera<MinAreaRectTargetData> shooterCamera;
   private static MinAreaRectTargetData targetData;
+  TelemetryService telService;
 
   private static String[][] lookupTable;
 
@@ -83,12 +84,13 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     shooterCamera.setLightEnabled(false);
 
     configureProcess();
-
-    TelemetryService telService = RobotContainer.TELEMETRY;
-    telService.stop();
-    telService.register(this);
-    telService.start();
-    shooterCamera.setEnabled(true);
+    if (!RobotContainer.isEvent) {
+      TelemetryService telService = RobotContainer.TELEMETRY;
+      telService.stop();
+      telService.register(this);
+      telService.start();
+      shooterCamera.setEnabled(true);
+    }
 
     try {
       readTable();

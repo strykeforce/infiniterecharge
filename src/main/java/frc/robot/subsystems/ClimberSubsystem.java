@@ -35,11 +35,12 @@ public class ClimberSubsystem extends SubsystemBase {
     climb.configAllSettings(talonConfig);
     climb.setNeutralMode(NeutralMode.Brake);
     climb.configSupplyCurrentLimit(holdingCurrent);
-
-    TelemetryService telemetryService = RobotContainer.TELEMETRY;
-    telemetryService.stop();
-    telemetryService.register(new TalonSRXItem(climb, "Climb"));
-    telemetryService.start();
+    if (!RobotContainer.isEvent) {
+      TelemetryService telemetryService = RobotContainer.TELEMETRY;
+      telemetryService.stop();
+      telemetryService.register(new TalonSRXItem(climb, "Climb"));
+      telemetryService.start();
+    }
     engageRatchet(false);
     holdClimb();
   }

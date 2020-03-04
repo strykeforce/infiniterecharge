@@ -12,6 +12,7 @@ public class MagazineSubsystem extends SubsystemBase {
   private static final int MAGAZINE_ID = 30;
 
   private TalonSRX magazineTalon;
+  TelemetryService telemetry;
 
   public MagazineSubsystem() {
     magazineTalon = new TalonSRX(MAGAZINE_ID);
@@ -40,10 +41,12 @@ public class MagazineSubsystem extends SubsystemBase {
     magazineTalon.setNeutralMode(NeutralMode.Brake);
     magazineTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 10, 30, 1));
     magazineTalon.enableVoltageCompensation(true);
-    TelemetryService telemetry = RobotContainer.TELEMETRY;
-    telemetry.stop();
-    telemetry.register(new TalonSRXItem(magazineTalon, "Magazine"));
-    telemetry.start();
+    if (RobotContainer.isEvent) {
+      TelemetryService telemetry = RobotContainer.TELEMETRY;
+      telemetry.stop();
+      telemetry.register(new TalonSRXItem(magazineTalon, "Magazine"));
+      telemetry.start();
+    }
   }
 
   public void runOpenLoop(double percent) {

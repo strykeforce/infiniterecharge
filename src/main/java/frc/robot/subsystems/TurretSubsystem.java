@@ -29,6 +29,7 @@ public class TurretSubsystem extends SubsystemBase {
   private static int kTurretZeroTicks;
   private static final double kWrapRange = Constants.TurretConstants.kWrapRange;
   private static final double kTurretMidpoint = Constants.TurretConstants.kTurretMidpoint;
+  TelemetryService telService;
 
   public TurretSubsystem() {
     kTurretZeroTicks = Constants.TurretConstants.kTurretZeroTicks;
@@ -61,11 +62,12 @@ public class TurretSubsystem extends SubsystemBase {
     turret.enableCurrentLimit(false);
     turret.enableVoltageCompensation(true);
     turret.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 30, 500));
-
-    TelemetryService telService = RobotContainer.TELEMETRY;
-    telService.stop();
-    telService.register(new TalonSRXItem(turret, "ShooterTurret"));
-    telService.start();
+    if (!RobotContainer.isEvent) {
+      TelemetryService telService = RobotContainer.TELEMETRY;
+      telService.stop();
+      telService.register(new TalonSRXItem(turret, "ShooterTurret"));
+      telService.start();
+    }
   }
 
   public boolean zeroTurret() {

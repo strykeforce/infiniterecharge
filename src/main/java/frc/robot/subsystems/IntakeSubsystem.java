@@ -18,6 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public static TalonFX intakeDrive;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  TelemetryService telemetryService;
 
   public IntakeSubsystem() {
     intakeDrive = new TalonFX(TALON_ID);
@@ -29,11 +30,12 @@ public class IntakeSubsystem extends SubsystemBase {
     talonConfig.supplyCurrLimit.enable = true;
 
     intakeDrive.configAllSettings(talonConfig);
-
-    TelemetryService telemetryService = RobotContainer.TELEMETRY;
-    telemetryService.stop();
-    telemetryService.register(new TalonFXItem(intakeDrive, "Intake"));
-    telemetryService.start();
+    if (!RobotContainer.isEvent) {
+      TelemetryService telemetryService = RobotContainer.TELEMETRY;
+      telemetryService.stop();
+      telemetryService.register(new TalonFXItem(intakeDrive, "Intake"));
+      telemetryService.start();
+    }
   }
 
   public void stopIntake() {
