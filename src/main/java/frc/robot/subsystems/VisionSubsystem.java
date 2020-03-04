@@ -79,6 +79,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     drive = RobotContainer.DRIVE;
 
     shooterCamera = deadeye.getCamera(kCameraID);
+    targetData = new MinAreaRectTargetData();
 
     shooterCamera.setLightEnabled(false);
 
