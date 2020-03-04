@@ -96,6 +96,8 @@ public class TurretSubsystem extends SubsystemBase {
       logger.error("Turret zero failed. Killing turret...");
     }
 
+    turret.clearStickyFaults();
+
     return didZero;
   }
 
