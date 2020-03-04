@@ -42,8 +42,9 @@ public class ClimbReleaseSequenceCommand extends CommandBase {
           state = ClimberSubsystem.State.RELEASING_RATCHET;
         }
       case RELEASING_RATCHET:
-        if (Math.abs(CLIMB.getClimbPosition() - Constants.ClimberConstants.kReverseSoftLimit)
-            <= Constants.ClimberConstants.kCloseEnoughTicks) {
+        if (CLIMB.getClimbPosition()
+            <= (Constants.ClimberConstants.kReverseSoftLimit
+                + Constants.ClimberConstants.kCloseEnoughTicks)) {
           CLIMB.ratchetReleaseTime = Timer.getFPGATimestamp();
           logger.info(
               "Ratchet Released - Initialize Ratchet Check time: {}", CLIMB.ratchetReleaseTime);

@@ -42,7 +42,7 @@ public class ClimberSubsystem extends SubsystemBase {
     talonConfig.reverseSoftLimitEnable = true;
     climb.configAllSettings(talonConfig);
     climb.setNeutralMode(NeutralMode.Brake);
-    climb.configSupplyCurrentLimit(holdingCurrent);
+    climb.configSupplyCurrentLimit(runningCurrent);
 
     TelemetryService telemetryService = RobotContainer.TELEMETRY;
     telemetryService.stop();
