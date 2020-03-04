@@ -162,10 +162,16 @@ public final class Constants {
     public static final int kHoodIndex = 3;
 
     public static final double kHorizAngleCorrection = 0;
-    public static final int kHoodTicksCorrectionR1 = 0; // 8-15 feet
-    public static final int kHoodTicksCorrectionR2 = 0; // 15-19 feet
-    public static final int kHoodTicksCorrectionR3 = 0; // 19-25 feet
-    public static final int kHoodTicksCorrectionR4 = 0; // 25+ feet
+    // + is further and lower
+    public static final int kHoodInchesCorrectionR1 = 0; // 8-15 feet
+    public static final int kHoodInchesCorrectionR2 = 0; // 15-19 feet
+    public static final int kHoodInchesCorrectionR3 = 0; // 19-25 feet
+    public static final int kHoodInchesCorrectionR4 = 0; // 25+ feet
+
+    public static final int kHoodTicksPerInchR1 = 40; // 8-15 feet
+    public static final int kHoodTicksPerInchR2 = 75; // 15-19 feet
+    public static final int kHoodTicksPerInchR3 = 75; // 19-25 feet
+    public static final int kHoodTicksPerInchR4 = 40; // 25+ feet
   }
 
   public static class CompConstants {
