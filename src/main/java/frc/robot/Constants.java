@@ -164,6 +164,18 @@ public final class Constants {
     public static final int kTableRes = 1;
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
+
+    public static final double kHorizAngleCorrection = 0;
+    // + is further and lower
+    public static final int kHoodInchesCorrectionR1 = 0; // 8-15 feet
+    public static final int kHoodInchesCorrectionR2 = 0; // 15-19 feet
+    public static final int kHoodInchesCorrectionR3 = 0; // 19-25 feet
+    public static final int kHoodInchesCorrectionR4 = 0; // 25+ feet
+
+    public static final int kHoodTicksPerInchR1 = 40; // 8-15 feet
+    public static final int kHoodTicksPerInchR2 = 75; // 15-19 feet
+    public static final int kHoodTicksPerInchR3 = 75; // 19-25 feet
+    public static final int kHoodTicksPerInchR4 = 40; // 25+ feet
   }
 
   public static final class AutoConstants {
@@ -188,8 +200,8 @@ public final class Constants {
   public static class ProtoConstants {
     // Turret
     public static final int kTurretZeroTicks = 2488;
-    public static final double kMaxStringPotZero = 95;
-    public static final double kMinStringPotZero = 13;
+    public static final double kMaxStringPotZero = 100;
+    public static final double kMinStringPotZero = -1;
 
     // Hood
     public static final int kHoodZeroTicks = 2650;
