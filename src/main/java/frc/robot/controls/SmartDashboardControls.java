@@ -3,9 +3,6 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.HealthCheckCommand;
-import frc.robot.Constants;
-import frc.robot.commands.ZeroDriveWheelsCommand;
-import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.ZeroDriveWheelsCommand;
 import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.magazine.MagazineSmartFeedCommand;
@@ -46,7 +43,7 @@ public class SmartDashboardControls {
     SmartDashboard.putData("Pit/HealthCheck", new HealthCheckCommand());
     SmartDashboard.putData("Pit/Zero Hood", new HoodPositionCommand(0));
     SmartDashboard.putData(
-            "Pit/Offset Zero Hood", new HoodPositionCommand(Constants.HoodConstants.kOffsetZeroTicks));
+        "Pit/Offset Zero Hood", new HoodPositionCommand(Constants.HoodConstants.kOffsetZeroTicks));
     SmartDashboard.putData("Pit/Zero Wheels", new ZeroDriveWheelsCommand());
   }
 
