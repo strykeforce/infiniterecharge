@@ -35,5 +35,6 @@ public class AutoReZeroCommand extends CommandBase {
   public void end(boolean interrupted) {
     TURRET.turretOpenLoop(0.0);
     TURRET.zeroTurret();
+    TURRET.talonReset = false;
   }
 }
