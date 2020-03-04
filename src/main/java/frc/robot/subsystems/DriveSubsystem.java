@@ -212,8 +212,19 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     }
   }
 
+  public void zeroSwerve() {
+    Wheel[] swerveWheels = swerve.getWheels();
+    for (int i = 0; i < 4; i++) {
+      swerveWheels[i].setAzimuthPosition(0);
+    }
+  }
+
   public AHRS getGyro() {
     return swerve.getGyro();
+  }
+
+  public Wheel[] getAllWheels() {
+    return swerve.getWheels();
   }
 
   // ----------------------------------Path
