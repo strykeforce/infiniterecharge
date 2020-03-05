@@ -15,7 +15,7 @@ public class BatterShotCommandGroup extends SequentialCommandGroup {
   public BatterShotCommandGroup() {
     addCommands(
         new ParallelCommandGroup(
-                new LogCommand("Begin Batter Shot Sequence"),
+            new LogCommand("Begin Batter Shot Sequence"),
             new ShooterVelocityCommand(Constants.ShooterConstants.kBatterShotVelocity),
             new TurretPositionCommand(Constants.TurretConstants.kBatterShotTicks),
             new HoodPositionCommand(Constants.HoodConstants.kBatterShotTicks),
@@ -23,6 +23,6 @@ public class BatterShotCommandGroup extends SequentialCommandGroup {
                 new RunMagazineCommand(Constants.MagazineConstants.kOpenloopArmReverse),
                 new WaitForMagazineBeamCommand())),
         new MagazineSmartFeedCommand(),
-            new LogCommand("End Batter Shot Sequence"));
+        new LogCommand("End Batter Shot Sequence"));
   }
 }

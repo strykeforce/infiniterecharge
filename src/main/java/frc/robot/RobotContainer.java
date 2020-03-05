@@ -50,15 +50,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     isEvent = eventFlag.get();
-    if(isEvent){
+    if (isEvent) {
       System.out.println("Event Flag removed - switching logging to log file");
       System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "logback-event.xml");
     }
 
-
-
     CONSTANTS = new Constants();
-    if(!isEvent) TELEMETRY = new TelemetryService(TelemetryController::new);
+    if (!isEvent) TELEMETRY = new TelemetryService(TelemetryController::new);
 
     DRIVE = new DriveSubsystem();
     MAGAZINE = new MagazineSubsystem();
@@ -77,7 +75,7 @@ public class RobotContainer {
 
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
 
-    if(!isEvent) TELEMETRY.start();
+    if (!isEvent) TELEMETRY.start();
 
     // Configure the button bindings
     configureButtonBindings();

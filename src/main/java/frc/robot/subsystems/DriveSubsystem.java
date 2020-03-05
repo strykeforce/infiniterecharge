@@ -141,7 +141,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     driveConfig.velocityMeasurementWindow = 64;
     driveConfig.voltageCompSaturation = 12;
     if (!RobotContainer.isEvent) {
-      TelemetryService telemetryService = RobotContainer.TELEMETRY;
+      telemetryService = RobotContainer.TELEMETRY;
       telemetryService.stop();
     }
     Wheel[] wheels = new Wheel[4];
@@ -268,8 +268,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
           TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
 
       List<Trajectory.State> states = trajectoryGenerated.getStates();
-      for (int i = 0; i < states.size(); i++) {
-      }
+      for (int i = 0; i < states.size(); i++) {}
     } catch (IOException error) {
       logger.error(error.toString());
       logger.error("Path {} not found", name);

@@ -9,6 +9,8 @@ import frc.robot.commands.magazine.LimitMagazineCommand;
 public class AutoIntakeCmdGroup extends ParallelCommandGroup {
   public AutoIntakeCmdGroup() {
     addCommands(
-        new LogCommand("Begin Driver Controller - Auto Intake"),new LimitMagazineCommand(MagazineConstants.kOpenLoopLoad), new IntakeAutoStopCommand());
+        new LogCommand("Begin Driver Controller - Auto Intake"),
+        new LimitMagazineCommand(MagazineConstants.kOpenLoopLoad),
+        new IntakeAutoStopCommand());
   }
 }

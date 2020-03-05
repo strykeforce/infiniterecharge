@@ -10,7 +10,7 @@ import frc.robot.commands.vision.SetCameraStateCommand;
 public class VisionAimCommandGroup extends ParallelCommandGroup {
   VisionAimCommandGroup() {
     addCommands(
-            new LogCommand("Begin Vision Aim Command Group"),
+        new LogCommand("Begin Vision Aim Command Group"),
         new SetCameraStateCommand(true),
         new TurretAimCommand(),
         new ShooterAimCommand(),

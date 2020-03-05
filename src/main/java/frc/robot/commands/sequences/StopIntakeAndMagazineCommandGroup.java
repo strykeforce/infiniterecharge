@@ -7,6 +7,9 @@ import frc.robot.commands.magazine.StopMagazineCommand;
 
 public class StopIntakeAndMagazineCommandGroup extends ParallelCommandGroup {
   public StopIntakeAndMagazineCommandGroup() {
-    addCommands(new LogCommand("Begin Stop Intake and Magazine Command"), new IntakeStopCommand(), new StopMagazineCommand());
+    addCommands(
+        new LogCommand("Begin Stop Intake and Magazine Command"),
+        new IntakeStopCommand(),
+        new StopMagazineCommand());
   }
 }

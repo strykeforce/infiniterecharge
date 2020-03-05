@@ -15,7 +15,7 @@ public class AutoIntakeCmdGroupController extends ParallelCommandGroup {
 
   public AutoIntakeCmdGroupController() {
     addCommands(
-            new LogCommand("Game Controller: Auto Intake Command Begin"),
+        new LogCommand("Game Controller: Auto Intake Command Begin"),
         new LimitMagazineCommand(MagazineConstants.kOpenLoopLoad),
         new IntakeAutoStopCommandController(),
         new TurretAngleCommand(Constants.TurretConstants.loadAngle));

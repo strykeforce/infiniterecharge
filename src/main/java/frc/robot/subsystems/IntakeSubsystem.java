@@ -60,8 +60,7 @@ public class IntakeSubsystem extends SubsystemBase {
           < Constants.IntakeConstants.kStallVelocity) {
         logger.info("Intake Stalled");
         return true;
-      }
-      else return false;
+      } else return false;
     } else return false;
   }
 }

@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drive.XLockCommand;
 import frc.robot.commands.drive.ZeroGyroCommand;
-import frc.robot.commands.auto.PathDriveCommand;
 import frc.robot.commands.hood.HoodOpenLoopCommand;
 import frc.robot.commands.sequences.*;
 

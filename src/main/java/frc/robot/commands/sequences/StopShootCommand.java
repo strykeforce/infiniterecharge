@@ -12,7 +12,7 @@ import frc.robot.commands.vision.StopVisionTrackingCommand;
 public class StopShootCommand extends ParallelCommandGroup {
   public StopShootCommand() {
     addCommands(
-            new LogCommand("Begin Stop Shoot Sequence"),
+        new LogCommand("Begin Stop Shoot Sequence"),
         new IntakeStopCommand(),
         new StopMagazineCommand(),
         new ShooterClosedLoopStopCommand(),

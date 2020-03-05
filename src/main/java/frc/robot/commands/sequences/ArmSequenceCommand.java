@@ -14,12 +14,12 @@ public class ArmSequenceCommand extends SequentialCommandGroup {
   public ArmSequenceCommand() {
     addCommands(
         // put in track start
-            new LogCommand("Begin Arm Sequence"),
+        new LogCommand("Begin Arm Sequence"),
         new SetCameraStateCommand(true),
         new RunMagazineCommand(MagazineConstants.kOpenloopArmReverse),
         // new SafeShooterReverseCommand(),
         new WaitForMagazineBeamCommand(),
         new ParallelCommandGroup(new TurretTrackingCommand(), new ArmShooterCommand()),
-            new LogCommand("End Arm Sequence"));
+        new LogCommand("End Arm Sequence"));
   }
 }
