@@ -46,3 +46,14 @@ AutoSwitch | 4        | 4
 AutoSwitch | 5        | 5
 EventFlag  | flag     | 8
 Constants  | protoBot | 9 
+
+## Auto Switch
+
+Switch | Auton
+------ | -----
+0x10   | no delay shoot
+0x11   | 4 sec delay
+0x12   | 8 sec delay
+0x13   | 10 sec delay
+0x20   | trench auto
+0x30   | 90 degree feed
