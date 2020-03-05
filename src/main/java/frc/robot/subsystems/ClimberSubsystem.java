@@ -23,7 +23,7 @@ public class ClimberSubsystem extends SubsystemBase {
   private static Servo ratchet;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private SupplyCurrentLimitConfiguration runningCurrent =
-      new SupplyCurrentLimitConfiguration(true, 40, 80, 1);
+      new SupplyCurrentLimitConfiguration(true, 60, 80, 1);
 
   public double ratchetReleasedTime;
   public double releaseStartTime;

@@ -10,10 +10,10 @@ is_reversed = true
     y = 0.0
     angle = 0.0
 [end_pose]
-    x = -0.3
+    x = -0.6
     y = 0.0
     angle = 0.0
 
 [[internal_points]]
-    x = -0.25
+    x = -0.3
     y = 0.0

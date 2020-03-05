@@ -50,7 +50,7 @@ public class MagazineSmartFeedCommand extends CommandBase {
         }
         break;
       case START_INTAKE:
-        INTAKE.runIntake(Constants.IntakeConstants.kIntakeSpeed);
+        INTAKE.runIntake(Constants.IntakeConstants.kIntakeShootSpeed);
         state = FeedStates.RUNNING;
         logger.info("Starting Intake");
         break;

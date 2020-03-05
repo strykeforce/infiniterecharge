@@ -206,6 +206,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public void setCameraEnabled(boolean enabled) {
+    logger.info("Setting camera enabled to {}", enabled);
     shooterCamera.setEnabled(enabled);
   }
 
