@@ -13,6 +13,7 @@ public class ClimbReleaseSequenceCommand extends CommandBase {
   private ClimberSubsystem.State state;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private double climbOutput;
+  private double releaseStartTime;
 
   public ClimbReleaseSequenceCommand(double climbOutput) {
     addRequirements(CLIMB);
@@ -21,7 +22,11 @@ public class ClimbReleaseSequenceCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    state = CLIMB.currentState;
+    if (CLIMB.getClimbPosition() <= Constants.ClimberConstants.kPastDeployedTicks) {
+      state = ClimberSubsystem.State.STOWED;
+    } else {
+      state = ClimberSubsystem.State.CLIMBING;
+    }
     logger.info("Slow Climb Up - Current State: {}", state);
   }
 
@@ -39,21 +44,22 @@ public class ClimbReleaseSequenceCommand extends CommandBase {
             >= Constants.ClimberConstants.kServoMoveTime) {
           CLIMB.runOpenLoop(Constants.ClimberConstants.kReleaseRatchetOutput);
           logger.info("Servo Moved - Moving Down");
+          CLIMB.releaseStartTime = Timer.getFPGATimestamp();
           state = ClimberSubsystem.State.RELEASING_RATCHET;
         }
+        break;
       case RELEASING_RATCHET:
-        if (CLIMB.getClimbPosition()
-            <= (Constants.ClimberConstants.kReverseSoftLimit
-                + Constants.ClimberConstants.kCloseEnoughTicks)) {
-          CLIMB.ratchetReleaseTime = Timer.getFPGATimestamp();
+        if (Timer.getFPGATimestamp() - CLIMB.releaseStartTime
+            >= Constants.ClimberConstants.kTimeoutRelease) {
+          CLIMB.ratchetReleasedTime = Timer.getFPGATimestamp();
           logger.info(
-              "Ratchet Released - Initialize Ratchet Check time: {}", CLIMB.ratchetReleaseTime);
+              "Ratchet Released - Initialize Ratchet Check time: {}", CLIMB.ratchetReleasedTime);
           CLIMB.runOpenLoop(Constants.ClimberConstants.kSlowUpOutput);
           state = ClimberSubsystem.State.CHECK_RATCHET;
         } else CLIMB.runOpenLoop(Constants.ClimberConstants.kReleaseRatchetOutput);
         break;
       case CHECK_RATCHET:
-        if ((Timer.getFPGATimestamp() - CLIMB.ratchetReleaseTime)
+        if ((Timer.getFPGATimestamp() - CLIMB.ratchetReleasedTime)
             >= Constants.ClimberConstants.kTimeoutRatchetCheck) {
           CLIMB.disableClimb();
           state = ClimberSubsystem.State.LOCKED_OUT;

@@ -22,20 +22,18 @@ public class ClimberSubsystem extends SubsystemBase {
   private static TalonSRX climb;
   private static Servo ratchet;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private SupplyCurrentLimitConfiguration holdingCurrent =
-      new SupplyCurrentLimitConfiguration(true, 10, 15, 0.04);
   private SupplyCurrentLimitConfiguration runningCurrent =
-      new SupplyCurrentLimitConfiguration(true, 40, 45, 0.04);
+      new SupplyCurrentLimitConfiguration(true, 40, 80, 1);
 
-  public State currentState = State.STOWED;
-  public double ratchetReleaseTime;
+  public double ratchetReleasedTime;
+  public double releaseStartTime;
   public double servoMoveTime;
 
   public ClimberSubsystem() {
     climb = new TalonSRX(TALON_ID);
     ratchet = new Servo(RATCHET_ID);
 
-    TalonSRXConfiguration talonConfig = new TalonSRXConfiguration(); // FIXME
+    TalonSRXConfiguration talonConfig = new TalonSRXConfiguration();
     talonConfig.forwardSoftLimitThreshold = Constants.ClimberConstants.kForwardSoftLimit;
     talonConfig.forwardSoftLimitEnable = true;
     talonConfig.reverseSoftLimitThreshold = Constants.ClimberConstants.kReverseSoftLimit;
@@ -60,12 +58,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void setClimbCurrentLimit() {
     climb.configSupplyCurrentLimit(runningCurrent);
-  }
-
-  public void holdClimb() {
-    climb.configSupplyCurrentLimit(holdingCurrent);
-    climb.set(TalonSRXControlMode.PercentOutput, Constants.ClimberConstants.kHoldOutput);
-    logger.info("holding climb");
   }
 
   public void engageRatchet(boolean enable) {
