@@ -34,6 +34,8 @@ public class Robot extends TimedRobot {
     RobotContainer.DRIVE.zeroGyro();
     RobotContainer.HOOD.zeroHood();
     RobotContainer.TURRET.zeroTurret();
+    RobotContainer.CLIMBER.zeroClimb();
+    RobotContainer.CLIMBER.engageRatchet(true);
     RobotContainer.VISION.setCameraEnabled(false);
   }
 
@@ -89,7 +91,6 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    RobotContainer.CLIMBER.holdClimb();
   }
 
   /** This function is called periodically during operator control. */

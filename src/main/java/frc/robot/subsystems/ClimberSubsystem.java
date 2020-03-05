@@ -22,43 +22,42 @@ public class ClimberSubsystem extends SubsystemBase {
   private static TalonSRX climb;
   private static Servo ratchet;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private SupplyCurrentLimitConfiguration holdingCurrent =
-      new SupplyCurrentLimitConfiguration(true, 10, 15, 0.04);
   private SupplyCurrentLimitConfiguration runningCurrent =
-      new SupplyCurrentLimitConfiguration(true, 40, 45, 0.04);
+      new SupplyCurrentLimitConfiguration(true, 40, 80, 1);
+
+  public double ratchetReleasedTime;
+  public double releaseStartTime;
+  public double servoMoveTime;
 
   public ClimberSubsystem() {
     climb = new TalonSRX(TALON_ID);
     ratchet = new Servo(RATCHET_ID);
 
-    TalonSRXConfiguration talonConfig = new TalonSRXConfiguration(); // FIXME
+    TalonSRXConfiguration talonConfig = new TalonSRXConfiguration();
+    talonConfig.forwardSoftLimitThreshold = Constants.ClimberConstants.kForwardSoftLimit;
+    talonConfig.forwardSoftLimitEnable = true;
+    talonConfig.reverseSoftLimitThreshold = Constants.ClimberConstants.kReverseSoftLimit;
+    talonConfig.reverseSoftLimitEnable = true;
     climb.configAllSettings(talonConfig);
     climb.setNeutralMode(NeutralMode.Brake);
-    climb.configSupplyCurrentLimit(holdingCurrent);
+    climb.configSupplyCurrentLimit(runningCurrent);
 
     TelemetryService telemetryService = RobotContainer.TELEMETRY;
     telemetryService.stop();
     telemetryService.register(new TalonSRXItem(climb, "Climb"));
     telemetryService.start();
-    engageRatchet(false);
-    holdClimb();
   }
 
   public void stopClimb() {
-    logger.info("stop Climb");
     climb.set(ControlMode.PercentOutput, 0.0);
   }
 
   public void runOpenLoop(double setpoint) {
-    logger.info("run Climb");
-    climb.configSupplyCurrentLimit(runningCurrent);
     climb.set(ControlMode.PercentOutput, setpoint);
   }
 
-  public void holdClimb() {
-    climb.configSupplyCurrentLimit(holdingCurrent);
-    climb.set(TalonSRXControlMode.PercentOutput, Constants.ClimberConstants.kHoldOutput);
-    logger.info("holding climb");
+  public void setClimbCurrentLimit() {
+    climb.configSupplyCurrentLimit(runningCurrent);
   }
 
   public void engageRatchet(boolean enable) {
@@ -69,5 +68,30 @@ public class ClimberSubsystem extends SubsystemBase {
       ratchet.set(Constants.ClimberConstants.kRatchetDisable);
       logger.info("Disabling Ratchet");
     }
+  }
+
+  public double getClimbPosition() {
+    return climb.getSelectedSensorPosition();
+  }
+
+  public void zeroClimb() {
+    logger.info("Zeroing Climber");
+    climb.setSelectedSensorPosition(0);
+  }
+
+  public void disableClimb() {
+    climb.set(TalonSRXControlMode.PercentOutput, 0.0);
+    climb.configPeakOutputForward(0.0);
+    climb.configPeakOutputReverse(0.0);
+    logger.error("Ratchet did not disengage, disabling climb");
+  }
+
+  public enum State {
+    STOWED,
+    SERVO_ENGAGE,
+    RELEASING_RATCHET,
+    CHECK_RATCHET,
+    CLIMBING,
+    LOCKED_OUT
   }
 }

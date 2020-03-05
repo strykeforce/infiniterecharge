@@ -136,10 +136,20 @@ public final class Constants {
     public static final double kSlowDownOutput = -0.25;
     public static final double kFastUpOutput = 1.0;
     public static final double kFastDownOutput = -1.0;
-    public static final double kHoldOutput = -0.05;
+    public static final double kReleaseRatchetOutput = -1.0;
 
-    public static final double kRatchetEngage = 0.5;
-    public static final double kRatchetDisable = 0.15;
+    public static final double kRatchetEngage = 0.6;
+    public static final double kRatchetDisable = 0.3;
+    public static final double kServoMoveTime = 0.05;
+
+    public static final int kReverseSoftLimit = -300;
+    public static final int kForwardSoftLimit = 55_000;
+
+    public static final int kPastDeployedTicks = 500;
+    public static final int kCheckRatchetTicks = 4_000;
+
+    public static final double kTimeoutRelease = 0.2;
+    public static final double kTimeoutRatchetCheck = 2;
   }
 
   public static final class DriveConstants {
