@@ -62,6 +62,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
 
   private final SwerveDrive swerve = configSwerve();
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  TelemetryService telemetryService;
 
   private Trajectory trajectoryGenerated;
   private int[] startEncoderPosition = new int[4];
@@ -139,10 +140,10 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     driveConfig.velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
     driveConfig.velocityMeasurementWindow = 64;
     driveConfig.voltageCompSaturation = 12;
-
-    TelemetryService telemetryService = RobotContainer.TELEMETRY;
-    telemetryService.stop();
-
+    if (!RobotContainer.isEvent) {
+      telemetryService = RobotContainer.TELEMETRY;
+      telemetryService.stop();
+    }
     Wheel[] wheels = new Wheel[4];
 
     for (int i = 0; i < 4; i++) {
@@ -156,15 +157,16 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
       driveTalon.configAllSettings(driveConfig);
       driveTalon.setNeutralMode(NeutralMode.Brake);
       driveTalon.enableVoltageCompensation(true);
-
-      telemetryService.register(new TalonSRXItem(azimuthTalon, "Azimuth " + i));
-      telemetryService.register(new TalonFXItem(driveTalon, "Drive " + (i + 10)));
-
+      if (!RobotContainer.isEvent) {
+        telemetryService.register(new TalonSRXItem(azimuthTalon, "Azimuth " + i));
+        telemetryService.register(new TalonFXItem(driveTalon, "Drive " + (i + 10)));
+      }
       wheels[i] = new Wheel(azimuthTalon, driveTalon, DRIVE_SETPOINT_MAX);
     }
-    telemetryService.register(this);
-    telemetryService.start();
-
+    if (!RobotContainer.isEvent) {
+      telemetryService.register(this);
+      telemetryService.start();
+    }
     return wheels;
   }
 
@@ -182,9 +184,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
 
   public void xLockSwerveDrive() {
     int angle = 0;
-
-    System.out.println(
-        "FrontLeft: " + XLOCK_FL_TICKS_TARGET + ", FrontRight: " + XLOCK_FR_TICKS_TARGET);
+    logger.info("X-locking wheels");
     Wheel[] swerveWheels = swerve.getWheels();
 
     for (int i = 0; i < 4; i++) {
@@ -268,9 +268,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
           TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
 
       List<Trajectory.State> states = trajectoryGenerated.getStates();
-      for (int i = 0; i < states.size(); i++) {
-        //        logger.info(states.get(i).toString());
-      }
+      for (int i = 0; i < states.size(); i++) {}
     } catch (IOException error) {
       logger.error(error.toString());
       logger.error("Path {} not found", name);

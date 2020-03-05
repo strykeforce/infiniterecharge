@@ -29,6 +29,8 @@ public class HoodSubsystem extends SubsystemBase {
 
   private static int kHoodZeroTicks;
 
+  TelemetryService telService;
+
   public HoodSubsystem() {
     kHoodZeroTicks = Constants.HoodConstants.kHoodZeroTicks;
     configTalons();
@@ -62,11 +64,12 @@ public class HoodSubsystem extends SubsystemBase {
     hood.enableCurrentLimit(false);
     hood.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 5, 30, 0.5));
     hood.enableVoltageCompensation(true);
-
-    TelemetryService telService = RobotContainer.TELEMETRY;
-    telService.stop();
-    telService.register(new TalonSRXItem(hood, "ShooterHood"));
-    telService.start();
+    if (!RobotContainer.isEvent) {
+      TelemetryService telService = RobotContainer.TELEMETRY;
+      telService.stop();
+      telService.register(new TalonSRXItem(hood, "ShooterHood"));
+      telService.start();
+    }
   }
 
   public List<BaseTalon> getTalons() {
@@ -98,6 +101,7 @@ public class HoodSubsystem extends SubsystemBase {
   public void setHoodPosition(int position) {
     hood.set(ControlMode.MotionMagic, position);
     targetHoodPosition = position;
+    logger.info("Setting Hood to {} ticks", position);
   }
 
   public int getHoodPosition() {
@@ -106,6 +110,7 @@ public class HoodSubsystem extends SubsystemBase {
 
   public void hoodOpenLoop(double output) {
     hood.set(ControlMode.PercentOutput, output);
+    logger.info("Running Hood open-loop at: {}", output);
   }
 
   public boolean hoodAtTarget() {

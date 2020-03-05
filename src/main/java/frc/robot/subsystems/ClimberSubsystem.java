@@ -23,7 +23,7 @@ public class ClimberSubsystem extends SubsystemBase {
   private static Servo ratchet;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private SupplyCurrentLimitConfiguration runningCurrent =
-      new SupplyCurrentLimitConfiguration(true, 40, 80, 1);
+      new SupplyCurrentLimitConfiguration(true, 60, 80, 1);
 
   public double ratchetReleasedTime;
   public double releaseStartTime;
@@ -41,19 +41,22 @@ public class ClimberSubsystem extends SubsystemBase {
     climb.configAllSettings(talonConfig);
     climb.setNeutralMode(NeutralMode.Brake);
     climb.configSupplyCurrentLimit(runningCurrent);
-
-    TelemetryService telemetryService = RobotContainer.TELEMETRY;
-    telemetryService.stop();
-    telemetryService.register(new TalonSRXItem(climb, "Climb"));
-    telemetryService.start();
+    if (!RobotContainer.isEvent) {
+      TelemetryService telemetryService = RobotContainer.TELEMETRY;
+      telemetryService.stop();
+      telemetryService.register(new TalonSRXItem(climb, "Climb"));
+      telemetryService.start();
+    }
   }
 
   public void stopClimb() {
+    logger.info("stop Climb");
     climb.set(ControlMode.PercentOutput, 0.0);
   }
 
   public void runOpenLoop(double setpoint) {
     climb.set(ControlMode.PercentOutput, setpoint);
+    logger.info("Running open-loop at: {}", setpoint);
   }
 
   public void setClimbCurrentLimit() {

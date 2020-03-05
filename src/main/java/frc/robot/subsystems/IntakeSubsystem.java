@@ -20,6 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public static TalonFX intakeDrive;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  TelemetryService telemetryService;
 
   public IntakeSubsystem() {
     intakeDrive = new TalonFX(TALON_ID);
@@ -31,11 +32,12 @@ public class IntakeSubsystem extends SubsystemBase {
     talonConfig.supplyCurrLimit.enable = true;
 
     intakeDrive.configAllSettings(talonConfig);
-
-    TelemetryService telemetryService = RobotContainer.TELEMETRY;
-    telemetryService.stop();
-    telemetryService.register(new TalonFXItem(intakeDrive, "Intake"));
-    telemetryService.start();
+    if (!RobotContainer.isEvent) {
+      TelemetryService telemetryService = RobotContainer.TELEMETRY;
+      telemetryService.stop();
+      telemetryService.register(new TalonFXItem(intakeDrive, "Intake"));
+      telemetryService.start();
+    }
   }
 
   public List<BaseTalon> getTalons() {
@@ -48,16 +50,17 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void runIntake(double setpoint) {
-    logger.info("run Intake");
+    logger.info("run Intake at: {}", setpoint);
     intakeDrive.set(ControlMode.PercentOutput, setpoint);
   }
 
   public boolean isStalled() {
-
     if (intakeDrive.getMotorOutputPercent() != 0) {
       if (Math.abs(intakeDrive.getSelectedSensorVelocity())
-          < Constants.IntakeConstants.kStallVelocity) return true;
-      else return false;
+          < Constants.IntakeConstants.kStallVelocity) {
+        logger.info("Intake Stalled");
+        return true;
+      } else return false;
     } else return false;
   }
 }

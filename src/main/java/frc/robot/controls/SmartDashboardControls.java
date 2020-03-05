@@ -3,7 +3,8 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.HealthCheckCommand;
-import frc.robot.commands.ZeroDriveWheelsCommand;
+import frc.robot.RobotContainer;
+import frc.robot.commands.drive.ZeroDriveWheelsCommand;
 import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.magazine.MagazineSmartFeedCommand;
 import frc.robot.commands.sequences.*;
@@ -16,9 +17,12 @@ public class SmartDashboardControls {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public SmartDashboardControls() {
-    addTuningCommands();
+
+    if (!RobotContainer.isEvent) {
+      addTuningCommands();
+      addPitCommands();
+    }
     addMatchCommands();
-    addPitCommands();
   }
 
   public void addTuningCommands() {
