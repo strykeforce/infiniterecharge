@@ -1,7 +1,7 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.commands.OffsetGyroCommand;
+import frc.robot.commands.drive.OffsetGyroCommand;
 import frc.robot.commands.sequences.ArmedShootSequenceCommand;
 import frc.robot.commands.sequences.AutoIntakeCmdGroup;
 import frc.robot.commands.sequences.StopShootCommand;
@@ -20,9 +20,9 @@ public class TrenchAutoCommandGroup extends SequentialCommandGroup {
         new StopShootCommand(),
         new ParallelRaceGroup(
             new SequentialCommandGroup(
-                new PathDriveCommand(ballFetchPath), new WaitCommand(intakeWait)),
+                new PathDriveCommand(ballFetchPath, 180), new WaitCommand(intakeWait)),
             new AutoIntakeCmdGroup()),
-        new PathDriveCommand(driveShootPath),
+        new PathDriveCommand(driveShootPath, 180),
         new AutoArmCommandGroup(),
         new ArmedShootSequenceCommand());
   }

@@ -2,9 +2,8 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.XLockCommand;
-import frc.robot.commands.ZeroGyroCommand;
-import frc.robot.commands.auto.PathDriveCommand;
+import frc.robot.commands.drive.XLockCommand;
+import frc.robot.commands.drive.ZeroGyroCommand;
 import frc.robot.commands.hood.HoodOpenLoopCommand;
 import frc.robot.commands.sequences.*;
 
@@ -16,8 +15,6 @@ public class DriverControls {
 
     // Drive Commands
     new JoystickButton(joystick, Button.RESET.id).whenPressed(new ZeroGyroCommand());
-    new JoystickButton(joystick, Button.HAMBURGER.id).whenPressed(new PathDriveCommand("TestPath"));
-    // new JoystickButton(joystick, Button.HAMBURGER.id).whenPressed(new AutoIntakeCmdGroup());
     new JoystickButton(joystick, Button.X.id).whenPressed(new XLockCommand());
 
     // Shoot Commands

@@ -11,16 +11,19 @@ public class AutoCommands {
   // .2 toml distance = 7"
   static Command createFor(int switchPosition) {
     switch (switchPosition) {
+      case 0x10:
+        return new NoDelayShootCommandGroup(180, 2, 180);
+      case 0x11:
+        return new DelayShootCommandGroup(180, 4, 2, 180);
+      case 0x12:
+        return new DelayShootCommandGroup(180, 8, 2, 180);
+      case 0x13:
+        return new DelayShootCommandGroup(180, 10, 2, 180);
       case 0x20:
-        return new NoDelayShootCommandGroup(180, 2);
-      case 0x21:
-        return new DelayShootCommandGroup(180, 0.5, 270);
-      case 0x30:
-        return new NoDelayShootCommandGroup(180, 2);
-      case 0x31:
-        return new DelayShootCommandGroup(180, 3, 2);
-      case 0x32:
         return new TrenchAutoCommandGroup(180, 1, 2, "TrenchPickupPath", "TrenchReturnPath");
+      case 0x30:
+        return new NoDelayShootCommandGroup(90, 12, -90);
+
       default:
         String msg =
             String.format("no auto command assigned for switch position %02X", switchPosition);

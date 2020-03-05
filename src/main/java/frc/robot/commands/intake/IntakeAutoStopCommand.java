@@ -27,13 +27,16 @@ public class IntakeAutoStopCommand extends CommandBase {
 
   @Override
   public void initialize() {
+    logger.info("Begin Driver Controller - Auto Intake");
     if (!magazine.isIntakeBeamBroken()) {
       intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
       state = IntakeStates.INTAKING;
       timerOn = false;
+      logger.info("Intake beam not broken - starting intake");
 
     } else {
       state = IntakeStates.DONE;
+      logger.info("Intake beam already broken - ending AutoIntake");
     }
   }
 
@@ -45,11 +48,11 @@ public class IntakeAutoStopCommand extends CommandBase {
         if (magazine.isIntakeBeamBroken() && !timerOn) {
           timerOn = true;
           breakTime = currentTime;
-          logger.debug("intake beam broken");
+          logger.info("intake beam broken - start timer");
         } else if (magazine.isIntakeBeamBroken() && timerOn) {
           if (currentTime - breakTime >= Constants.IntakeConstants.kTimeFullIntake) {
             state = IntakeStates.DONE;
-            logger.debug("intake stopping");
+            logger.info("intake timer {} reached - stop intake", IntakeConstants.kTimeFullIntake);
             SmartDashboard.putBoolean("Match/Magazine Full", true);
             intakeSubsystem.stopIntake();
           }
@@ -87,6 +90,7 @@ public class IntakeAutoStopCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intakeSubsystem.stopIntake();
+    logger.info("Driver Controller - Stopping Auto Intake");
   }
 
   private enum IntakeStates {

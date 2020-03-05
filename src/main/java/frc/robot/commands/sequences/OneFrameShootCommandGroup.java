@@ -1,7 +1,7 @@
 package frc.robot.commands.sequences;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.QuickLockDriveCommand;
+import frc.robot.commands.drive.QuickLockDriveCommand;
 import frc.robot.commands.turret.TurretAimCommand;
 import frc.robot.commands.vision.StopVisionTrackingCommand;
 

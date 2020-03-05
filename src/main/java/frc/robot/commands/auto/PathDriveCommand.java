@@ -11,19 +11,21 @@ public class PathDriveCommand extends CommandBase {
 
   private DriveSubsystem driveSubsystem = RobotContainer.DRIVE;
   private Trajectory trajectory;
+  private double targetYaw;
   private double startTimeSeconds;
   private double timeElapsed;
   private boolean isFirstExecute;
 
-  public PathDriveCommand(String trajectoryName) {
+  public PathDriveCommand(String trajectoryName, double targetYaw) {
     addRequirements(driveSubsystem);
     trajectory = driveSubsystem.calculateTrajctory(trajectoryName);
+    this.targetYaw = targetYaw;
   }
 
   @Override
   public void initialize() {
     isFirstExecute = true;
-    driveSubsystem.startPath(trajectory, 180);
+    driveSubsystem.startPath(trajectory, targetYaw);
     System.out.println("Starting pathing...");
   }
 
