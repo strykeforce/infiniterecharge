@@ -5,11 +5,14 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.MagazineSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LimitMagazineCommand extends CommandBase {
   private MagazineSubsystem magazineSubsystem = RobotContainer.MAGAZINE;
   private ShooterSubsystem shooterSubsystem = RobotContainer.SHOOTER;
   private HoodSubsystem hoodSubsystem = RobotContainer.HOOD;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private double setSpeed;
 
   public LimitMagazineCommand(double speed) {
@@ -22,6 +25,7 @@ public class LimitMagazineCommand extends CommandBase {
     if (!hoodSubsystem.isMagazineBeamBroken()) {
       magazineSubsystem.runOpenLoop(setSpeed);
       magazineSubsystem.enableLimitSwitch(true);
+      logger.info("No Balls in Magazine yet - starting magazine");
     }
   }
 
@@ -33,5 +37,6 @@ public class LimitMagazineCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     magazineSubsystem.stopTalon();
+    logger.info("Ball in magazine, stopping");
   }
 }

@@ -218,6 +218,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     }
     if (visionStableCounts >= kStableCounts) {
       visionStableCounts = 0;
+      logger.info("Camera image stable, resetting stable counts");
       return true;
     } else {
       return false;

@@ -7,6 +7,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.telemetry.TelemetryService;
 import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
 
@@ -15,6 +18,7 @@ public class MagazineSubsystem extends SubsystemBase {
 
   private TalonSRX magazineTalon;
   TelemetryService telemetry;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public MagazineSubsystem() {
     magazineTalon = new TalonSRX(MAGAZINE_ID);
@@ -43,7 +47,7 @@ public class MagazineSubsystem extends SubsystemBase {
     magazineTalon.setNeutralMode(NeutralMode.Brake);
     magazineTalon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 10, 30, 1));
     magazineTalon.enableVoltageCompensation(true);
-    if (RobotContainer.isEvent) {
+    if (!RobotContainer.isEvent) {
       TelemetryService telemetry = RobotContainer.TELEMETRY;
       telemetry.stop();
       telemetry.register(new TalonSRXItem(magazineTalon, "Magazine"));
@@ -57,14 +61,17 @@ public class MagazineSubsystem extends SubsystemBase {
 
   public void runOpenLoop(double percent) {
     magazineTalon.set(ControlMode.PercentOutput, percent);
+    logger.info("Running open loop at: {}", percent);
   }
 
   public void runSpeed(double velocity) {
     magazineTalon.set(ControlMode.Velocity, velocity);
+    logger.info("Running closed loop at: {}", velocity);
   }
 
   public void stopTalon() {
     magazineTalon.set(ControlMode.PercentOutput, 0);
+    logger.info("Stopping Magazine");
   }
 
   public void enableLimitSwitch(boolean isEnabled) {

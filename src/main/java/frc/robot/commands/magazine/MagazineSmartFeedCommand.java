@@ -6,11 +6,14 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.MagazineSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MagazineSmartFeedCommand extends CommandBase {
   private MagazineSubsystem MAGAZINE = RobotContainer.MAGAZINE;
   private IntakeSubsystem INTAKE = RobotContainer.INTAKE;
   private TurretSubsystem TURRET = RobotContainer.TURRET;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private FeedStates state;
   private double timerStart;
 
@@ -22,6 +25,7 @@ public class MagazineSmartFeedCommand extends CommandBase {
   @Override
   public void initialize() {
     state = FeedStates.STOPPED;
+    logger.info("Begin Magazine Smart Feed Sequence");
   }
 
   @Override
@@ -30,12 +34,14 @@ public class MagazineSmartFeedCommand extends CommandBase {
       case STOPPED:
         if (!isMoving()) {
           state = FeedStates.START_MAG;
+          logger.info("Turret Done Moving - Starting Smart Feed again");
         }
         break;
       case START_MAG:
         MAGAZINE.runSpeed(Constants.MagazineConstants.kClosedLoopShoot);
         timerStart = System.currentTimeMillis();
         state = FeedStates.WAIT;
+        logger.info("Starting Magazine");
         break;
       case WAIT:
         if (System.currentTimeMillis() - timerStart
@@ -46,12 +52,14 @@ public class MagazineSmartFeedCommand extends CommandBase {
       case START_INTAKE:
         INTAKE.runIntake(Constants.IntakeConstants.kIntakeSpeed);
         state = FeedStates.RUNNING;
+        logger.info("Starting Intake");
         break;
       case RUNNING:
         if (isMoving()) {
           INTAKE.runIntake(0);
           MAGAZINE.runOpenLoop(0);
           state = FeedStates.STOPPED;
+          logger.info("Turret is Moving - Stopping Intake and Magazine");
         }
         break;
     }

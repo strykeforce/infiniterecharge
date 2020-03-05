@@ -184,9 +184,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
 
   public void xLockSwerveDrive() {
     int angle = 0;
-
-    System.out.println(
-        "FrontLeft: " + XLOCK_FL_TICKS_TARGET + ", FrontRight: " + XLOCK_FR_TICKS_TARGET);
+    logger.info("X-locking wheels");
     Wheel[] swerveWheels = swerve.getWheels();
 
     for (int i = 0; i < 4; i++) {
@@ -271,7 +269,6 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
 
       List<Trajectory.State> states = trajectoryGenerated.getStates();
       for (int i = 0; i < states.size(); i++) {
-        //        logger.info(states.get(i).toString());
       }
     } catch (IOException error) {
       logger.error(error.toString());

@@ -74,16 +74,19 @@ public class ShooterSubsystem extends SubsystemBase {
     rightSlave.follow(leftMaster);
     leftMaster.set(ControlMode.Velocity, velocity);
     targetShooterSpeed = velocity;
+    logger.info("Running closed loop at: {}", velocity);
   }
 
   public void stop() {
     rightSlave.follow(leftMaster);
     leftMaster.set(ControlMode.PercentOutput, 0);
+    logger.info("Stopping Shooter (open loop)");
   }
 
   public void runOpenLoop(double percent) {
     rightSlave.follow(leftMaster);
     leftMaster.set(ControlMode.PercentOutput, percent);
+    logger.info("Running open loop at: {}", percent);
   }
 
   public double getShooterSpeed() {

@@ -120,6 +120,7 @@ public class TurretSubsystem extends SubsystemBase {
       targetAngle += 360;
     }
     double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
+    logger.info("Rotating Turret to {} degrees", targetAngle);
     setTurret(setPoint);
   }
 
@@ -128,6 +129,7 @@ public class TurretSubsystem extends SubsystemBase {
     if (bearing < 0) bearing += 360;
     double setPoint = bearing * TURRET_TICKS_PER_DEGREE;
     setTurret(setPoint);
+    logger.info("Seeking Target with {} degree offset", angleOffset);
   }
 
   public void setTurret(double setPoint) {
@@ -135,11 +137,13 @@ public class TurretSubsystem extends SubsystemBase {
     else {
       targetTurretPosition = setPoint;
       turret.set(ControlMode.MotionMagic, setPoint);
+      logger.info("Rotating Turret to {} ticks", setPoint);
     }
   }
 
   public void turretOpenLoop(double output) {
     turret.set(ControlMode.PercentOutput, output);
+    logger.info("Running turret open-loop at: {}", output);
   }
 
   public boolean turretAtTarget() {

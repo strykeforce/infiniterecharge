@@ -7,11 +7,12 @@
 
 package frc.robot;
 
+import ch.qos.logback.classic.util.ContextInitializer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.commands.drive.TeleopDriveCommand;
 import frc.robot.controls.AutoChooser;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.*;
@@ -48,8 +49,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    isEvent = eventFlag.get();
+    if(isEvent){
+      System.out.println("Event Flag removed - switching logging to log file");
+      System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "logback-event.xml");
+    }
+
+
+
     CONSTANTS = new Constants();
-    TELEMETRY = new TelemetryService(TelemetryController::new);
+    if(!isEvent) TELEMETRY = new TelemetryService(TelemetryController::new);
 
     DRIVE = new DriveSubsystem();
     MAGAZINE = new MagazineSubsystem();
@@ -67,8 +76,8 @@ public class RobotContainer {
     AUTO = new AutoChooser();
 
     DRIVE.setDefaultCommand(new TeleopDriveCommand());
-    isEvent = eventFlag.get();
-    TELEMETRY.start();
+
+    if(!isEvent) TELEMETRY.start();
 
     // Configure the button bindings
     configureButtonBindings();

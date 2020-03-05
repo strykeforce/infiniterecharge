@@ -1,13 +1,16 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.DriveSubsystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class XLockCommand extends CommandBase {
   private DriveSubsystem driveSubsystem = RobotContainer.DRIVE;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private DriverControls controls;
   private boolean isDoneLocked;
 
@@ -34,5 +37,10 @@ public class XLockCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return isDoneLocked;
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    logger.info("Interrupting X-Lock Command");
   }
 }

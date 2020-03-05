@@ -50,15 +50,17 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void runIntake(double setpoint) {
-    logger.info("run Intake");
+    logger.info("run Intake at: {}", setpoint);
     intakeDrive.set(ControlMode.PercentOutput, setpoint);
   }
 
   public boolean isStalled() {
-
     if (intakeDrive.getMotorOutputPercent() != 0) {
       if (Math.abs(intakeDrive.getSelectedSensorVelocity())
-          < Constants.IntakeConstants.kStallVelocity) return true;
+          < Constants.IntakeConstants.kStallVelocity) {
+        logger.info("Intake Stalled");
+        return true;
+      }
       else return false;
     } else return false;
   }

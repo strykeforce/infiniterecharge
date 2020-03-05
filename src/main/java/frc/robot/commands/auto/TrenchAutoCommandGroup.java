@@ -1,7 +1,7 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.commands.OffsetGyroCommand;
+import frc.robot.commands.drive.OffsetGyroCommand;
 import frc.robot.commands.sequences.ArmedShootSequenceCommand;
 import frc.robot.commands.sequences.AutoIntakeCmdGroup;
 import frc.robot.commands.sequences.StopShootCommand;

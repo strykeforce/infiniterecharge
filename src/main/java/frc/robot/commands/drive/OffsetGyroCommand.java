@@ -1,18 +1,20 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class ZeroGyroCommand extends InstantCommand {
+public class OffsetGyroCommand extends InstantCommand {
   private DriveSubsystem DRIVE = RobotContainer.DRIVE;
+  private double offset;
 
-  public ZeroGyroCommand() {
+  public OffsetGyroCommand(double offset) {
     addRequirements(DRIVE);
+    this.offset = offset;
   }
 
   @Override
   public void initialize() {
-    DRIVE.zeroGyro();
+    DRIVE.offsetGyro(offset);
   }
 }

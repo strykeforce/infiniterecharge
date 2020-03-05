@@ -51,9 +51,9 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void runOpenLoop(double setpoint) {
-    logger.info("run Climb");
     climb.configSupplyCurrentLimit(runningCurrent);
     climb.set(ControlMode.PercentOutput, setpoint);
+    logger.info("Running open-loop at: {}", setpoint);
   }
 
   public void holdClimb() {
