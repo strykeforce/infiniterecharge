@@ -9,6 +9,7 @@ public class ClimberOpenLoopCommand extends InstantCommand {
   private final double setpoint;
 
   public ClimberOpenLoopCommand(double setpoint) {
+    addRequirements(CLIMBER);
     this.setpoint = setpoint;
   }
 
