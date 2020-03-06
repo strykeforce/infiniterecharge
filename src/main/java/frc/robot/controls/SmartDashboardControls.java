@@ -9,6 +9,7 @@ import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.magazine.MagazineSmartFeedCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.shooter.ActuateTuningCommand;
+import frc.robot.commands.vision.SetCameraStateCommand;
 import frc.robot.commands.vision.UpdateWidthsCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,5 +57,7 @@ public class SmartDashboardControls {
     SmartDashboard.putBoolean("Match/Ball Chambered", false);
     SmartDashboard.putBoolean("Match/Intake Stalled", false);
     SmartDashboard.putBoolean("Match/Locked On", false);
+    SmartDashboard.putData("Match/CameraOn", new SetCameraStateCommand(true));
+    SmartDashboard.putData("Match/CameraOff", new SetCameraStateCommand(false));
   }
 }

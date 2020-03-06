@@ -18,7 +18,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private static TalonFX leftMaster;
   private static TalonFX rightSlave;
 
-  public static boolean isArmed = false;
+  private static boolean isArmed = false;
   private static int targetShooterSpeed = 0;
   private static int shooterStableCounts = 0;
 
@@ -81,6 +81,14 @@ public class ShooterSubsystem extends SubsystemBase {
     rightSlave.follow(leftMaster);
     leftMaster.set(ControlMode.PercentOutput, 0);
     logger.info("Stopping Shooter (open loop)");
+  }
+
+  public void setArmedState(boolean armed) {
+    isArmed = armed;
+  }
+
+  public boolean isArmed() {
+    return isArmed;
   }
 
   public void runOpenLoop(double percent) {

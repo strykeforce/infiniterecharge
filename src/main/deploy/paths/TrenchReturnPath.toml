@@ -10,7 +10,7 @@ is_reversed = false
     y = 0.0
     angle = 0.0
 [end_pose]
-    x = 4.0
+    x = 3.75
     y = 0.0
     angle = 0.0
 

@@ -15,7 +15,7 @@ public class ShooterClosedLoopStopCommand extends InstantCommand {
   @Override
   public void initialize() {
     SHOOTER.run(0);
-    SHOOTER.isArmed = false;
+    SHOOTER.setArmedState(false);
     SmartDashboard.putBoolean("Match/Magazine Full", false);
   }
 }

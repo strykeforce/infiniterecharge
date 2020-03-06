@@ -114,7 +114,7 @@ public final class Constants {
 
     public static final int kCloseEnoughTurret = 40;
     public static final int kMaxShootError = 5000;
-    public static final double kSweepRange = 20;
+    public static final double kSweepRange = 25;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 13_000; // FIXME
     public static final double loadAngle = 25;
@@ -168,6 +168,8 @@ public final class Constants {
 
     public static final int kStableRange = 20;
     public static final int kStableCounts = 5;
+    public static final double kCenteredRange = 2;
+    public static final double kLostLimit = 5;
 
     public static final String kTablePath = "/home/lvuser/deploy/Lookup_Table.csv";
     public static final int kTableMin = 96;

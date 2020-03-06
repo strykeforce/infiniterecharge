@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -21,6 +22,10 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
 
   private RobotContainer m_robotContainer;
+
+  private double timerStart;
+  private double timeLimit = 5;
+  private boolean didCamStartup;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -37,6 +42,7 @@ public class Robot extends TimedRobot {
     RobotContainer.CLIMBER.zeroClimb();
     RobotContainer.CLIMBER.engageRatchet(true);
     RobotContainer.VISION.setCameraEnabled(false);
+    didCamStartup = false;
   }
 
   /**
@@ -58,13 +64,23 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    //    logger.info("Disabled Init");
     RobotContainer.VISION.setCameraEnabled(false);
     RobotContainer.AUTO.reset();
+    timerStart = Timer.getFPGATimestamp();
+    if (!didCamStartup) {
+      RobotContainer.VISION.setCameraEnabled(true);
+    }
   }
 
   @Override
   public void disabledPeriodic() {
     RobotContainer.AUTO.checkSwitch();
+
+    if (!didCamStartup && Timer.getFPGATimestamp() - timerStart > timeLimit) {
+      RobotContainer.VISION.setCameraEnabled(false);
+      didCamStartup = true;
+    }
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
