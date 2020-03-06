@@ -237,7 +237,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
       visionLostCounts = 0;
     }
 
-    if (visionStableCounts > Constants.VisionConstants.kLostLimit) {
+    if (visionLostCounts > Constants.VisionConstants.kLostLimit) {
       logger.info("Target lost");
       return true;
     }

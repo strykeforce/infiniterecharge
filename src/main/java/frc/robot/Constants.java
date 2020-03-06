@@ -169,7 +169,7 @@ public final class Constants {
     public static final int kStableRange = 20;
     public static final int kStableCounts = 5;
     public static final double kCenteredRange = 2;
-    public static final double kLostLimit = 5;
+    public static final double kLostLimit = 30;
 
     public static final String kTablePath = "/home/lvuser/deploy/Lookup_Table.csv";
     public static final int kTableMin = 96;
