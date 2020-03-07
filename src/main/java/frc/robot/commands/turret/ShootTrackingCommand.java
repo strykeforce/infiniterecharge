@@ -52,7 +52,6 @@ public class ShootTrackingCommand extends CommandBase {
 
     switch (state) {
       case SEEK_LEFT:
-
         // switch to tracking if target is detected
         if (VISION.isTargetValid()) {
           state = TrackingState.HAS_TARGET;

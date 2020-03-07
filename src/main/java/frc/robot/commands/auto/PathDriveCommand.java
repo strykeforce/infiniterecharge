@@ -40,7 +40,7 @@ public class PathDriveCommand extends CommandBase {
     }
     double currentTimeSeconds = Timer.getFPGATimestamp();
     timeElapsed = currentTimeSeconds - startTimeSeconds;
-    logger.info("Current time seconds: " + timeElapsed);
+    //    logger.info("Current time seconds: " + timeElapsed);
     driveSubsystem.updatePathOutput(timeElapsed);
   }
 
