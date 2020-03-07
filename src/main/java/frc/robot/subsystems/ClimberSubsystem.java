@@ -63,6 +63,11 @@ public class ClimberSubsystem extends SubsystemBase {
     climb.configSupplyCurrentLimit(runningCurrent);
   }
 
+  public void disableSoftLimits() {
+    climb.configForwardSoftLimitEnable(false);
+    climb.configReverseSoftLimitEnable(false);
+  }
+
   public void engageRatchet(boolean enable) {
     if (enable) {
       ratchet.set(Constants.ClimberConstants.kRatchetEngage);

@@ -1,12 +1,15 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.HealthCheckCommand;
 import frc.robot.RobotContainer;
 import frc.robot.commands.drive.ZeroDriveWheelsCommand;
 import frc.robot.commands.hood.HoodPositionCommand;
+import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.magazine.MagazineSmartFeedCommand;
+import frc.robot.commands.magazine.RunMagazineCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.shooter.ActuateTuningCommand;
 import frc.robot.commands.vision.SetCameraStateCommand;
@@ -50,6 +53,11 @@ public class SmartDashboardControls {
     SmartDashboard.putData(
         "Pit/Offset Zero Hood", new HoodPositionCommand(Constants.HoodConstants.kOffsetZeroTicks));
     SmartDashboard.putData("Pit/Zero Wheels", new ZeroDriveWheelsCommand());
+    SmartDashboard.putData(
+        "Pit/Eject Balls",
+        new ParallelCommandGroup(
+            new IntakeRunCommand(-Constants.IntakeConstants.kIntakeSpeed),
+            new RunMagazineCommand(Constants.MagazineConstants.kOpenloopReverse)));
   }
 
   public void addMatchCommands() {

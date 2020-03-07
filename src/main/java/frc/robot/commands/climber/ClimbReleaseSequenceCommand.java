@@ -72,6 +72,9 @@ public class ClimbReleaseSequenceCommand extends CommandBase {
         } else {
           CLIMB.runOpenLoop(Constants.ClimberConstants.kSlowUpOutput);
         }
+        if (CLIMB.getClimbPosition() <= Constants.ClimberConstants.kPastDeployedTicks) {
+          CLIMB.disableSoftLimits();
+        }
         break;
       case CLIMBING:
         CLIMB.runOpenLoop(climbOutput);
