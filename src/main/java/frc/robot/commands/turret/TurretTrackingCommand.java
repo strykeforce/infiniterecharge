@@ -11,7 +11,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShootTrackingCommand extends CommandBase {
+public class TurretTrackingCommand extends CommandBase {
   private static final TurretSubsystem TURRET = RobotContainer.TURRET;
   private static final VisionSubsystem VISION = RobotContainer.VISION;
   private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
@@ -23,11 +23,13 @@ public class ShootTrackingCommand extends CommandBase {
   private final int ATTEMPT_LIMIT = 2;
   private boolean isArmed;
   private boolean lost;
+  private boolean doReseek;
 
   public Logger logger = LoggerFactory.getLogger("Turret Track Command");
 
-  public ShootTrackingCommand() {
+  public TurretTrackingCommand(boolean doReseek) {
     addRequirements(TURRET);
+    this.doReseek = doReseek;
   }
 
   @Override
@@ -52,6 +54,7 @@ public class ShootTrackingCommand extends CommandBase {
 
     switch (state) {
       case SEEK_LEFT:
+
         // switch to tracking if target is detected
         if (VISION.isTargetValid()) {
           state = TrackingState.HAS_TARGET;
@@ -89,7 +92,12 @@ public class ShootTrackingCommand extends CommandBase {
         if (VISION.isTargetValid()) {
           TURRET.rotateTurret(-0.95 * VISION.getOffsetAngle() + getStrafeAdjustment());
           SmartDashboard.putBoolean("Match/Locked On", true);
+        } else {
+          if (lost && doReseek) {
+            state = TrackingState.SEEK_RIGHT;
+          }
         }
+        break;
     }
   }
 
