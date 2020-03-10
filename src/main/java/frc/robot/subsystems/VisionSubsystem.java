@@ -38,13 +38,13 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static TurretSubsystem turret;
   private static Camera<MinAreaRectTargetData> shooterCamera;
   private static MinAreaRectTargetData targetData;
-  TelemetryService telService;
 
   private static String[][] lookupTable;
 
   private static boolean trackingEnabled;
   private static double initOffset = 0;
   private static int visionStableCounts;
+  private static int visionLostCounts;
 
   public static String kCameraID;
   public static String kTablePath;
@@ -188,17 +188,20 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public double getCorrectedWidth() {
     double fieldOrientedOffset =
-        90
-            - (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
-                + (270 - turret.getTurretAngle())
-                + getOffsetAngle());
+        (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
+            + (270 - turret.getTurretAngle())
+            + getOffsetAngle());
     if (getTargetData().getValid()) {
-      return getRawWidth() / Math.sin(Math.toRadians(fieldOrientedOffset));
+      return getRawWidth() / Math.cos(Math.toRadians(fieldOrientedOffset));
     } else return -1;
   }
 
   public boolean isTargetValid() {
-    return getTargetData().getValid();
+    //    double fieldOrientedOffset =
+    //        (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
+    //            + (270 - turret.getTurretAngle())
+    //            + getOffsetAngle());
+    return getTargetData().getValid(); // && Math.abs(fieldOrientedOffset) < 90
   }
 
   public void setLightsEnabled(boolean enabled) {
@@ -225,6 +228,20 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     } else {
       return false;
     }
+  }
+
+  public boolean lostCheck() {
+    if (!isTargetValid()) {
+      visionLostCounts++;
+    } else {
+      visionLostCounts = 0;
+    }
+
+    if (visionLostCounts > Constants.VisionConstants.kLostLimit) {
+      logger.info("Target lost");
+      return true;
+    }
+    return false;
   }
 
   public int getBestTableIndex() {

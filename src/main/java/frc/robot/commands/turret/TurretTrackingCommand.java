@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.controls.DriverControls;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import org.slf4j.Logger;
@@ -13,22 +14,30 @@ import org.slf4j.LoggerFactory;
 public class TurretTrackingCommand extends CommandBase {
   private static final TurretSubsystem TURRET = RobotContainer.TURRET;
   private static final VisionSubsystem VISION = RobotContainer.VISION;
+  private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
   private static DriverControls DRIVER_CONTROLS;
 
   private double strafeFactor = 5.45; // theoretical 7.45
   private TrackingState state;
   private int attemptNum;
   private final int ATTEMPT_LIMIT = 2;
+  private boolean isArmed;
+  private boolean lost;
+  private boolean doReseek;
 
   public Logger logger = LoggerFactory.getLogger("Turret Track Command");
 
-  public TurretTrackingCommand() {
+  public TurretTrackingCommand(boolean doReseek) {
     addRequirements(TURRET);
+    this.doReseek = doReseek;
   }
 
   @Override
   public void initialize() {
-    state = TrackingState.SEEK_LEFT;
+    isArmed = SHOOTER.isArmed();
+    if (isArmed) {
+      state = TrackingState.HAS_TARGET;
+    } else state = TrackingState.SEEK_LEFT;
     attemptNum = 1;
     VISION.setTrackingEnabled(true);
     DRIVER_CONTROLS = RobotContainer.CONTROLS.getDriverControls();
@@ -78,13 +87,15 @@ public class TurretTrackingCommand extends CommandBase {
         break;
       case HAS_TARGET:
         // continue tracking until target is lost
+        lost = VISION.lostCheck();
         attemptNum = 1;
         if (VISION.isTargetValid()) {
           TURRET.rotateTurret(-0.95 * VISION.getOffsetAngle() + getStrafeAdjustment());
           SmartDashboard.putBoolean("Match/Locked On", true);
         } else {
-          state = TrackingState.SEEK_LEFT;
-          SmartDashboard.putBoolean("Match/Locked On", false);
+          if (lost && doReseek) {
+            state = TrackingState.SEEK_RIGHT;
+          }
         }
         break;
     }

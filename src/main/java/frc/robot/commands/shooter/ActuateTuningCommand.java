@@ -32,6 +32,7 @@ public class ActuateTuningCommand extends CommandBase {
     shooterSpeed = (int) SmartDashboard.getNumber("Tuning/shooterVel", 0);
     SHOOTER.run(shooterSpeed);
     TURRET.setTurret(turretSetpoint);
+    logger.info("Rotating Turret to {} ticks", turretSetpoint);
     HOOD.setHoodPosition(hoodSetpoint);
   }
 

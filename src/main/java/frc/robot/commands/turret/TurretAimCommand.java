@@ -26,10 +26,16 @@ public class TurretAimCommand extends CommandBase {
       logger.info("Single correction: offset angle {}", offset);
     }
   }
+  //
+  //  @Override
+  //  public void execute() {
+  //    if (!VISION.getTargetData().getValid()) {
+  //    }
+  //  }
 
   @Override
   public boolean isFinished() {
     SmartDashboard.putBoolean("Match/Locked On", true);
-    return TURRET.turretAtTarget() && VISION.isStable();
+    return TURRET.turretAtTarget() && VISION.isStable() && VISION.isTargetValid();
   }
 }

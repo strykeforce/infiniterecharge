@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.strykeforce.thirdcoast.swerve.SwerveDrive.DriveMode;
 
 public class PathDriveCommand extends CommandBase {
@@ -15,6 +17,7 @@ public class PathDriveCommand extends CommandBase {
   private double startTimeSeconds;
   private double timeElapsed;
   private boolean isFirstExecute;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public PathDriveCommand(String trajectoryName, double targetYaw) {
     addRequirements(driveSubsystem);
@@ -26,7 +29,7 @@ public class PathDriveCommand extends CommandBase {
   public void initialize() {
     isFirstExecute = true;
     driveSubsystem.startPath(trajectory, targetYaw);
-    System.out.println("Starting pathing...");
+    logger.info("Starting pathing...");
   }
 
   @Override
@@ -37,7 +40,7 @@ public class PathDriveCommand extends CommandBase {
     }
     double currentTimeSeconds = Timer.getFPGATimestamp();
     timeElapsed = currentTimeSeconds - startTimeSeconds;
-    System.out.println("Current time seconds: " + timeElapsed);
+    //    logger.info("Current time seconds: " + timeElapsed);
     driveSubsystem.updatePathOutput(timeElapsed);
   }
 
@@ -48,7 +51,7 @@ public class PathDriveCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Stopping pathing; Interruption: " + interrupted);
+    logger.info("Stopping pathing; Interruption: " + interrupted);
     driveSubsystem.drive(0, 0, 0);
     driveSubsystem.setDriveMode(DriveMode.OPEN_LOOP);
   }

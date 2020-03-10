@@ -72,8 +72,8 @@ public final class Constants {
 
     // Command Specific
     public static final long kTimeFullIntake = 1000;
-    public static final long kShootDelayIntake = 0;
-    public static final long kReverseTime = 500;
+    public static final double kShootDelayIntake = 0;
+    public static final double kReverseTime = .5;
     public static final double kStallCount = 5;
   }
 
@@ -98,7 +98,7 @@ public final class Constants {
     public static final int kStableCounts = 5;
 
     // Command Specific
-    public static final long kArmTimeToAccelerate = 1500;
+    public static final double kArmTimeToAccelerate = 1.5;
     public static final int kArmSpeed = 10000;
     public static final int kBatterShotVelocity = 11000; // 12-27 inches (2 feet)
   }
@@ -114,7 +114,7 @@ public final class Constants {
 
     public static final int kCloseEnoughTurret = 40;
     public static final int kMaxShootError = 5000;
-    public static final double kSweepRange = 20;
+    public static final double kSweepRange = 25;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 13_000; // FIXME
     public static final double loadAngle = 25;
@@ -168,6 +168,8 @@ public final class Constants {
 
     public static final int kStableRange = 20;
     public static final int kStableCounts = 5;
+    public static final double kCenteredRange = 2;
+    public static final double kLostLimit = 30;
 
     public static final String kTablePath = "/home/lvuser/deploy/Lookup_Table.csv";
     public static final int kTableMin = 96;
@@ -197,9 +199,9 @@ public final class Constants {
 
   public static class CompConstants {
     // Turret
-    public static final int kTurretZeroTicks = 1486;
-    public static final double kMaxStringPotZero = 138;
-    public static final double kMinStringPotZero = 52;
+    public static final int kTurretZeroTicks = 1931;
+    public static final double kMaxStringPotZero = 100;
+    public static final double kMinStringPotZero = 35;
 
     // Hood
     public static final int kHoodZeroTicks = 2008; // gut check: 162

@@ -4,11 +4,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ArmShooterCommand extends CommandBase {
   private static final ShooterSubsystem SHOOTER = RobotContainer.SHOOTER;
-
-  private boolean isArmed;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public ArmShooterCommand() {
     //    addRequirements(shooterSubsystem); weird
@@ -16,20 +17,20 @@ public class ArmShooterCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    if (!SHOOTER.isArmed) {
+    if (!SHOOTER.isArmed()) {
       SHOOTER.run(Constants.ShooterConstants.kArmSpeed);
     }
-    System.out.println("Arming!!!");
+    logger.info("Arming!!!");
   }
 
   @Override
   public boolean isFinished() {
-    return isArmed || SHOOTER.atTargetSpeed();
+    return SHOOTER.isArmed() || SHOOTER.atTargetSpeed();
   }
 
   @Override
   public void end(boolean interrupted) {
-    SHOOTER.isArmed = true;
+    SHOOTER.setArmedState(true);
     System.out.println("Armed!!!");
   }
 }
