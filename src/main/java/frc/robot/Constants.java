@@ -72,8 +72,8 @@ public final class Constants {
 
     // Command Specific
     public static final long kTimeFullIntake = 1000;
-    public static final long kShootDelayIntake = 0;
-    public static final long kReverseTime = 500;
+    public static final double kShootDelayIntake = 0;
+    public static final double kReverseTime = .5;
     public static final double kStallCount = 5;
   }
 
@@ -98,7 +98,7 @@ public final class Constants {
     public static final int kStableCounts = 5;
 
     // Command Specific
-    public static final long kArmTimeToAccelerate = 1500;
+    public static final double kArmTimeToAccelerate = 1.5;
     public static final int kArmSpeed = 10000;
     public static final int kBatterShotVelocity = 11000; // 12-27 inches (2 feet)
   }
