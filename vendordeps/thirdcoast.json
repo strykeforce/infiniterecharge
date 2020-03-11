@@ -11,7 +11,7 @@
         {
             "groupId": "org.strykeforce",
             "artifactId": "thirdcoast",
-            "version": "20.2.1"
+            "version": "20.4.0"
         }
     ],
     "jniDependencies": [],
