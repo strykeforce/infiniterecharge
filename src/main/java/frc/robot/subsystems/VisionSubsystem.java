@@ -25,6 +25,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static final String X_OFFSET = "X_OFFSET";
   private static final String RAW_WIDTH = "RAW_WIDTH";
   private static final String CORRECTED_WIDTH = "CORRECTED_WIDTH";
+  private static final String FIELD_OFFSET = "FIELD_OFFSET";
 
   public static double VERTICAL_FOV;
   public static double HORIZ_FOV;
@@ -129,6 +130,14 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     return 2767;
   }
 
+  public double getFieldOffset() {
+    if (getTargetData().getValid())
+      return Math.IEEEremainder(drive.getGyro().getAngle(), 360)
+          + (270 - turret.getTurretAngle())
+          + getOffsetAngle();
+    return 2767;
+  }
+
   public double getHorizAngleAdjustment() {
     return Constants.VisionConstants.kHorizAngleCorrection;
   }
@@ -191,9 +200,11 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
         (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
             + (270 - turret.getTurretAngle())
             + getOffsetAngle());
+    fieldOrientedOffset = Math.IEEEremainder(fieldOrientedOffset, 360);
     if (getTargetData().getValid()) {
-      return getRawWidth() / Math.cos(Math.toRadians(fieldOrientedOffset));
-    } else return -1;
+      double correction = -0.0128 * Math.pow(fieldOrientedOffset, 2) - 0.0318 * fieldOrientedOffset;
+      return getRawWidth() - correction;
+    } else return 2767;
   }
 
   public boolean isTargetValid() {
@@ -309,7 +320,8 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
         new Measure(BEARING, "Bearing"),
         new Measure(X_OFFSET, "Pixel offset"),
         new Measure(RAW_WIDTH, "Raw Pixel Width"),
-        new Measure(CORRECTED_WIDTH, "Corrected Pixel Width"));
+        new Measure(CORRECTED_WIDTH, "Corrected Pixel Width"),
+        new Measure(FIELD_OFFSET, "Field Oriented Offset"));
   }
 
   @NotNull
@@ -339,6 +351,8 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
         return this::getRawWidth;
       case CORRECTED_WIDTH:
         return this::getCorrectedWidth;
+      case FIELD_OFFSET:
+        return this::getFieldOffset;
       default:
         return () -> 2767;
     }
