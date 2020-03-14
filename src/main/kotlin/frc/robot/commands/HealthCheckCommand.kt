@@ -1,20 +1,23 @@
-package frc.robot
+package frc.robot.commands
 
 import edu.wpi.first.wpilibj2.command.CommandBase
+import frc.robot.RobotContainer
 import mu.KotlinLogging
+import org.strykeforce.thirdcoast.healthcheck.HealthCheck
+import org.strykeforce.thirdcoast.healthcheck.healthCheck
 
-private val logger = KotlinLogging.logger {  }
+private val logger = KotlinLogging.logger { }
 
 class HealthCheckCommand : CommandBase() {
     init {
         addRequirements(
-                RobotContainer.DRIVE,
-                RobotContainer.INTAKE,
-                RobotContainer.MAGAZINE,
-                RobotContainer.SHOOTER,
-                RobotContainer.HOOD,
-                RobotContainer.TURRET,
-                RobotContainer.CLIMBER
+            RobotContainer.DRIVE,
+            RobotContainer.INTAKE,
+            RobotContainer.MAGAZINE,
+            RobotContainer.SHOOTER,
+            RobotContainer.HOOD,
+            RobotContainer.TURRET,
+            RobotContainer.CLIMBER
         )
     }
 
