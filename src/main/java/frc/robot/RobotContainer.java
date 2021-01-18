@@ -65,7 +65,6 @@ public class RobotContainer {
     HOOD = new HoodSubsystem();
     TURRET = new TurretSubsystem();
     CLIMBER = new ClimberSubsystem();
-    DEADEYE = Deadeye.INSTANCE;
     VISION = new VisionSubsystem();
 
     // Create Controls last so all subsystems exist

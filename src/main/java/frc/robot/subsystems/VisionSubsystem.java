@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.opencsv.CSVReader;
-import com.squareup.moshi.Moshi;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -36,7 +35,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static Deadeye deadeye;
   private static DriveSubsystem drive;
   private static TurretSubsystem turret;
-  private static Camera<MinAreaRectTargetData> shooterCamera;
+  private static DeadeyeA0 shooterCamera;
   private static MinAreaRectTargetData targetData;
 
   private static String[][] lookupTable;
@@ -79,16 +78,16 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     turret = RobotContainer.TURRET;
     drive = RobotContainer.DRIVE;
 
-    shooterCamera = deadeye.getCamera(kCameraID);
     targetData = new MinAreaRectTargetData();
+    shooterCamera = new DeadeyeA0(); // ?
 
-    shooterCamera.setLightEnabled(false);
+    shooterCamera.setLightsEnabled(false);
 
-    configureProcess();
     if (!RobotContainer.isEvent) {
       TelemetryService telService = RobotContainer.TELEMETRY;
       telService.stop();
       telService.register(this);
+      telService.register(shooterCamera);
       telService.start();
       shooterCamera.setEnabled(true);
     }
@@ -100,22 +99,6 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     }
   }
 
-  public void configureProcess() {
-    shooterCamera.setJsonAdapter(new MinAreaRectTargetDataJsonAdapter(new Moshi.Builder().build()));
-    shooterCamera.getId();
-    shooterCamera.setTargetDataListener(
-        new TargetDataListener() {
-          @Override
-          public void onTargetData(TargetData arg0) {
-            targetData = (MinAreaRectTargetData) arg0;
-          }
-        });
-  }
-
-  public synchronized MinAreaRectTargetData getTargetData() {
-    return targetData;
-  }
-
   public void setTrackingEnabled(boolean isEnabled) {
     trackingEnabled = isEnabled;
   }
@@ -125,7 +108,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public double getOffsetAngle() {
-    if (getTargetData().getValid()) return HORIZ_FOV * getPixOffset() / HORIZ_RES;
+    if (shooterCamera.getValid()) return HORIZ_FOV * getPixOffset() / HORIZ_RES;
     return 2767;
   }
 
@@ -155,12 +138,11 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   public double getPixOffset() {
-    MinAreaRectTargetData targetData = getTargetData();
-    if (targetData.getValid()) {
+    if (shooterCamera.getValid()) {
       double center =
-          (targetData.getWidth() > targetData.getHeight())
-              ? (targetData.getTopLeftX() + targetData.getTopRightX()) / 2
-              : (targetData.getTopRightX() + targetData.getBottomRightX()) / 2;
+          (shooterCamera.getWidth() > shooterCamera.getHeight())
+              ? (shooterCamera.getTopLeftX() + shooterCamera.getTopRightX()) / 2
+              : (shooterCamera.getTopRightX() + shooterCamera.getBottomRightX()) / 2;
       return center - HORIZ_RES / 2;
     }
     return 2767;
@@ -168,21 +150,21 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public double getDistance() {
     double enclosedAngle =
-        HORIZ_FOV * Math.max(getTargetData().getWidth(), getTargetData().getHeight()) / HORIZ_RES;
-    if (getTargetData().getValid())
+        HORIZ_FOV * Math.max(shooterCamera.getWidth(), shooterCamera.getHeight()) / HORIZ_RES;
+    if (shooterCamera.getValid())
       return TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
     return -1;
   }
 
   public double getGroundDistance() {
-    if (getTargetData().getValid())
+    if (shooterCamera.getValid())
       return Math.sqrt(Math.pow(getDistance(), 2) - Math.pow(TARGET_HEIGHT - CAMERA_HEIGHT, 2));
     else return -1;
   }
 
   public double getRawWidth() {
-    if (getTargetData().getValid()) {
-      return Math.max(getTargetData().getHeight(), getTargetData().getWidth());
+    if (shooterCamera.getValid()) {
+      return Math.max(shooterCamera.getHeight(), shooterCamera.getWidth());
     } else return -1;
   }
 
@@ -191,7 +173,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
         (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
             + (270 - turret.getTurretAngle())
             + getOffsetAngle());
-    if (getTargetData().getValid()) {
+    if (shooterCamera.getValid()) {
       return getRawWidth() / Math.cos(Math.toRadians(fieldOrientedOffset));
     } else return -1;
   }
@@ -201,11 +183,11 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     //        (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
     //            + (270 - turret.getTurretAngle())
     //            + getOffsetAngle());
-    return getTargetData().getValid(); // && Math.abs(fieldOrientedOffset) < 90
+    return shooterCamera.getValid(); // && Math.abs(fieldOrientedOffset) < 90
   }
 
   public void setLightsEnabled(boolean enabled) {
-    shooterCamera.setLightEnabled(enabled);
+    shooterCamera.setLightsEnabled(enabled);
   }
 
   public void setCameraEnabled(boolean enabled) {
