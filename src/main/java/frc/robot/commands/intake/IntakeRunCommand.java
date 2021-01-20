@@ -14,6 +14,6 @@ public class IntakeRunCommand extends InstantCommand {
 
   @Override
   public void initialize() {
-    INTAKE.runIntake(setpoint);
+    INTAKE.runSquids(setpoint);
   }
 }

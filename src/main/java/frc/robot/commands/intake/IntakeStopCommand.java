@@ -11,6 +11,6 @@ public class IntakeStopCommand extends InstantCommand {
 
   @Override
   public void initialize() {
-    INTAKE.stopIntake();
+    INTAKE.stopSquids();
   }
 }
