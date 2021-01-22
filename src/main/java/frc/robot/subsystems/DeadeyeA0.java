@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.strykeforce.deadeye.*;
 import org.strykeforce.thirdcoast.telemetry.item.Measurable;
 import org.strykeforce.thirdcoast.telemetry.item.Measure;
@@ -11,8 +13,10 @@ public class DeadeyeA0 implements TargetDataListener<MinAreaRectTargetData>, Mea
   private static final String X = "X";
   private static final String Y = "Y";
 
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
   private final Deadeye<MinAreaRectTargetData> deadeye =
-      new Deadeye<>("H0", MinAreaRectTargetData.class);
+      new Deadeye<>("A0", MinAreaRectTargetData.class);
 
   private double centerX;
   private double centerY;
@@ -81,6 +85,8 @@ public class DeadeyeA0 implements TargetDataListener<MinAreaRectTargetData>, Mea
     topLeft = data.points[1];
     topRight = data.points[2];
     bottomRight = data.points[3];
+
+    logger.info(data.toString());
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -89,7 +95,7 @@ public class DeadeyeA0 implements TargetDataListener<MinAreaRectTargetData>, Mea
   @NotNull
   @Override
   public String getDescription() {
-    return "Deadeye H0";
+    return "Deadeye A0";
   }
 
   @NotNull
