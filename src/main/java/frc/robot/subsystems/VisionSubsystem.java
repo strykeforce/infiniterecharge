@@ -58,6 +58,8 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public VisionSubsystem() {
+
+    // FIXME: Check framerate
     VERTICAL_FOV = Constants.VisionConstants.VERTICAL_FOV;
     HORIZ_FOV = Constants.VisionConstants.HORIZ_FOV;
     HORIZ_RES = Constants.VisionConstants.HORIZ_RES;

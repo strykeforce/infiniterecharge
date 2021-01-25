@@ -85,8 +85,6 @@ public class DeadeyeA0 implements TargetDataListener<MinAreaRectTargetData>, Mea
     topLeft = data.points[1];
     topRight = data.points[2];
     bottomRight = data.points[3];
-
-    logger.info(data.toString());
   }
 
   ///////////////////////////////////////////////////////////////////////////
