@@ -5,15 +5,19 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeRunCommand extends InstantCommand {
-  public static IntakeSubsystem INTAKE = RobotContainer.INTAKE;
-  private final double setpoint;
+  public static final IntakeSubsystem INTAKE = RobotContainer.INTAKE;
+  private final double intakeSetpoint;
+  private final double squidsSetpoint;
 
-  public IntakeRunCommand(double setpoint) {
-    this.setpoint = setpoint;
+  public IntakeRunCommand(double intakeSetpoint, double squidsSetpoint) {
+    addRequirements(INTAKE);
+    this.intakeSetpoint = intakeSetpoint;
+    this.squidsSetpoint = squidsSetpoint;
   }
 
   @Override
   public void initialize() {
-    INTAKE.runSquids(setpoint);
+
+    INTAKE.runBoth(intakeSetpoint, squidsSetpoint);
   }
 }

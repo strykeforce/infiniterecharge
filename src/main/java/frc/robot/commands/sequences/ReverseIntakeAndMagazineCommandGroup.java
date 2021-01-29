@@ -11,7 +11,7 @@ public class ReverseIntakeAndMagazineCommandGroup extends ParallelCommandGroup {
   public ReverseIntakeAndMagazineCommandGroup() {
     addCommands(
         new LogCommand("Begin Reverse Intake and Magazine Command Group"),
-        new IntakeRunCommand(IntakeConstants.kEjectSpeed),
+        new IntakeRunCommand(IntakeConstants.kIntakeEjectSpeed, IntakeConstants.kSquidEjectSpeed),
         new RunMagazineCommand(MagazineConstants.kOpenloopReverse));
   }
 }

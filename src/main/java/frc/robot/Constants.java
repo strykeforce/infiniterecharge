@@ -64,9 +64,12 @@ public final class Constants {
 
   public static final class IntakeConstants {
     // Subsystem Specific
+    public static final double kSquidSpeed = -0.5;
     public static final double kIntakeSpeed = -0.5;
+    public static final double kSquidShootSpeed = -0.75;
     public static final double kIntakeShootSpeed = -0.75;
-    public static final double kEjectSpeed = 0.25;
+    public static final double kSquidEjectSpeed = 0.25;
+    public static final double kIntakeEjectSpeed = 0.25;
     public static final int kStallVelocity = 100;
     public static final double kDoublePressMaxTime = 0.5; // Timer class returns time in seconds
 

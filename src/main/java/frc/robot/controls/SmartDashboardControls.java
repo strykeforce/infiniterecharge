@@ -56,7 +56,8 @@ public class SmartDashboardControls {
     SmartDashboard.putData(
         "Pit/Eject Balls",
         new ParallelCommandGroup(
-            new IntakeRunCommand(-Constants.IntakeConstants.kIntakeSpeed),
+            new IntakeRunCommand(
+                -Constants.IntakeConstants.kIntakeSpeed, -Constants.IntakeConstants.kSquidSpeed),
             new RunMagazineCommand(Constants.MagazineConstants.kOpenloopReverse)));
   }
 

@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,13 +18,13 @@ public class IntakeSubsystem extends SubsystemBase {
   public static int INTAKE_ID = 21;
 
   public static TalonFX squidsDrive;
-  public static TalonSRX intakeDrive;
+  public static TalonFX intakeDrive;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   TelemetryService telemetryService;
 
   public IntakeSubsystem() {
     squidsDrive = new TalonFX(SQUIDS_ID);
-    intakeDrive = new TalonSRX(INTAKE_ID);
+    intakeDrive = new TalonFX(INTAKE_ID);
 
     TalonFXConfiguration squidsConfig = new TalonFXConfiguration();
     squidsConfig.supplyCurrLimit.currentLimit = 40.0;
@@ -33,20 +32,30 @@ public class IntakeSubsystem extends SubsystemBase {
     squidsConfig.supplyCurrLimit.triggerThresholdTime = 0.04;
     squidsConfig.supplyCurrLimit.enable = true;
 
-    TalonSRXConfiguration intakeConfig = new TalonSRXConfiguration();
-    intakeDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 45, 0.04));
+    TalonFXConfiguration intakeConfig = new TalonFXConfiguration();
+    intakeConfig.supplyCurrLimit.currentLimit = 40.0;
+    intakeConfig.supplyCurrLimit.triggerThresholdCurrent = 45.0;
+    intakeConfig.supplyCurrLimit.triggerThresholdTime = 0.04;
+    intakeConfig.supplyCurrLimit.enable = true;
 
     squidsDrive.configAllSettings(squidsConfig);
+    intakeDrive.configAllSettings(intakeConfig);
     if (!RobotContainer.isEvent) {
       TelemetryService telemetryService = RobotContainer.TELEMETRY;
       telemetryService.stop();
       telemetryService.register(new TalonFXItem(squidsDrive, "Squids"));
+      telemetryService.register(new TalonFXItem(intakeDrive, "Intake"));
       telemetryService.start();
     }
   }
 
   public List<BaseTalon> getTalons() {
-    return List.of(squidsDrive);
+    return List.of(squidsDrive, intakeDrive);
+  }
+
+  public void stopIntake() {
+    logger.info("stop Intake");
+    intakeDrive.set(ControlMode.PercentOutput, 0.0);
   }
 
   public void stopSquids() {
@@ -57,6 +66,17 @@ public class IntakeSubsystem extends SubsystemBase {
   public void runSquids(double setpoint) {
     logger.info("run Squids at: {}", setpoint);
     squidsDrive.set(ControlMode.PercentOutput, setpoint);
+  }
+
+  public void runIntake(double setpoint) {
+    logger.info("run Intake at: {}", setpoint);
+    intakeDrive.set(ControlMode.PercentOutput, setpoint);
+  }
+
+  public void runBoth(double intakeSpeed, double squidSpeed) {
+    logger.info("Run Intake at: {} Run Squids at: {}", intakeSpeed, squidSpeed);
+    intakeDrive.set(ControlMode.PercentOutput, intakeSpeed);
+    squidsDrive.set(ControlMode.PercentOutput, squidSpeed);
   }
 
   public boolean squidsStalled() {
