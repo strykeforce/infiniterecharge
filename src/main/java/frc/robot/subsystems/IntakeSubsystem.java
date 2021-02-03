@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.BaseTalon;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -32,6 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
     talonConfig.supplyCurrLimit.enable = true;
 
     intakeDrive.configAllSettings(talonConfig);
+
     if (!RobotContainer.isEvent) {
       TelemetryService telemetryService = RobotContainer.TELEMETRY;
       telemetryService.stop();

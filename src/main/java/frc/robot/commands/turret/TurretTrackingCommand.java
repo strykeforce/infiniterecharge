@@ -90,7 +90,7 @@ public class TurretTrackingCommand extends CommandBase {
         lost = VISION.lostCheck();
         attemptNum = 1;
         if (VISION.isTargetValid()) {
-          TURRET.rotateTurret(-0.95 * VISION.getOffsetAngle() + getStrafeAdjustment());
+          TURRET.rotateTurret(-0.95 * VISION.getOffsetAngle()); // + getStrafeAdjustment()
           SmartDashboard.putBoolean("Match/Locked On", true);
         } else {
           if (lost && doReseek) {
