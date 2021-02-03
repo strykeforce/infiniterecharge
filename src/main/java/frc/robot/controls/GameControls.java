@@ -82,7 +82,10 @@ public class GameControls {
 
     // Intake Commands
     UpDPAD.whenActive(new ReverseIntakeAndMagazineCommandGroup());
-    DownDPAD.whenActive(new IntakeRunCommand(Constants.IntakeConstants.kEjectSpeed));
+    DownDPAD.whenActive(
+        new IntakeRunCommand(
+            Constants.IntakeConstants.kIntakeEjectSpeed,
+            Constants.IntakeConstants.kSquidEjectSpeed));
     dPad.whenInactive(new StopIntakeAndMagazineCommandGroup());
 
     new JoystickButton(controller, Button.kB.value).whenPressed(new AutoIntakeCmdGroupController());

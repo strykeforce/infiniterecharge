@@ -1,5 +1,7 @@
 package frc.robot.commands.magazine;
 
+import static frc.robot.Constants.IntakeConstants.*;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -53,13 +55,13 @@ public class MagazineSmartFeedCommand extends CommandBase {
         System.out.println("Waiting");
         break;
       case START_INTAKE:
-        INTAKE.runIntake(Constants.IntakeConstants.kIntakeShootSpeed);
+        INTAKE.runBoth(kIntakeShootSpeed, kSquidShootSpeed);
         state = FeedStates.RUNNING;
         logger.info("Starting Intake");
         break;
       case RUNNING:
         if (isMoving()) {
-          INTAKE.runIntake(0);
+          INTAKE.runBoth(0, 0);
           MAGAZINE.runOpenLoop(0);
           state = FeedStates.STOPPED;
           logger.info("Turret is Moving - Stopping Intake and Magazine");

@@ -20,6 +20,6 @@ public class OpenLoopShootCommand extends SequentialCommandGroup {
         new edu.wpi.first.wpilibj2.command.WaitCommand(ShooterConstants.kArmTimeToAccelerate),
         new RunMagazineCommand(MagazineConstants.kOpenloopShoot),
         new WaitCommand(IntakeConstants.kShootDelayIntake),
-        new IntakeRunCommand(IntakeConstants.kIntakeSpeed));
+        new IntakeRunCommand(IntakeConstants.kIntakeSpeed, IntakeConstants.kSquidSpeed));
   }
 }
