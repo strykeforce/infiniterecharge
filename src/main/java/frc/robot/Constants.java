@@ -64,8 +64,8 @@ public final class Constants {
 
   public static final class IntakeConstants {
     // Subsystem Specific
-    public static final double kSquidSpeed = -0.5;
-    public static final double kIntakeSpeed = -0.5;
+    public static final double kSquidSpeed = -0.4;
+    public static final double kIntakeSpeed = -0.4;
     public static final double kSquidShootSpeed = -0.75;
     public static final double kIntakeShootSpeed = -0.75;
     public static final double kSquidEjectSpeed = 0.25;
