@@ -29,7 +29,7 @@ public class IntakeAutoStopCommand extends CommandBase {
   public void initialize() {
     logger.info("Begin Driver Controller - Auto Intake");
     if (!magazine.isIntakeBeamBroken()) {
-      intakeSubsystem.runSquids(IntakeConstants.kIntakeSpeed);
+      intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
       state = IntakeStates.INTAKING;
       timerOn = false;
       logger.info("Intake beam not broken - starting intake");
@@ -54,20 +54,20 @@ public class IntakeAutoStopCommand extends CommandBase {
             state = IntakeStates.DONE;
             logger.info("intake timer {} reached - stop intake", IntakeConstants.kTimeFullIntake);
             SmartDashboard.putBoolean("Match/Magazine Full", true);
-            intakeSubsystem.stopSquids();
+            intakeSubsystem.stopIntake();
           }
         } else {
           timerOn = false;
         }
 
-        if (intakeSubsystem.squidsStalled()) stallCount++;
+        if (intakeSubsystem.isStalled()) stallCount++;
         else stallCount = 0;
 
         if (stallCount >= IntakeConstants.kStallCount) {
           state = IntakeStates.REVERSING;
           logger.debug("intake stalled");
           reverseTime = currentTime;
-          intakeSubsystem.runSquids(IntakeConstants.kEjectSpeed);
+          intakeSubsystem.runIntake(IntakeConstants.kEjectSpeed);
           SmartDashboard.putBoolean("Match/Intake Stalled", true);
         }
         break;
@@ -75,7 +75,7 @@ public class IntakeAutoStopCommand extends CommandBase {
         if ((currentTime - reverseTime) >= IntakeConstants.kReverseTime) {
           state = IntakeStates.INTAKING;
           logger.debug("unjammed, running intake");
-          intakeSubsystem.runSquids(IntakeConstants.kIntakeSpeed);
+          intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
           SmartDashboard.putBoolean("Match/Intake Stalled", false);
         }
         break;
@@ -89,7 +89,7 @@ public class IntakeAutoStopCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.stopSquids();
+    intakeSubsystem.stopIntake();
     logger.info("Driver Controller - Stopping Auto Intake");
   }
 

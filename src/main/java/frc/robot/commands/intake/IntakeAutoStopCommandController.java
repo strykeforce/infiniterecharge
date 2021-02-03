@@ -34,7 +34,7 @@ public class IntakeAutoStopCommandController extends CommandBase {
             <= IntakeConstants.kDoublePressMaxTime;
     if (doublePressed || !magazine.isIntakeBeamBroken()) {
       state = IntakeStates.INTAKING;
-      intakeSubsystem.runSquids(IntakeConstants.kIntakeSpeed);
+      intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
       intakeSubsystem.lastIntakePressedTime = Timer.getFPGATimestamp();
       timerOn = false;
 
@@ -57,27 +57,27 @@ public class IntakeAutoStopCommandController extends CommandBase {
           if (currentTime - breakTime >= Constants.IntakeConstants.kTimeFullIntake) {
             state = IntakeStates.DONE;
             logger.debug("intake stopping");
-            intakeSubsystem.stopSquids();
+            intakeSubsystem.stopIntake();
           }
         } else {
           timerOn = false;
         }
 
-        if (intakeSubsystem.squidsStalled()) stallCount++;
+        if (intakeSubsystem.isStalled()) stallCount++;
         else stallCount = 0;
 
         if (stallCount >= IntakeConstants.kStallCount) {
           state = IntakeStates.REVERSING;
           logger.debug("intake stalled");
           reverseTime = currentTime;
-          intakeSubsystem.runSquids(IntakeConstants.kEjectSpeed);
+          intakeSubsystem.runIntake(IntakeConstants.kEjectSpeed);
         }
         break;
       case REVERSING:
         if ((currentTime - reverseTime) >= IntakeConstants.kReverseTime) {
           state = IntakeStates.INTAKING;
           logger.debug("unjammed, running intake");
-          intakeSubsystem.runSquids(IntakeConstants.kIntakeSpeed);
+          intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
         }
         break;
     }
@@ -90,7 +90,7 @@ public class IntakeAutoStopCommandController extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.stopSquids();
+    intakeSubsystem.stopIntake();
   }
 
   private enum IntakeStates {

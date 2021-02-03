@@ -53,13 +53,13 @@ public class MagazineSmartFeedCommand extends CommandBase {
         System.out.println("Waiting");
         break;
       case START_INTAKE:
-        INTAKE.runSquids(Constants.IntakeConstants.kIntakeShootSpeed);
+        INTAKE.runIntake(Constants.IntakeConstants.kIntakeShootSpeed);
         state = FeedStates.RUNNING;
         logger.info("Starting Intake");
         break;
       case RUNNING:
         if (isMoving()) {
-          INTAKE.runSquids(0);
+          INTAKE.runIntake(0);
           MAGAZINE.runOpenLoop(0);
           state = FeedStates.STOPPED;
           logger.info("Turret is Moving - Stopping Intake and Magazine");
