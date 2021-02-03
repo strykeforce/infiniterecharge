@@ -105,7 +105,7 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   public int getHoodPosition() {
-    return hood.getSelectedSensorPosition();
+    return (int) hood.getSelectedSensorPosition();
   }
 
   public void hoodOpenLoop(double output) {
