@@ -34,7 +34,7 @@ public class IntakeAutoStopCommandController extends CommandBase {
             <= IntakeConstants.kDoublePressMaxTime;
     if (doublePressed || !magazine.isIntakeBeamBroken()) {
       state = IntakeStates.INTAKING;
-      intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
+      intakeSubsystem.runBoth(IntakeConstants.kIntakeSpeed, IntakeConstants.kSquidSpeed);
       intakeSubsystem.lastIntakePressedTime = Timer.getFPGATimestamp();
       timerOn = false;
 
@@ -57,27 +57,29 @@ public class IntakeAutoStopCommandController extends CommandBase {
           if (currentTime - breakTime >= Constants.IntakeConstants.kTimeFullIntake) {
             state = IntakeStates.DONE;
             logger.debug("intake stopping");
+            intakeSubsystem.stopSquids();
             intakeSubsystem.stopIntake();
           }
         } else {
           timerOn = false;
         }
 
-        if (intakeSubsystem.isStalled()) stallCount++;
+        if (intakeSubsystem.squidsStalled()) stallCount++;
         else stallCount = 0;
 
         if (stallCount >= IntakeConstants.kStallCount) {
           state = IntakeStates.REVERSING;
           logger.debug("intake stalled");
           reverseTime = currentTime;
-          intakeSubsystem.runIntake(IntakeConstants.kEjectSpeed);
+          intakeSubsystem.runBoth(
+              IntakeConstants.kIntakeEjectSpeed, IntakeConstants.kSquidEjectSpeed);
         }
         break;
       case REVERSING:
         if ((currentTime - reverseTime) >= IntakeConstants.kReverseTime) {
           state = IntakeStates.INTAKING;
           logger.debug("unjammed, running intake");
-          intakeSubsystem.runIntake(IntakeConstants.kIntakeSpeed);
+          intakeSubsystem.runBoth(IntakeConstants.kIntakeSpeed, IntakeConstants.kSquidSpeed);
         }
         break;
     }
@@ -90,6 +92,7 @@ public class IntakeAutoStopCommandController extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    intakeSubsystem.stopSquids();
     intakeSubsystem.stopIntake();
   }
 

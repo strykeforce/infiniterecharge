@@ -17,7 +17,8 @@
 | Drive     | FX   | drive      | 11  | 0   |
 | Drive     | FX   | drive      | 12  | 3   |
 | Drive     | FX   | drive      | 13  | 1   |
-| Intake    | FX   | intake     | 20  | 15  |
+| Intake    | FX   | squids    | 20  | 15  |
+| Intake    | FX   | intake    | 21 | 8  |
 | Magazine  | SRX  | magazine   | 30  | 9   |
 | Shooter   | FX   | leftMaster | 40  | 12  |
 | Shooter   | FX   | rightSlave | 41  | 13  |
