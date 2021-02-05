@@ -8,26 +8,18 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
-import net.consensys.cava.toml.Toml;
-import net.consensys.cava.toml.TomlArray;
-import net.consensys.cava.toml.TomlParseResult;
-import net.consensys.cava.toml.TomlTable;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,50 +221,16 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
 
   // ----------------------------------Path
   // Methods--------------------------------------------------
-  public Trajectory calculateTrajctory(String name) {
+  public Trajectory calculateTrajectory(String name) {
     // Take name and parse
+    String pathName = "paths/" + name + ".wpilib.json";
     try {
-      // Parse Toml File
-      TomlParseResult parseResult =
-          Toml.parse(Paths.get("/home/lvuser/deploy/paths/" + name + ".toml"));
-
-      Pose2d startPos =
-          new Pose2d(
-              parseResult.getTable("start_pose").getDouble("x"),
-              parseResult.getTable("start_pose").getDouble("y"),
-              new Rotation2d(parseResult.getTable("start_pose").getDouble("angle")));
-      Pose2d endPos =
-          new Pose2d(
-              parseResult.getTable("end_pose").getDouble("x"),
-              parseResult.getTable("end_pose").getDouble("y"),
-              new Rotation2d(parseResult.getTable("end_pose").getDouble("angle")));
-      TomlArray internalPointsToml = parseResult.getArray("internal_points");
-      ArrayList<Translation2d> path = new ArrayList<>();
-      logger.info("Toml Array Size: {}", internalPointsToml.size());
-
-      for (int i = 0; i < internalPointsToml.size(); i++) {
-        TomlTable pointToml = internalPointsToml.getTable(i);
-        Translation2d point = new Translation2d(pointToml.getDouble("x"), pointToml.getDouble("y"));
-        //        path.set(i, point);
-        path.add(point);
-      }
-
-      // Create Trajectory
-      TrajectoryConfig trajectoryConfig =
-          new TrajectoryConfig(
-              parseResult.getDouble("max_velocity"), parseResult.getDouble("max_acceleration"));
-      trajectoryConfig.setReversed(parseResult.getBoolean("is_reversed"));
-      trajectoryConfig.setStartVelocity(parseResult.getDouble("start_velocity"));
-      trajectoryConfig.setEndVelocity(parseResult.getDouble("end_velocity"));
-      trajectoryGenerated =
-          TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
-
-      List<Trajectory.State> states = trajectoryGenerated.getStates();
-      for (int i = 0; i < states.size(); i++) {}
-    } catch (IOException error) {
-      logger.error(error.toString());
-      logger.error("Path {} not found", name);
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(pathName);
+      trajectoryGenerated = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + pathName, ex.getStackTrace());
     }
+
     return trajectoryGenerated;
   }
 
@@ -284,7 +242,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     }
 
     // Reset State Variables
-    lastPosition = Constants.AutoConstants.START_PATH.getTranslation();
+    lastPosition = trajectoryGenerated.getInitialPose().getTranslation();
     estimatedDistanceTraveled = 0;
     desiredDistance = 0;
     distError = 0.0;
