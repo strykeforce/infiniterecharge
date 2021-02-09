@@ -276,11 +276,11 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   }
 
   // GAMEPIECE CAMERA
-  public void setGamepieceEnabled (boolean enabled) {
+  public void setGamepieceEnabled(boolean enabled) {
     gamepieceCamera.setEnabled(enabled);
   }
 
-  public DeadeyeA1.Layout getLayout(){
+  public DeadeyeA1.Layout getLayout() {
     return gamepieceCamera.getLayout();
   }
 

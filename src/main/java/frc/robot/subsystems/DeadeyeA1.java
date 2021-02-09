@@ -1,10 +1,9 @@
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
 import java.util.List;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
-
-import frc.robot.Constants;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,22 +35,22 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
   }
 
   public Layout getLayout() {
-    if(getLargestSize() > SIZE_THRESHOLD) {
-      return isRed1()? Layout.RED1 : Layout.RED2;
+    if (getLargestSize() > SIZE_THRESHOLD) {
+      return isRed1() ? Layout.RED1 : Layout.RED2;
     } else {
-      return isBlue1()? Layout.BLUE1 : Layout.BLUE2;
+      return isBlue1() ? Layout.BLUE1 : Layout.BLUE2;
     }
   }
 
   public double getLargestSize() {
     double largest = 0;
-    for(TargetListTargetData.Target target : targets) {
+    for (TargetListTargetData.Target target : targets) {
       if (target.contourArea > largest) largest = target.contourArea;
     }
     return largest;
   }
 
-  private boolean isRed1 () {
+  private boolean isRed1() {
     int leftmost = 320;
     boolean isBottom = true;
     for (TargetListTargetData.Target target : targets) {
@@ -69,7 +68,7 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
     return !isBottom;
   }
 
-  private boolean isBlue1 () {
+  private boolean isBlue1() {
     int rightmost = 0;
     for (TargetListTargetData.Target target : targets) {
       if (target.topLeft.x > rightmost) rightmost = target.topLeft.x;
@@ -102,8 +101,6 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
     numTargets = data.targets.size();
     valid = data.valid;
     targets = data.targets;
-
-
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -118,8 +115,7 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
   @NotNull
   @Override
   public Set<Measure> getMeasures() {
-    return Set.of(
-        new Measure(NUM_TARGETS, "Number of Targets"));
+    return Set.of(new Measure(NUM_TARGETS, "Number of Targets"));
   }
 
   @NotNull

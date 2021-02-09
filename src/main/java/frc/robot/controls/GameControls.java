@@ -8,7 +8,6 @@ import frc.robot.Constants;
 import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.turret.TurretOpenLoopCommand;
-import frc.robot.commands.vision.ChooseSearchLayoutCommand;
 
 public class GameControls {
   private XboxController controller;
@@ -94,7 +93,7 @@ public class GameControls {
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
 
     // Vision Commands
-    new JoystickButton(controller, Button.kBack.value).whenPressed(new ChooseSearchLayoutCommand());
+    new JoystickButton(controller, Button.kBack.value).whenPressed(new GalacticSearchCmdGroup());
 
     // Climb Commands
     //    new JoystickButton(controller, Button.kStart.value)

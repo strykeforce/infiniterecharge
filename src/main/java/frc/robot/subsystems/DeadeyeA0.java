@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.Set;
 import java.util.function.DoubleSupplier;
-
-import frc.robot.Constants;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

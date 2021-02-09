@@ -11,14 +11,13 @@ public class ChooseSearchLayoutCommand extends InstantCommand {
   private static final VisionSubsystem VISION = RobotContainer.VISION;
   public Logger logger = LoggerFactory.getLogger("Layout Select Command");
 
-  public ChooseSearchLayoutCommand() {
-
-  }
+  public ChooseSearchLayoutCommand() {}
 
   @Override
   public void initialize() {
+
     DeadeyeA1.Layout layout = VISION.getLayout();
-    switch(layout) {
+    switch (layout) {
       case RED1:
         logger.info("Layout: Red-1");
         break;
