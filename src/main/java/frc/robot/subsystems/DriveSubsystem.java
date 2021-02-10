@@ -181,7 +181,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
 
     for (int i = 0; i < 4; i++) {
 
-      int position = swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
+      int position = (int) swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
       int TARGET = XLOCK_FL_TICKS_TARGET;
       angle = position % AZIMUTH_TICKS;
       if (i == 1 || i == 2) {
@@ -238,7 +238,8 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     this.trajectoryGenerated = trajectoryGenerated;
     this.targetYaw = targetYaw;
     for (int i = 0; i < 4; i++) {
-      startEncoderPosition[i] = swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition();
+      startEncoderPosition[i] =
+          (int) swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition();
     }
 
     // Reset State Variables

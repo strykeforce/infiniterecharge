@@ -168,7 +168,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public int getTurretError() {
-    return turret.getClosedLoopError();
+    return (int) turret.getClosedLoopError();
   }
 
   public boolean turretInRange(int targetCounts) {

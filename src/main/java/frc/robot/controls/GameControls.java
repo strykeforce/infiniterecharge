@@ -5,9 +5,6 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.commands.climber.ClimbReleaseSequenceCommand;
-import frc.robot.commands.climber.ClimberOpenLoopCommand;
-import frc.robot.commands.climber.FastClimbRatchetCommand;
 import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.turret.TurretOpenLoopCommand;
@@ -96,19 +93,24 @@ public class GameControls {
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
 
     // Climb Commands
-    new JoystickButton(controller, Button.kStart.value)
-        .whenPressed(new ClimbReleaseSequenceCommand(Constants.ClimberConstants.kFastUpOutput));
-    new JoystickButton(controller, Button.kStart.value).whenReleased(new ClimberOpenLoopCommand(0));
-    new JoystickButton(controller, Button.kBack.value).whenPressed(new FastClimbRatchetCommand());
-    new JoystickButton(controller, Button.kBack.value).whenReleased(new ClimberOpenLoopCommand(0));
-    new JoystickButton(controller, Button.kBumperLeft.value)
-        .whenPressed(new ClimberOpenLoopCommand(Constants.ClimberConstants.kSlowDownOutput));
-    new JoystickButton(controller, Button.kBumperLeft.value)
-        .whenReleased(new ClimberOpenLoopCommand(0));
-    new JoystickButton(controller, Button.kBumperRight.value)
-        .whenPressed(new ClimbReleaseSequenceCommand(Constants.ClimberConstants.kSlowUpOutput));
-    new JoystickButton(controller, Button.kBumperRight.value)
-        .whenReleased(new ClimberOpenLoopCommand(0));
+    //    new JoystickButton(controller, Button.kStart.value)
+    //        .whenPressed(new
+    // ClimbReleaseSequenceCommand(Constants.ClimberConstants.kFastUpOutput));
+    //    new JoystickButton(controller, Button.kStart.value).whenReleased(new
+    // ClimberOpenLoopCommand(0));
+    //    new JoystickButton(controller, Button.kBack.value).whenPressed(new
+    // FastClimbRatchetCommand());
+    //    new JoystickButton(controller, Button.kBack.value).whenReleased(new
+    // ClimberOpenLoopCommand(0));
+    //    new JoystickButton(controller, Button.kBumperLeft.value)
+    //        .whenPressed(new ClimberOpenLoopCommand(Constants.ClimberConstants.kSlowDownOutput));
+    //    new JoystickButton(controller, Button.kBumperLeft.value)
+    //        .whenReleased(new ClimberOpenLoopCommand(0));
+    //    new JoystickButton(controller, Button.kBumperRight.value)
+    //        .whenPressed(new
+    // ClimbReleaseSequenceCommand(Constants.ClimberConstants.kSlowUpOutput));
+    //    new JoystickButton(controller, Button.kBumperRight.value)
+    //        .whenReleased(new ClimberOpenLoopCommand(0));
 
     // Shooter Commands
     new JoystickButton(controller, Button.kX.value).whenPressed(new BatterShotCommandGroup());

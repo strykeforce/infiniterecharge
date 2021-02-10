@@ -307,7 +307,7 @@ class HealthCheckCommand : CommandBase() {
         healthCheck.execute()
     }
 
-    override fun isFinished() = healthCheck.isFinised()
+    override fun isFinished() = healthCheck.isFinished()
 
     override fun end(interrupted: Boolean) {
         healthCheck.report()
