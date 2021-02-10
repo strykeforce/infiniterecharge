@@ -16,8 +16,8 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private static final double SIZE_THRESHOLD = Constants.HoodConstants.HOOD_TICKS_PER_DEGREE;
-  private static final double DISTANCE_THRESHOLD = Constants.HoodConstants.HOOD_TICKS_PER_DEGREE;
+  private static final double SIZE_THRESHOLD = Constants.VisionConstants.SIZE_THRESHOLD;
+  private static final double DISTANCE_THRESHOLD = Constants.VisionConstants.DISTANCE_THRESHOLD;
 
   private final Deadeye<TargetListTargetData> deadeye =
       new Deadeye<>("A1", TargetListTargetData.class);
@@ -35,6 +35,9 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
   }
 
   public Layout getLayout() {
+    if (valid == false || targets.size() == 0) {
+      return Layout.INVALID;
+    }
     if (getLargestSize() > SIZE_THRESHOLD) {
       return isRed1() ? Layout.RED1 : Layout.RED2;
     } else {
@@ -47,18 +50,19 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
     for (TargetListTargetData.Target target : targets) {
       if (target.contourArea > largest) largest = target.contourArea;
     }
+
     return largest;
   }
 
   private boolean isRed1() {
-    int leftmost = 320;
+    int leftmost = 640;
     boolean isBottom = true;
     for (TargetListTargetData.Target target : targets) {
       if (target.topLeft.x < leftmost) {
         leftmost = target.topLeft.x;
         isBottom = true;
         for (TargetListTargetData.Target compare : targets) {
-          if (target.topLeft.x < compare.topLeft.x) {
+          if (target.topLeft.y < compare.topLeft.y) {
             isBottom = false;
             break;
           }
@@ -74,7 +78,7 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
       if (target.topLeft.x > rightmost) rightmost = target.topLeft.x;
     }
 
-    int leftmost = 320;
+    int leftmost = 640;
     for (TargetListTargetData.Target target : targets) {
       if (target.topLeft.x < leftmost) leftmost = target.topLeft.x;
     }
@@ -90,7 +94,8 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
     RED1,
     RED2,
     BLUE1,
-    BLUE2
+    BLUE2,
+    INVALID
   }
 
   ///////////////////////////////////////////////////////////////////////////

@@ -169,8 +169,8 @@ public final class Constants {
     public static final double TARGET_HEIGHT = 98.5;
     public static String kCameraID = "A0";
 
-    public static final double SIZE_THRESHOLD = 500;
-    public static final double DISTANCE_THRESHOLD = 100;
+    public static final double SIZE_THRESHOLD = 400;
+    public static final double DISTANCE_THRESHOLD = 200;
 
     public static final int kStableRange = 20;
     public static final int kStableCounts = 5;

@@ -15,21 +15,27 @@ public class ChooseSearchLayoutCommand extends InstantCommand {
 
   @Override
   public void initialize() {
-
-    DeadeyeA1.Layout layout = VISION.getLayout();
-    switch (layout) {
-      case RED1:
-        logger.info("Layout: Red-1");
-        break;
-      case RED2:
-        logger.info("Layout: Red-2");
-        break;
-      case BLUE1:
-        logger.info("Layout: Blue-1");
-        break;
-      case BLUE2:
-        logger.info("Layout: Blue-2");
-        break;
+    DeadeyeA1.Layout layout = DeadeyeA1.Layout.INVALID;
+    int attempts = 0;
+    while (layout == DeadeyeA1.Layout.INVALID && attempts < 3) {
+      layout = VISION.getLayout();
+      switch (layout) {
+        case RED1:
+          logger.info("Layout: Red-1");
+          break;
+        case RED2:
+          logger.info("Layout: Red-2");
+          break;
+        case BLUE1:
+          logger.info("Layout: Blue-1");
+          break;
+        case BLUE2:
+          logger.info("Layout: Blue-2");
+          break;
+        case INVALID:
+          logger.info("Layout: Invalid, retrying");
+      }
+      attempts++;
     }
   }
 }
