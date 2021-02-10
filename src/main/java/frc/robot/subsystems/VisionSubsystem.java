@@ -36,6 +36,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   private static DriveSubsystem drive;
   private static TurretSubsystem turret;
   private static DeadeyeA0 shooterCamera;
+  private static DeadeyeA1 gamepieceCamera;
   private static MinAreaRectTargetData targetData;
 
   private static String[][] lookupTable;
@@ -81,7 +82,8 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     drive = RobotContainer.DRIVE;
 
     targetData = new MinAreaRectTargetData();
-    shooterCamera = new DeadeyeA0(); // ?
+    shooterCamera = new DeadeyeA0();
+    gamepieceCamera = new DeadeyeA1();
 
     shooterCamera.setLightsEnabled(false);
 
@@ -271,6 +273,15 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
     logger.info("First cell = {}" + lookupTable[1][0]);
     logger.info("Second cell = {}" + lookupTable[2][0]);
+  }
+
+  // GAMEPIECE CAMERA
+  public void setGamepieceEnabled(boolean enabled) {
+    gamepieceCamera.setEnabled(enabled);
+  }
+
+  public DeadeyeA1.Layout getLayout() {
+    return gamepieceCamera.getLayout();
   }
 
   @NotNull
