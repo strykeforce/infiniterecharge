@@ -121,7 +121,7 @@ public final class Constants {
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 13_000; // FIXME
     public static final double loadAngle = 25;
-    public static final int kBatterShotTicks = 19550; // FIXME
+    public static final int kBatterShotTicks = 19600;
   }
 
   public static final class HoodConstants {
@@ -132,7 +132,7 @@ public final class Constants {
     public static final int kForwardSoftLimit = 9000; // 10000
     public static final int kReverseSoftLimit = 0; // 0
     public static final int kOffsetZeroTicks = 1820;
-    public static final int kBatterShotTicks = 0; // FIXME
+    public static final int kBatterShotTicks = 3670;
   }
 
   public static final class ClimberConstants {
