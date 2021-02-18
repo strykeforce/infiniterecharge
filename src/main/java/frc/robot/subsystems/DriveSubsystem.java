@@ -46,7 +46,8 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
   private static final double MAX_ACCELERATION = 2.0; // FIXME
   private static final int TICKS_PER_REV = 9011; // FIXME
   private static final double WHEEL_DIAMETER = 0.0635; // In meters
-  private static final double TICKS_PER_METER = TICKS_PER_REV / (WHEEL_DIAMETER * Math.PI);
+  private static final double TICKS_PER_METER = 55451; // TICKS_PER_REV / (WHEEL_DIAMETER * Math.PI)
+  private static final double TICKS_PER_INCH = 1408;
   private static final double kP_PATH = 10; // FIXME?
   private static final double MAX_VELOCITY_MPS = (MAX_VELOCITY * 10) / TICKS_PER_METER;
   private static final double kV_PATH = 1 / MAX_VELOCITY_MPS;

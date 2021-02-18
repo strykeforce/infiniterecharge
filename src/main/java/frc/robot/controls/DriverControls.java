@@ -36,7 +36,7 @@ public class DriverControls {
     // Software Testing
 
     new JoystickButton(joystick, Button.HAMBURGER.id)
-        .whenPressed(new DistanceCalibrateCommand(75000));
+        .whenPressed(new DistanceCalibrateCommand(145728));
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {
