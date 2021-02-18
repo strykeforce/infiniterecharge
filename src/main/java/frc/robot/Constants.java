@@ -89,7 +89,7 @@ public final class Constants {
     public static final double kClosedLoopShoot = 4800;
 
     // Command Specific
-    public static final long kArmTimeToShooterOn = 500;
+    public static final long kArmTimeToShooterOn = 250;
     public static final int kBeamStableCounts = 5;
   }
 
