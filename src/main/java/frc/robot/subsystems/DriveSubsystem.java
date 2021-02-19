@@ -37,7 +37,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
 
   private static final double ROBOT_LENGTH = 25.5;
   private static final double ROBOT_WIDTH = 21.5;
-  private static final double DRIVE_SETPOINT_MAX = 0.0;
+  private static final double DRIVE_SETPOINT_MAX = 18000.0;
   private static final int XLOCK_FL_TICKS_TARGET = 567;
   private static final int XLOCK_FR_TICKS_TARGET = 1481;
   private static final int AZIMUTH_TICKS = 4096;
@@ -47,7 +47,6 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
   private static final int TICKS_PER_REV = 9011; // FIXME
   private static final double WHEEL_DIAMETER = 0.0635; // In meters
   private static final double TICKS_PER_METER = 55451; // TICKS_PER_REV / (WHEEL_DIAMETER * Math.PI)
-  private static final double TICKS_PER_INCH = 1408;
   private static final double kP_PATH = 10; // FIXME?
   private static final double MAX_VELOCITY_MPS = (MAX_VELOCITY * 10) / TICKS_PER_METER;
   private static final double kV_PATH = 1 / MAX_VELOCITY_MPS;
@@ -127,8 +126,12 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     driveConfig.supplyCurrLimit.triggerThresholdCurrent = 45;
     driveConfig.supplyCurrLimit.triggerThresholdTime = 40;
     driveConfig.supplyCurrLimit.enable = true;
-    driveConfig.slot0.integralZone = 1000;
-    driveConfig.slot0.maxIntegralAccumulator = 150_000;
+    driveConfig.slot0.kP = 0.045;
+    driveConfig.slot0.kI = 0.0005;
+    driveConfig.slot0.kD = 0.000;
+    driveConfig.slot0.kF = 0.047;
+    driveConfig.slot0.integralZone = 500;
+    driveConfig.slot0.maxIntegralAccumulator = 75_000;
     driveConfig.slot0.allowableClosedloopError = 0;
     driveConfig.velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
     driveConfig.velocityMeasurementWindow = 64;
@@ -224,7 +227,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
   // Methods--------------------------------------------------
   public Trajectory calculateTrajectory(String name) {
     // Take name and parse
-    String pathName = "paths/" + name + ".wpilib.json";
+    String pathName = "output/" + name + ".wpilib.json";
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(pathName);
       trajectoryGenerated = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
@@ -248,7 +251,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     estimatedDistanceTraveled = 0;
     desiredDistance = 0;
     distError = 0.0;
-    // swerve.setDriveMode(DriveMode.CLOSED_LOOP); //FIXME
+    swerve.setDriveMode(DriveMode.CLOSED_LOOP);
   }
 
   public void updatePathOutput(double timeSeconds) {
