@@ -21,7 +21,7 @@ public class PathDriveCommand extends CommandBase {
 
   public PathDriveCommand(String trajectoryName, double targetYaw) {
     addRequirements(driveSubsystem);
-    trajectory = driveSubsystem.calculateTrajctory(trajectoryName);
+    trajectory = driveSubsystem.calculateTrajectory(trajectoryName);
     this.targetYaw = targetYaw;
   }
 
