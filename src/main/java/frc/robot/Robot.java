@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
     RobotContainer.CLIMBER.zeroClimb();
     RobotContainer.CLIMBER.engageRatchet(true);
     RobotContainer.VISION.setCameraEnabled(false);
+    RobotContainer.VISION.setGamepieceEnabled(false);
     didCamStartup = false;
   }
 
@@ -66,6 +67,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     //    logger.info("Disabled Init");
     RobotContainer.VISION.setCameraEnabled(false);
+    RobotContainer.VISION.setGamepieceEnabled(false);
     RobotContainer.AUTO.reset();
     timerStart = Timer.getFPGATimestamp();
     if (!didCamStartup) {

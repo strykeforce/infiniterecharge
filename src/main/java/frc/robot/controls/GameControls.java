@@ -92,6 +92,9 @@ public class GameControls {
     new JoystickButton(controller, Button.kB.value)
         .whenReleased(new StopIntakeAndMagazineCommandGroup());
 
+    // Vision Commands
+    new JoystickButton(controller, Button.kBack.value).whenPressed(new GalacticSearchCmdGroup());
+
     // Climb Commands
     //    new JoystickButton(controller, Button.kStart.value)
     //        .whenPressed(new
