@@ -1,5 +1,6 @@
 {
   "lengthUnit": "Meter",
+  "exportUnit": "Same as Project",
   "maxVelocity": 2.0,
   "maxAcceleration": 2.0,
   "wheelBase": 0.5588,
