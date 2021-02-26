@@ -35,7 +35,7 @@ public class DriverControls {
 
     // Software Testing
 
-    new JoystickButton(joystick, Button.HAMBURGER.id).whenPressed(new PathDriveCommand("Red2", 0));
+    new JoystickButton(joystick, Button.HAMBURGER.id).whenPressed(new PathDriveCommand("blue1", 0));
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {

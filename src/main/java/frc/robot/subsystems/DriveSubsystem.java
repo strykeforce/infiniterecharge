@@ -300,7 +300,7 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
     } else {
       yawPath = -yawError * kP_YAW;
     }
-    drive(-fwdPath, -strPath, -yawPath);
+    drive(-fwdPath, strPath, -yawPath);
     lastPosition = currentState.poseMeters.getTranslation();
   }
 
