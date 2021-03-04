@@ -11,6 +11,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.strykeforce.thirdcoast.swerve.SwerveDrive;
 
 public class GalacticSearchCommand extends CommandBase {
   private static final VisionSubsystem VISION = RobotContainer.VISION;
@@ -82,6 +83,7 @@ public class GalacticSearchCommand extends CommandBase {
           if (layout != DeadeyeA1.Layout.INVALID) {
             state = GalacticSearchState.WAITING;
             waitStart = System.currentTimeMillis();
+            logger.info("Waiting");
           }
         } else {
           logger.warn("Failed to identify layout, quiting");
@@ -93,6 +95,8 @@ public class GalacticSearchCommand extends CommandBase {
       case WAITING:
         if (System.currentTimeMillis() - waitStart > 2000) {
           state = GalacticSearchState.RUNNING;
+          DRIVE.startPath(selectedTrajectory, 0);
+          logger.info("Wait ended, driving path");
         }
         break;
 
@@ -107,6 +111,7 @@ public class GalacticSearchCommand extends CommandBase {
         timeElapsed = currentTimeSeconds - startTimeSeconds;
         //    logger.info("Current time seconds: " + timeElapsed);
         DRIVE.updatePathOutput(timeElapsed);
+        if (DRIVE.isPathDone(timeElapsed)) state = GalacticSearchState.FINISHED;
         break;
 
       case FINISHED:
@@ -119,7 +124,12 @@ public class GalacticSearchCommand extends CommandBase {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    INTAKE.stopIntake();
+    INTAKE.stopSquids();
+    DRIVE.drive(0, 0, 0);
+    DRIVE.setDriveMode(SwerveDrive.DriveMode.OPEN_LOOP);
+  }
 
   private enum GalacticSearchState {
     SELECTING,
