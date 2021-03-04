@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.auto.PathDriveCommand;
 import frc.robot.commands.drive.XLockCommand;
 import frc.robot.commands.drive.ZeroGyroCommand;
 import frc.robot.commands.hood.HoodOpenLoopCommand;
@@ -31,6 +32,11 @@ public class DriverControls {
     new JoystickButton(joystick, Trim.LEFT_Y_POS.id).whenReleased(new HoodOpenLoopCommand(0));
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenPressed(new HoodOpenLoopCommand(-.2));
     new JoystickButton(joystick, Trim.LEFT_Y_NEG.id).whenReleased(new HoodOpenLoopCommand(0));
+
+    // Software Testing
+
+    new JoystickButton(joystick, Button.HAMBURGER.id)
+        .whenPressed(new PathDriveCommand("testPath", 0));
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {
