@@ -36,6 +36,7 @@ public class DeadeyeA1 implements TargetDataListener<TargetListTargetData>, Meas
 
   public Layout getLayout() {
     if (valid == false || targets.size() < 3) {
+      logger.warn("Invalid image, isValid = {}", valid);
       return Layout.INVALID;
     }
     if (getLargestSize() > SIZE_THRESHOLD) {

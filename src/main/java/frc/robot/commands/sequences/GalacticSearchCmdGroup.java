@@ -10,7 +10,8 @@ public class GalacticSearchCmdGroup extends SequentialCommandGroup {
     addCommands(
         new LogCommand("Begin Galactic Search Sequence"),
         new SetGamepieceStateCommand(true),
-        new GalacticSearchCommand(),
-        new SetGamepieceStateCommand(false));
+        new GalacticSearchCommand()
+        //        new SetGamepieceStateCommand(false)
+        );
   }
 }

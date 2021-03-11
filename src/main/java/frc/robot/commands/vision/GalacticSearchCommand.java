@@ -47,6 +47,7 @@ public class GalacticSearchCommand extends CommandBase {
   public void initialize() {
     layout = DeadeyeA1.Layout.INVALID;
     state = GalacticSearchState.SELECTING;
+    VISION.setGamepieceEnabled(true);
     attempts = 0;
     isFirstExecute = true;
 
@@ -93,7 +94,7 @@ public class GalacticSearchCommand extends CommandBase {
 
         // this exists for tests so that we can disable is it is going to run the wrong path
       case WAITING:
-        if (System.currentTimeMillis() - waitStart > 2000) {
+        if (System.currentTimeMillis() - waitStart >= 0) {
           state = GalacticSearchState.RUNNING;
           DRIVE.startPath(selectedTrajectory, 0);
           logger.info("Wait ended, driving path");
