@@ -28,7 +28,6 @@ public class PathDriveCommand extends CommandBase {
   @Override
   public void initialize() {
     isFirstExecute = true;
-    driveSubsystem.offsetGyro(-targetYaw);
     driveSubsystem.startPath(trajectory, targetYaw);
     logger.info("Starting pathing...");
   }
@@ -54,7 +53,6 @@ public class PathDriveCommand extends CommandBase {
   public void end(boolean interrupted) {
     logger.info("Stopping pathing; Interruption: " + interrupted);
     driveSubsystem.drive(0, 0, 0);
-    driveSubsystem.offsetGyro(targetYaw);
     driveSubsystem.setDriveMode(DriveMode.OPEN_LOOP);
   }
 }
