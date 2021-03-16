@@ -1,8 +1,8 @@
 {
   "lengthUnit": "Meter",
   "exportUnit": "Same as Project",
-  "maxVelocity": 2.0,
-  "maxAcceleration": 2.0,
+  "maxVelocity": 3.8,
+  "maxAcceleration": 3.5,
   "wheelBase": 0.5588,
   "gameName": "Destination: Deep Space",
   "outputDir": "../src/main/deploy"
