@@ -5,5 +5,5 @@
   "maxAcceleration": 2.0,
   "wheelBase": 0.5588,
   "gameName": "Bounce Path",
-  "outputDir": "../src/main/deploy"
+  "outputDir": "src/main/deploy"
 }
