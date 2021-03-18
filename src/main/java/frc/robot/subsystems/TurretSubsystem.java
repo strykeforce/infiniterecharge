@@ -149,7 +149,10 @@ public class TurretSubsystem extends SubsystemBase {
   public boolean turretAtTarget() {
     double currentTurretPosition = turret.getSelectedSensorPosition();
     if (!Constants.isCompBot
-        || Math.abs(targetTurretPosition - currentTurretPosition)
+        || Math.abs(
+                targetTurretPosition
+                    - currentTurretPosition
+                    - Constants.VisionConstants.kHorizAngleCorrection)
             > Constants.TurretConstants.kCloseEnoughTurret) {
       turretStableCounts = 0;
     } else {
