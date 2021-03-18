@@ -4,6 +4,6 @@
   "maxVelocity": 2.0,
   "maxAcceleration": 2.0,
   "wheelBase": 0.5588,
-  "gameName": "Destination: Deep Space",
+  "gameName": "Bounce Path",
   "outputDir": "../src/main/deploy"
 }

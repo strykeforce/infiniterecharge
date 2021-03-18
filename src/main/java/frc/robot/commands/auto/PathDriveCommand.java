@@ -53,6 +53,7 @@ public class PathDriveCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     logger.info("Stopping pathing; Interruption: " + interrupted);
+    driveSubsystem.offsetGyro(targetYaw);
     driveSubsystem.drive(0, 0, 0);
     driveSubsystem.offsetGyro(targetYaw);
     driveSubsystem.setDriveMode(DriveMode.OPEN_LOOP);
