@@ -36,7 +36,7 @@ public class DriverControls {
     // Software Testing
 
     new JoystickButton(joystick, Button.HAMBURGER.id)
-        .whenPressed(new PathDriveCommand("Bounce1", 90));
+        .whenPressed(new PathDriveCommand("barrelRacingPath", 90));
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {
