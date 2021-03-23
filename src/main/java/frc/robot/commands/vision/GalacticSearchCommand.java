@@ -58,7 +58,7 @@ public class GalacticSearchCommand extends CommandBase {
   public void execute() {
     switch (state) {
       case SELECTING:
-        if (attempts < 3) {
+        if (attempts < 20) {
           layout = VISION.getLayout();
           switch (layout) {
             case RED1:
@@ -94,7 +94,7 @@ public class GalacticSearchCommand extends CommandBase {
 
         // this exists for tests so that we can disable is it is going to run the wrong path
       case WAITING:
-        if (System.currentTimeMillis() - waitStart >= 0) {
+        if (System.currentTimeMillis() - waitStart >= 250) {
           state = GalacticSearchState.RUNNING;
           DRIVE.startPath(selectedTrajectory, 0);
           logger.info("Wait ended, driving path");
