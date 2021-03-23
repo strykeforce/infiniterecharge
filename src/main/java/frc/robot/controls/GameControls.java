@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.turret.TurretOpenLoopCommand;
@@ -101,8 +102,7 @@ public class GameControls {
     // ClimbReleaseSequenceCommand(Constants.ClimberConstants.kFastUpOutput));
     //    new JoystickButton(controller, Button.kStart.value).whenReleased(new
     // ClimberOpenLoopCommand(0));
-    //    new JoystickButton(controller, Button.kBack.value).whenPressed(new
-    // FastClimbRatchetCommand());
+    new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(0));
     //    new JoystickButton(controller, Button.kBack.value).whenReleased(new
     // ClimberOpenLoopCommand(0));
     //    new JoystickButton(controller, Button.kBumperLeft.value)

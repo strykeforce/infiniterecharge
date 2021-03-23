@@ -17,6 +17,7 @@ public class ArmSequenceCommand extends SequentialCommandGroup {
         // put in track start
         new LogCommand("Begin Arm Sequence"),
         new SetCameraStateCommand(true),
+        //        new IntakeRunCommand(0, Constants.IntakeConstants.kIntakeSpeed),
         new RunMagazineCommand(MagazineConstants.kOpenloopArmReverse),
         // new SafeShooterReverseCommand(),
         new ParallelCommandGroup(new WaitForMagazineBeamCommand(), new SeekTargetCommand()),

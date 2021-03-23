@@ -2,7 +2,6 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -49,21 +48,6 @@ public class IntakeAutoStopCommandController extends CommandBase {
     long currentTime = System.currentTimeMillis();
     switch (state) {
       case INTAKING:
-        if (magazine.isIntakeBeamBroken() && !timerOn) {
-          timerOn = true;
-          breakTime = currentTime;
-          logger.debug("intake beam broken");
-        } else if (magazine.isIntakeBeamBroken() && timerOn) {
-          if (currentTime - breakTime >= Constants.IntakeConstants.kTimeFullIntake) {
-            state = IntakeStates.DONE;
-            logger.debug("intake stopping");
-            intakeSubsystem.stopSquids();
-            intakeSubsystem.stopIntake();
-          }
-        } else {
-          timerOn = false;
-        }
-
         if (intakeSubsystem.squidsStalled()) stallCount++;
         else stallCount = 0;
 
