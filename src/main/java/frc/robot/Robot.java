@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autoCommand = new PathDriveCommand("barrelRacingPath", 0);
+    autoCommand = new PathDriveCommand("barrelRacingPath", 90);
 
     // schedule the autonomous command (example)
     if (autoCommand != null) {

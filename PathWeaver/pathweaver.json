@@ -2,7 +2,7 @@
   "lengthUnit": "Meter",
   "exportUnit": "Same as Project",
   "maxVelocity": 4.5,
-  "maxAcceleration": 4.0,
+  "maxAcceleration": 4.5,
   "wheelBase": 0.5588,
   "gameName": "Bounce Path",
   "outputDir": "../src/main/deploy"
