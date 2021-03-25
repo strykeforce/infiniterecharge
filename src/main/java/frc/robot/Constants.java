@@ -64,9 +64,9 @@ public final class Constants {
 
   public static final class IntakeConstants {
     // Subsystem Specific
-    public static final double kSquidSpeed = -0.4;
-    public static final double kIntakeSpeed = -0.4;
-    public static final double kSquidShootSpeed = -0.75;
+    public static final double kSquidSpeed = -0.6; // -0.4
+    public static final double kIntakeSpeed = -0.6; // -0.4
+    public static final double kSquidShootSpeed = -0.5;
     public static final double kIntakeShootSpeed = -0.75;
     public static final double kSquidEjectSpeed = 0.25;
     public static final double kIntakeEjectSpeed = 0.25;
@@ -83,10 +83,10 @@ public final class Constants {
   public static final class MagazineConstants {
     // Subsystem Specific
     public static final double kOpenLoopLoad = 0.7;
-    public static final double kOpenloopShoot = 1.0;
+    public static final double kOpenloopShoot = 0.7; // redundant?
     public static final double kOpenloopReverse = -0.25;
     public static final double kOpenloopArmReverse = -0.2;
-    public static final double kClosedLoopShoot = 4800;
+    public static final double kClosedLoopShoot = 3800;
 
     // Command Specific
     public static final long kArmTimeToShooterOn = 250;
@@ -120,7 +120,7 @@ public final class Constants {
     public static final double kSweepRange = 25;
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 13_000; // FIXME
-    public static final double loadAngle = 25;
+    public static final double loadAngle = 270;
     public static final int kBatterShotTicks = 19600;
   }
 
@@ -184,12 +184,12 @@ public final class Constants {
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
 
-    public static final double kHorizAngleCorrection = 2.5;
+    public static final double kHorizAngleCorrection = 2.25;
     // + is further and lower
-    public static final int kHoodInchesCorrectionR1 = 4; // 8-15 feet
-    public static final int kHoodInchesCorrectionR2 = 4; // 15-19 feet
-    public static final int kHoodInchesCorrectionR3 = 4; // 19-25 feet
-    public static final int kHoodInchesCorrectionR4 = 4; // 25+ feet
+    public static final int kHoodInchesCorrectionR1 = 3; // 8-15 feet
+    public static final int kHoodInchesCorrectionR2 = 3; // 15-19 feet
+    public static final int kHoodInchesCorrectionR3 = 3; // 19-25 feet
+    public static final int kHoodInchesCorrectionR4 = 3; // 25+ feet
 
     public static final int kHoodTicksPerInchR1 = 40; // 8-15 feet
     public static final int kHoodTicksPerInchR2 = 75; // 15-19 feet
@@ -206,8 +206,8 @@ public final class Constants {
   public static class CompConstants {
     // Turret
     public static final int kTurretZeroTicks = 1931;
-    public static final double kMaxStringPotZero = 100;
-    public static final double kMinStringPotZero = 35;
+    public static final double kMaxStringPotZero = 75;
+    public static final double kMinStringPotZero = 8;
 
     // Hood
     public static final int kHoodZeroTicks = 2008; // gut check: 162

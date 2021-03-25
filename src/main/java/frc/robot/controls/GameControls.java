@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.commands.hood.HoodPositionCommand;
 import frc.robot.commands.intake.IntakeRunCommand;
+import frc.robot.commands.magazine.RunMagazineCommand;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.turret.TurretOpenLoopCommand;
 
@@ -105,10 +106,10 @@ public class GameControls {
     new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(0));
     //    new JoystickButton(controller, Button.kBack.value).whenReleased(new
     // ClimberOpenLoopCommand(0));
-    //    new JoystickButton(controller, Button.kBumperLeft.value)
-    //        .whenPressed(new ClimberOpenLoopCommand(Constants.ClimberConstants.kSlowDownOutput));
-    //    new JoystickButton(controller, Button.kBumperLeft.value)
-    //        .whenReleased(new ClimberOpenLoopCommand(0));
+    new JoystickButton(controller, Button.kBumperLeft.value)
+        .whenPressed(new RunMagazineCommand(-0.2));
+    new JoystickButton(controller, Button.kBumperLeft.value)
+        .whenReleased(new RunMagazineCommand(0));
     //    new JoystickButton(controller, Button.kBumperRight.value)
     //        .whenPressed(new
     // ClimbReleaseSequenceCommand(Constants.ClimberConstants.kSlowUpOutput));
