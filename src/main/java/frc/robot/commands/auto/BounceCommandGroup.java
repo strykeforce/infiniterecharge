@@ -9,6 +9,6 @@ public class BounceCommandGroup extends SequentialCommandGroup {
     addCommands(
         new LogCommand("Begin Bounce Path Group"),
         new PathDriveCommand("Bounce1", 90),
-        new BruteRotateCommand(-1, 300));
+        new BruteRotateCommand(0.5, 500));
   }
 }
