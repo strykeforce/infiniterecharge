@@ -95,6 +95,7 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       turret.configPeakOutputForward(0, 0);
       turret.configPeakOutputReverse(0, 0);
+      logger.warn("turret {}", stringPotPosition);
       logger.error("Turret zero failed. Killing turret...");
     }
 

@@ -10,7 +10,7 @@ import frc.robot.commands.shooter.ActuateTuningCommand;
 public class TuneFireCommandGroup extends SequentialCommandGroup {
   public TuneFireCommandGroup() {
     addCommands(
-        new IntakeRunCommand(IntakeConstants.kIntakeSpeed, IntakeConstants.kSquidSpeed),
+        new IntakeRunCommand(IntakeConstants.kIntakeSpeed, IntakeConstants.kSquidShootSpeed),
         new ActuateTuningCommand(),
         new RunMagazineCommand(Constants.MagazineConstants.kOpenloopShoot));
   }

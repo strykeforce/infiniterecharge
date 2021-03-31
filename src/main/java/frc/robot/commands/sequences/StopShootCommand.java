@@ -18,6 +18,6 @@ public class StopShootCommand extends ParallelCommandGroup {
         new ShooterClosedLoopStopCommand(),
         new StopVisionTrackingCommand(),
         new TurretAngleCommand(270),
-        new HoodPositionCommand(500));
+        new HoodPositionCommand(600));
   }
 }

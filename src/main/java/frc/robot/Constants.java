@@ -64,10 +64,10 @@ public final class Constants {
 
   public static final class IntakeConstants {
     // Subsystem Specific
-    public static final double kSquidSpeed = -0.6; // -0.4
-    public static final double kIntakeSpeed = -0.6; // -0.4
-    public static final double kSquidShootSpeed = -0.5;
-    public static final double kIntakeShootSpeed = -0.75;
+    public static final double kSquidSpeed = -0.2; // -0.4
+    public static final double kIntakeSpeed = -0.4; // -0.4
+    public static final double kSquidShootSpeed = -0.2;
+    public static final double kIntakeShootSpeed = -0.5;
     public static final double kSquidEjectSpeed = 0.25;
     public static final double kIntakeEjectSpeed = 0.25;
     public static final int kStallVelocity = 100;
@@ -86,7 +86,7 @@ public final class Constants {
     public static final double kOpenloopShoot = 0.7; // redundant?
     public static final double kOpenloopReverse = -0.25;
     public static final double kOpenloopArmReverse = -0.2;
-    public static final double kClosedLoopShoot = 3800;
+    public static final double kClosedLoopShoot = 1000;
 
     // Command Specific
     public static final long kArmTimeToShooterOn = 250;
@@ -207,7 +207,7 @@ public final class Constants {
     // Turret
     public static final int kTurretZeroTicks = 1931;
     public static final double kMaxStringPotZero = 75;
-    public static final double kMinStringPotZero = 8;
+    public static final double kMinStringPotZero = 0;
 
     // Hood
     public static final int kHoodZeroTicks = 2008; // gut check: 162
