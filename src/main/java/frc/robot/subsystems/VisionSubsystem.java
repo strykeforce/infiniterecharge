@@ -122,18 +122,26 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public int getHoodTicksAdjustment() {
     double distance = getGroundDistance();
-    if (distance > 96 && distance <= 180)
+    if (distance > 96 && distance <= 120) {
+      logger.info("Zone 1");
       return Constants.VisionConstants.kHoodInchesCorrectionR1
           * Constants.VisionConstants.kHoodTicksPerInchR1;
-    if (distance > 180 && distance <= 228)
+    }
+    if (distance > 120 && distance <= 180) {
+      logger.info("Zone 2");
       return Constants.VisionConstants.kHoodInchesCorrectionR2
           * Constants.VisionConstants.kHoodTicksPerInchR2;
-    if (distance > 228 && distance <= 300)
+    }
+    if (distance > 180 && distance <= 240) {
+      logger.info("Zone 3");
       return Constants.VisionConstants.kHoodInchesCorrectionR3
           * Constants.VisionConstants.kHoodTicksPerInchR3;
-    if (distance > 300)
+    }
+    if (distance > 240) {
+      logger.info("Zone 4");
       return Constants.VisionConstants.kHoodInchesCorrectionR4
           * Constants.VisionConstants.kHoodTicksPerInchR4;
+    }
     return 0;
   }
 
@@ -232,6 +240,7 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public int getBestTableIndex() {
     double distance = getGroundDistance();
+    //    distance -= 24;
     if (distance > kTableMax) {
       logger.warn(
           "Error retrieving table entry for {}, using MAX distance in table {}",

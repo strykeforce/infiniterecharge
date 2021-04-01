@@ -103,7 +103,7 @@ public class GameControls {
     // ClimbReleaseSequenceCommand(Constants.ClimberConstants.kFastUpOutput));
     //    new JoystickButton(controller, Button.kStart.value).whenReleased(new
     // ClimberOpenLoopCommand(0));
-    new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(0));
+    new JoystickButton(controller, Button.kBack.value).whenPressed(new HoodPositionCommand(600));
     //    new JoystickButton(controller, Button.kBack.value).whenReleased(new
     // ClimberOpenLoopCommand(0));
     new JoystickButton(controller, Button.kBumperLeft.value)
@@ -120,6 +120,7 @@ public class GameControls {
     new JoystickButton(controller, Button.kX.value).whenPressed(new BatterShotCommandGroup());
     new JoystickButton(controller, Button.kX.value).whenReleased(new StopShootCommand());
     new JoystickButton(controller, Button.kA.value).whenPressed(new StopShootCommand());
+    //    new JoystickButton(controller, Button.kA.value).whenReleased(new StopShootCommand());
     new JoystickButton(controller, Button.kY.value).whenPressed(new ArmSequenceCommand());
 
     // Turret Commands

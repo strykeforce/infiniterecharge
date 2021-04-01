@@ -86,10 +86,10 @@ public final class Constants {
     public static final double kOpenloopShoot = 0.7; // redundant?
     public static final double kOpenloopReverse = -0.25;
     public static final double kOpenloopArmReverse = -0.2;
-    public static final double kClosedLoopShoot = 1000;
+    public static final double kClosedLoopShoot = 400;
 
     // Command Specific
-    public static final long kArmTimeToShooterOn = 250;
+    public static final long kArmTimeToShooterOn = 750;
     public static final int kBeamStableCounts = 5;
   }
 
@@ -103,7 +103,8 @@ public final class Constants {
     // Command Specific
     public static final double kArmTimeToAccelerate = 1.5;
     public static final int kArmSpeed = 10000;
-    public static final int kBatterShotVelocity = 8000; // 12-27 inches (2 feet)
+    public static final int kBatterShotVelocity = 9000; // 12-27 inches (2 feet)
+    public static final int kLongShotVelocity = 12000; // 12-27 inches (2 feet)
   }
 
   public static final class TurretConstants {
@@ -121,7 +122,8 @@ public final class Constants {
     public static final double kWrapRange = 1; // FIXME
     public static final double kTurretMidpoint = 13_000; // FIXME
     public static final double loadAngle = 270;
-    public static final int kBatterShotTicks = 19600;
+    public static final int kBatterShotTicks = 19800;
+    public static final int kLongShotTicks = 6600;
   }
 
   public static final class HoodConstants {
@@ -132,7 +134,8 @@ public final class Constants {
     public static final int kForwardSoftLimit = 9000; // 10000
     public static final int kReverseSoftLimit = 0; // 0
     public static final int kOffsetZeroTicks = 1820;
-    public static final int kBatterShotTicks = 1600;
+    public static final int kBatterShotTicks = 850;
+    public static final int kLongShotTicks = 5150;
   }
 
   public static final class ClimberConstants {
@@ -184,12 +187,12 @@ public final class Constants {
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
 
-    public static final double kHorizAngleCorrection = 2.25;
+    public static final double kHorizAngleCorrection = 2.0;
     // + is further and lower
-    public static final int kHoodInchesCorrectionR1 = 3; // 8-15 feet
-    public static final int kHoodInchesCorrectionR2 = 3; // 15-19 feet
-    public static final int kHoodInchesCorrectionR3 = 3; // 19-25 feet
-    public static final int kHoodInchesCorrectionR4 = 3; // 25+ feet
+    public static final int kHoodInchesCorrectionR1 = 0; // 8-10 feet 3
+    public static final int kHoodInchesCorrectionR2 = -2; // 10-15 feet 3
+    public static final int kHoodInchesCorrectionR3 = 3; // 15-20 feet 7
+    public static final int kHoodInchesCorrectionR4 = 3; // 20+ feet 7
 
     public static final int kHoodTicksPerInchR1 = 40; // 8-15 feet
     public static final int kHoodTicksPerInchR2 = 75; // 15-19 feet

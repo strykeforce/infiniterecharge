@@ -52,7 +52,7 @@ public class MagazineSmartFeedCommand extends CommandBase {
             > Constants.MagazineConstants.kArmTimeToShooterOn) {
           state = FeedStates.START_INTAKE;
         }
-        System.out.println("Waiting");
+        //        System.out.println("Waiting");
         break;
       case START_INTAKE:
         INTAKE.runBoth(kIntakeShootSpeed, kSquidShootSpeed);
