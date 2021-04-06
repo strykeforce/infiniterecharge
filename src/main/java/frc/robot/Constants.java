@@ -187,12 +187,12 @@ public final class Constants {
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
 
-    public static final double kHorizAngleCorrection = 2.0;
+    public static final double kHorizAngleCorrection = 2.5;
     // + is further and lower
-    public static final int kHoodInchesCorrectionR1 = 0; // 8-10 feet 3
-    public static final int kHoodInchesCorrectionR2 = -2; // 10-15 feet 3
-    public static final int kHoodInchesCorrectionR3 = 3; // 15-20 feet 7
-    public static final int kHoodInchesCorrectionR4 = 3; // 20+ feet 7
+    public static final int kHoodInchesCorrectionR1 = -2; // 8-10 feet 3
+    public static final int kHoodInchesCorrectionR2 = -5; // 10-15 feet 3
+    public static final int kHoodInchesCorrectionR3 = 1; // 15-20 feet 7
+    public static final int kHoodInchesCorrectionR4 = 5; // 20+ feet 7
 
     public static final int kHoodTicksPerInchR1 = 40; // 8-15 feet
     public static final int kHoodTicksPerInchR2 = 75; // 15-19 feet
