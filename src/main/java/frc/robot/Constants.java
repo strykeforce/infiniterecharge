@@ -64,10 +64,10 @@ public final class Constants {
 
   public static final class IntakeConstants {
     // Subsystem Specific
-    public static final double kSquidSpeed = -0.5; // -0.4
-    public static final double kIntakeSpeed = -0.5; // -0.4
-    public static final double kSquidShootSpeed = -0.4;
-    public static final double kIntakeShootSpeed = -0.5;
+    public static final double kSquidSpeed = -0.2; // -0.4
+    public static final double kIntakeSpeed = -0.2; // -0.4
+    public static final double kSquidShootSpeed = -0.2;
+    public static final double kIntakeShootSpeed = -0.25;
     public static final double kSquidEjectSpeed = 0.25;
     public static final double kIntakeEjectSpeed = 0.25;
     public static final int kStallVelocity = 100;
@@ -187,7 +187,7 @@ public final class Constants {
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
 
-    public static final double kHorizAngleCorrection = 2.25;
+    public static final double kHorizAngleCorrection = 0;
     // + is further and lower
     public static final int kHoodInchesCorrectionR1 = 0; // 8-10 feet 3
     public static final int kHoodInchesCorrectionR2 = -2; // 10-15 feet 3
