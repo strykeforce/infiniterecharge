@@ -17,8 +17,8 @@ import frc.robot.controls.AutoChooser;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.*;
 import org.strykeforce.deadeye.Deadeye;
-import org.strykeforce.thirdcoast.telemetry.TelemetryController;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
+import org.strykeforce.telemetry.TelemetryController;
+import org.strykeforce.telemetry.TelemetryService;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a

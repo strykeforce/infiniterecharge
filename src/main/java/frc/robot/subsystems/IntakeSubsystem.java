@@ -1,17 +1,20 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.thirdcoast.talon.TalonFXItem;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
+import org.strykeforce.telemetry.TelemetryService;
+import org.strykeforce.thirdcoast.talon.TalonFXMeasurable;
 
 public class IntakeSubsystem extends SubsystemBase {
+
   public static double lastIntakePressedTime = 0;
 
   public static int SQUIDS_ID = 20;
@@ -43,8 +46,8 @@ public class IntakeSubsystem extends SubsystemBase {
     if (!RobotContainer.isEvent) {
       TelemetryService telemetryService = RobotContainer.TELEMETRY;
       telemetryService.stop();
-      telemetryService.register(new TalonFXItem(squidsDrive, "Squids"));
-      telemetryService.register(new TalonFXItem(intakeDrive, "Intake"));
+      telemetryService.register(new TalonFXMeasurable(squidsDrive, "Squids"));
+      telemetryService.register(new TalonFXMeasurable(intakeDrive, "Intake"));
       telemetryService.start();
     }
   }
@@ -85,7 +88,11 @@ public class IntakeSubsystem extends SubsystemBase {
           < Constants.IntakeConstants.kStallVelocity) {
         logger.info("Squids Stalled");
         return true;
-      } else return false;
-    } else return false;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }

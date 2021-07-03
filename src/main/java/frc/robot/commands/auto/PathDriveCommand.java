@@ -7,7 +7,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.thirdcoast.swerve.SwerveDrive.DriveMode;
 
 public class PathDriveCommand extends CommandBase {
 
@@ -56,6 +55,6 @@ public class PathDriveCommand extends CommandBase {
     driveSubsystem.offsetGyro(targetYaw);
     driveSubsystem.drive(0, 0, 0);
     driveSubsystem.offsetGyro(targetYaw);
-    driveSubsystem.setDriveMode(DriveMode.OPEN_LOOP);
+    //    driveSubsystem.setDriveMode(DriveMode.OPEN_LOOP);
   }
 }

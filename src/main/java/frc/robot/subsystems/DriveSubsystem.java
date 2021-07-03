@@ -8,32 +8,19 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.thirdcoast.swerve.SwerveDrive;
-import org.strykeforce.thirdcoast.swerve.SwerveDrive.DriveMode;
-import org.strykeforce.thirdcoast.swerve.SwerveDriveConfig;
-import org.strykeforce.thirdcoast.swerve.Wheel;
-import org.strykeforce.thirdcoast.talon.TalonFXItem;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
-import org.strykeforce.thirdcoast.telemetry.item.Measurable;
-import org.strykeforce.thirdcoast.telemetry.item.Measure;
-import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
+import org.strykeforce.swerve.SwerveDrive;
+import org.strykeforce.telemetry.TelemetryService;
+import org.strykeforce.telemetry.measurable.MeasurableSubsystem;
+import org.strykeforce.telemetry.measurable.Measure;
 
-public class DriveSubsystem extends SubsystemBase implements Measurable {
+public class DriveSubsystem extends MeasurableSubsystem {
 
   private static final double ROBOT_LENGTH = 25.5;
   private static final double ROBOT_WIDTH = 21.5;
@@ -51,11 +38,21 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
   private static final double MAX_VELOCITY_MPS = (MAX_VELOCITY * 10) / TICKS_PER_METER;
   private static final double kV_PATH = 1 / MAX_VELOCITY_MPS;
   private static final double kP_YAW = 0.01;
-
-  private final SwerveDrive swerve = configSwerve();
+  // -----------------------------------GRAPHER
+  // METHODS---------------------------------------------------
+  private static final String DESIRED_DISTANCE = "desired distance";
+  private static final String ACTUAL_DISTANCE = "actual distance";
+  private static final String DISTANCE_ERROR = "distance error";
+  private static final String PATH_VELOCITY = "path velocity";
+  private static final String DESIRED_VELOCITY = "desired path velocity";
+  private static final String FWD_PATH = "forward path";
+  private static final String STR_PATH = "strafe path";
+  private static final String YAW_PATH = "yaw path";
+  private static final String YAW_ERROR = "yaw error";
+  private static final String YAW = "yaw";
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final SwerveDrive swerve = configSwerve();
   TelemetryService telemetryService;
-
   private Trajectory trajectoryGenerated;
   private int[] startEncoderPosition = new int[4];
   private double estimatedDistanceTraveled;
@@ -72,39 +69,35 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
   private double yawPath = 0;
 
   public DriveSubsystem() {
-    swerve.setFieldOriented(true);
+    //    swerve.setFieldOriented(true);
     zeroAzimuths();
   }
 
   public void drive(double forward, double strafe, double yaw) {
-    swerve.drive(forward, strafe, yaw);
+    //    swerve.drive(forward, strafe, yaw);
   }
 
   public void zeroGyro() {
-    AHRS gyro = swerve.getGyro();
-    gyro.setAngleAdjustment(0);
-    double adj = gyro.getAngle() % 360;
-    gyro.setAngleAdjustment(-adj);
-    logger.info("resetting gyro: ({})", adj);
+    //    AHRS gyro = swerve.getGyro();
+    //    gyro.setAngleAdjustment(0);
+    //    double adj = gyro.getAngle() % 360;
+    //    gyro.setAngleAdjustment(-adj);
+    //    logger.info("resetting gyro: ({})", adj);
   }
 
   public void offsetGyro(double offset) {
-    AHRS gyro = swerve.getGyro();
-    gyro.setAngleAdjustment(0);
-    double adj = gyro.getAngle() % 360;
-    gyro.setAngleAdjustment(-adj - offset);
-    logger.info("offsetting gyro: ({})", offset);
+    //    AHRS gyro = swerve.getGyro();
+    //    gyro.setAngleAdjustment(0);
+    //    double adj = gyro.getAngle() % 360;
+    //    gyro.setAngleAdjustment(-adj - offset);
+    //    logger.info("offsetting gyro: ({})", offset);
   }
 
   public void zeroAzimuths() {
-    swerve.zeroAzimuthEncoders();
+    //    swerve.zeroAzimuthEncoders();
   }
 
-  public void setDriveMode(DriveMode mode) {
-    swerve.setDriveMode(mode);
-  }
-
-  private Wheel[] getWheels() {
+  private void getWheels() {
     TalonSRXConfiguration azimuthConfig = new TalonSRXConfiguration();
     azimuthConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
     azimuthConfig.continuousCurrentLimit = 10;
@@ -140,7 +133,6 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
       telemetryService = RobotContainer.TELEMETRY;
       telemetryService.stop();
     }
-    Wheel[] wheels = new Wheel[4];
 
     for (int i = 0; i < 4; i++) {
       TalonSRX azimuthTalon = new TalonSRX(i);
@@ -154,237 +146,99 @@ public class DriveSubsystem extends SubsystemBase implements Measurable {
       driveTalon.setNeutralMode(NeutralMode.Brake);
       driveTalon.enableVoltageCompensation(true);
       if (!RobotContainer.isEvent) {
-        telemetryService.register(new TalonSRXItem(azimuthTalon, "Azimuth " + i));
-        telemetryService.register(new TalonFXItem(driveTalon, "Drive " + (i + 10)));
+        //        telemetryService.register(new TalonSRXItem(azimuthTalon, "Azimuth " + i));
+        //        telemetryService.register(new TalonFXItem(driveTalon, "Drive " + (i + 10)));
       }
-      wheels[i] = new Wheel(azimuthTalon, driveTalon, DRIVE_SETPOINT_MAX);
+      //      wheels[i] = new Wheel(azimuthTalon, driveTalon, DRIVE_SETPOINT_MAX);
     }
     if (!RobotContainer.isEvent) {
       telemetryService.register(this);
       telemetryService.start();
     }
-    return wheels;
   }
 
   private SwerveDrive configSwerve() {
-    SwerveDriveConfig config = new SwerveDriveConfig();
-    config.length = ROBOT_LENGTH;
-    config.width = ROBOT_WIDTH;
-    config.wheels = getWheels();
-    config.gyro = new AHRS(SPI.Port.kMXP);
-    config.gyroLoggingEnabled = true;
-    config.summarizeTalonErrors = false;
-
-    return new SwerveDrive(config);
+    return null;
   }
 
   public void xLockSwerveDrive() {
-    int angle = 0;
-    logger.info("X-locking wheels");
-    Wheel[] swerveWheels = swerve.getWheels();
-
-    for (int i = 0; i < 4; i++) {
-
-      int position = (int) swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
-      int TARGET = XLOCK_FL_TICKS_TARGET;
-      angle = position % AZIMUTH_TICKS;
-      if (i == 1 || i == 2) {
-        TARGET = XLOCK_FR_TICKS_TARGET;
-      }
-
-      if (angle >= 0) {
-        int delta = TARGET - angle;
-        if (Math.abs(delta) > AZIMUTH_TICKS / 4) {
-          delta = (TARGET + AZIMUTH_TICKS / 2) - angle;
-        }
-        swerveWheels[i].setAzimuthPosition(position + delta);
-      } else {
-        int delta = (TARGET - AZIMUTH_TICKS / 2) - angle;
-        if (Math.abs(delta) > AZIMUTH_TICKS / 4) {
-          delta = (TARGET - AZIMUTH_TICKS) - angle;
-        }
-        swerveWheels[i].setAzimuthPosition(position + delta);
-      }
-    }
+    //    int angle = 0;
+    //    logger.info("X-locking wheels");
+    //    Wheel[] swerveWheels = swerve.getWheels();
+    //
+    //    for (int i = 0; i < 4; i++) {
+    //
+    //      int position = (int) swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
+    //      int TARGET = XLOCK_FL_TICKS_TARGET;
+    //      angle = position % AZIMUTH_TICKS;
+    //      if (i == 1 || i == 2) {
+    //        TARGET = XLOCK_FR_TICKS_TARGET;
+    //      }
+    //
+    //      if (angle >= 0) {
+    //        int delta = TARGET - angle;
+    //        if (Math.abs(delta) > AZIMUTH_TICKS / 4) {
+    //          delta = (TARGET + AZIMUTH_TICKS / 2) - angle;
+    //        }
+    //        swerveWheels[i].setAzimuthPosition(position + delta);
+    //      } else {
+    //        int delta = (TARGET - AZIMUTH_TICKS / 2) - angle;
+    //        if (Math.abs(delta) > AZIMUTH_TICKS / 4) {
+    //          delta = (TARGET - AZIMUTH_TICKS) - angle;
+    //        }
+    //        swerveWheels[i].setAzimuthPosition(position + delta);
+    //      }
+    //    }
   }
 
   public void zeroSwerve() {
-    Wheel[] swerveWheels = swerve.getWheels();
-    for (int i = 0; i < 4; i++) {
-      swerveWheels[i].setAzimuthPosition(0);
-    }
+    //    Wheel[] swerveWheels = swerve.getWheels();
+    //    for (int i = 0; i < 4; i++) {
+    //      swerveWheels[i].setAzimuthPosition(0);
+    //    }
   }
 
   public AHRS getGyro() {
-    return swerve.getGyro();
-  }
-
-  public Wheel[] getAllWheels() {
-    return swerve.getWheels();
+    throw new UnsupportedOperationException("gyro not implemented");
   }
 
   // ----------------------------------Path
   // Methods--------------------------------------------------
   public Trajectory calculateTrajectory(String name) {
-    // Take name and parse
-    String pathName = "output/" + name + ".wpilib.json";
-    try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(pathName);
-      trajectoryGenerated = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + pathName, ex.getStackTrace());
-    }
-
-    return trajectoryGenerated;
+    throw new UnsupportedOperationException("old path code");
   }
 
   public void startPath(Trajectory trajectoryGenerated, double targetYaw) {
-    this.trajectoryGenerated = trajectoryGenerated;
-    this.targetYaw = targetYaw;
-    for (int i = 0; i < 4; i++) {
-      startEncoderPosition[i] =
-          (int) swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition();
-    }
-
-    // Reset State Variables
-    lastPosition = trajectoryGenerated.getInitialPose().getTranslation();
-    estimatedDistanceTraveled = 0;
-    desiredDistance = 0;
-    distError = 0.0;
-    swerve.setDriveMode(DriveMode.CLOSED_LOOP);
+    throw new UnsupportedOperationException("old path code");
   }
 
   public void updatePathOutput(double timeSeconds) {
-    Trajectory.State currentState = trajectoryGenerated.sample(timeSeconds);
-
-    // Calculate Desired Distance
-    estimatedDistanceTraveled += currentState.poseMeters.getTranslation().getDistance(lastPosition);
-    desiredDistance = estimatedDistanceTraveled;
-
-    // Get Current Distance Travelled
-    int currentEncoderPosition = 0;
-    for (int i = 0; i < 4; i++) {
-      currentEncoderPosition +=
-          Math.abs(
-              swerve.getWheels()[i].getDriveTalon().getSelectedSensorPosition()
-                  - startEncoderPosition[i]);
-    }
-    currentEncoderPosition = currentEncoderPosition / 4;
-    currentDistance = currentEncoderPosition / TICKS_PER_METER;
-
-    // Calculate Output Velocity
-    distError = desiredDistance - currentDistance;
-    desiredPathVelocity = currentState.velocityMetersPerSecond / MAX_VELOCITY_MPS;
-    double rawOutput =
-        Math.copySign(1, currentState.velocityMetersPerSecond) * kP_PATH * distError
-            + currentState.velocityMetersPerSecond / MAX_VELOCITY_MPS;
-    pathVelocity =
-        rawOutput / MAX_VELOCITY_MPS; // * TICKS_PER_METER)/(MAX_VELOCITY * 10); // Ticks per 100ms
-    // //FIXME
-    double heading = currentState.poseMeters.getRotation().getRadians();
-
-    // Convert to FWD/STR Components
-    fwdPath = Math.cos(heading) * pathVelocity;
-    strPath = Math.sin(heading) * pathVelocity;
-    if (targetYaw == 180 || targetYaw == -180) {
-      double currentGyro = Math.IEEEremainder(swerve.getGyro().getAngle(), 360);
-      double posError = currentGyro - 180;
-      double negError = currentGyro + 180;
-      if (Math.abs(posError) < Math.abs(negError)) yawError = posError;
-      else yawError = negError;
-    } else {
-      yawError = Math.IEEEremainder(swerve.getGyro().getAngle(), 360) - targetYaw;
-    }
-    if (Math.abs(yawError) < 1) {
-      yawPath = 0.0;
-    } else {
-      yawPath = -yawError * kP_YAW;
-    }
-    drive(-fwdPath, strPath, -yawPath);
-    lastPosition = currentState.poseMeters.getTranslation();
+    throw new UnsupportedOperationException("old path code");
   }
 
   public boolean isPathDone(double timePassedSeconds) {
-    return timePassedSeconds >= trajectoryGenerated.getTotalTimeSeconds();
-  }
-
-  // -----------------------------------GRAPHER
-  // METHODS---------------------------------------------------
-  private static final String DESIRED_DISTANCE = "desired distance";
-  private static final String ACTUAL_DISTANCE = "actual distance";
-  private static final String DISTANCE_ERROR = "distance error";
-  private static final String PATH_VELOCITY = "path velocity";
-  private static final String DESIRED_VELOCITY = "desired path velocity";
-  private static final String FWD_PATH = "forward path";
-  private static final String STR_PATH = "strafe path";
-  private static final String YAW_PATH = "yaw path";
-  private static final String YAW_ERROR = "yaw error";
-  private static final String YAW = "yaw";
-
-  @NotNull
-  @Override
-  public String getDescription() {
-    return "drive subsystem";
-  }
-
-  @Override
-  public int getDeviceId() {
-    return 0;
+    throw new UnsupportedOperationException("old path code");
   }
 
   @NotNull
   @Override
   public Set<Measure> getMeasures() {
     return Set.of(
-        new Measure(DESIRED_DISTANCE, "desired distance"),
-        new Measure(ACTUAL_DISTANCE, "actual distance"),
-        new Measure(DISTANCE_ERROR, "distance error"),
-        new Measure(PATH_VELOCITY, "path velocity"),
-        new Measure(DESIRED_VELOCITY, "desired path velocity"),
-        new Measure(FWD_PATH, "forward path"),
-        new Measure(STR_PATH, "strafe path"),
-        new Measure(YAW_PATH, "yaw path"),
-        new Measure(YAW_ERROR, "yaw_error"),
-        new Measure(YAW, "yaw"));
-  }
-
-  @NotNull
-  @Override
-  public String getType() {
-    return "drive subsystem";
-  }
-
-  @Override
-  public int compareTo(@NotNull Measurable measurable) {
-    return 0;
-  }
-
-  @NotNull
-  @Override
-  public DoubleSupplier measurementFor(@NotNull Measure measure) {
-    switch (measure.getName()) {
-      case DESIRED_DISTANCE:
-        return () -> desiredDistance;
-      case ACTUAL_DISTANCE:
-        return () -> currentDistance;
-      case DISTANCE_ERROR:
-        return () -> distError;
-      case PATH_VELOCITY:
-        return () -> pathVelocity;
-      case DESIRED_VELOCITY:
-        return () -> desiredPathVelocity;
-      case FWD_PATH:
-        return () -> fwdPath;
-      case STR_PATH:
-        return () -> strPath;
-      case YAW_PATH:
-        return () -> yawPath;
-      case YAW_ERROR:
-        return () -> yawError;
-      case YAW:
-        return () -> Math.IEEEremainder(swerve.getGyro().getAngle(), 360);
-      default:
-        return () -> 2767;
-    }
+        new Measure(DESIRED_DISTANCE, "desired distance", () -> desiredDistance),
+        new Measure(ACTUAL_DISTANCE, "actual distance", () -> currentDistance),
+        new Measure(DISTANCE_ERROR, "distance error", () -> distError),
+        new Measure(PATH_VELOCITY, "path velocity", () -> pathVelocity),
+        new Measure(DESIRED_VELOCITY, "desired path velocity", () -> desiredPathVelocity),
+        new Measure(FWD_PATH, "forward path", () -> fwdPath),
+        new Measure(STR_PATH, "strafe path", () -> strPath),
+        new Measure(YAW_PATH, "yaw path", () -> yawPath),
+        new Measure(YAW_ERROR, "yaw_error", () -> yawError),
+        new Measure(
+            YAW,
+            "yaw",
+            () -> {
+              throw new UnsupportedOperationException();
+            }));
+    //        new Measure(YAW, "yaw", () -> Math.IEEEremainder(swerve.getGyro().getAngle(), 360)));
   }
 }

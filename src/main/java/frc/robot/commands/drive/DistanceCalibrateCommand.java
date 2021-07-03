@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 
 public class DistanceCalibrateCommand extends CommandBase {
 
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private DriveSubsystem driveSubsystem = RobotContainer.DRIVE;
   private double[] currentEncoder = new double[4];
   private double[] beginningEncoder = new double[4];
   private int ticks = 0;
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public DistanceCalibrateCommand(int ticks) {
 
@@ -23,8 +23,8 @@ public class DistanceCalibrateCommand extends CommandBase {
   @Override
   public void initialize() {
     for (int i = 0; i < 4; i++) {
-      beginningEncoder[i] =
-          driveSubsystem.getAllWheels()[i].getDriveTalon().getSelectedSensorPosition();
+      //      beginningEncoder[i] =
+      //          driveSubsystem.getAllWheels()[i].getDriveTalon().getSelectedSensorPosition();
     }
     driveSubsystem.drive(0.25, 0, 0);
   }
@@ -36,8 +36,8 @@ public class DistanceCalibrateCommand extends CommandBase {
   public void end(boolean interrupted) {
     double[] deltaEncoder = new double[4];
     for (int i = 0; i < 4; i++) {
-      currentEncoder[i] =
-          driveSubsystem.getAllWheels()[i].getDriveTalon().getSelectedSensorPosition();
+      //      currentEncoder[i] =
+      //          driveSubsystem.getAllWheels()[i].getDriveTalon().getSelectedSensorPosition();
       deltaEncoder[i] = Math.abs(currentEncoder[i] - beginningEncoder[i]);
     }
     driveSubsystem.drive(0, 0, 0);
@@ -51,10 +51,10 @@ public class DistanceCalibrateCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-
-    return Math.abs(
-            driveSubsystem.getAllWheels()[1].getDriveTalon().getSelectedSensorPosition()
-                - beginningEncoder[1])
-        >= ticks;
+    return true;
+    //    return Math.abs(
+    //            driveSubsystem.getAllWheels()[1].getDriveTalon().getSelectedSensorPosition()
+    //                - beginningEncoder[1])
+    //        >= ticks;
   }
 }

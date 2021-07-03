@@ -1,23 +1,23 @@
 package frc.robot.subsystems;
 
 import com.opencsv.CSVReader;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.deadeye.*;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
-import org.strykeforce.thirdcoast.telemetry.item.Measurable;
-import org.strykeforce.thirdcoast.telemetry.item.Measure;
+import org.strykeforce.deadeye.Deadeye;
+import org.strykeforce.deadeye.MinAreaRectTargetData;
+import org.strykeforce.telemetry.TelemetryService;
+import org.strykeforce.telemetry.measurable.MeasurableSubsystem;
+import org.strykeforce.telemetry.measurable.Measure;
 
-public class VisionSubsystem extends SubsystemBase implements Measurable {
+public class VisionSubsystem extends MeasurableSubsystem {
+
   private static final String RANGE = "RANGE";
   private static final String GROUND_RANGE = "GROUND_RANGE";
   private static final String BEARING = "BEARING";
@@ -31,21 +31,6 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   public static double TARGET_WIDTH_IN;
   public static double CAMERA_HEIGHT;
   public static double TARGET_HEIGHT;
-
-  private static Deadeye deadeye;
-  private static DriveSubsystem drive;
-  private static TurretSubsystem turret;
-  private static DeadeyeA0 shooterCamera;
-  private static DeadeyeA1 gamepieceCamera;
-  private static MinAreaRectTargetData targetData;
-
-  private static String[][] lookupTable;
-
-  private static boolean trackingEnabled;
-  private static double initOffset = 0;
-  private static int visionStableCounts;
-  private static int visionLostCounts;
-
   public static String kCameraID;
   public static String kTablePath;
   public static int kStableRange;
@@ -55,7 +40,17 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   public static int kTableRes;
   public static int kHoodIndex;
   public static int kShooterIndex;
-
+  private static Deadeye deadeye;
+  private static DriveSubsystem drive;
+  private static TurretSubsystem turret;
+  private static DeadeyeA0 shooterCamera;
+  private static DeadeyeA1 gamepieceCamera;
+  private static MinAreaRectTargetData targetData;
+  private static String[][] lookupTable;
+  private static boolean trackingEnabled;
+  private static double initOffset = 0;
+  private static int visionStableCounts;
+  private static int visionLostCounts;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public VisionSubsystem() {
@@ -103,16 +98,18 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
     }
   }
 
-  public void setTrackingEnabled(boolean isEnabled) {
-    trackingEnabled = isEnabled;
-  }
-
   public boolean isTrackingEnabled() {
     return trackingEnabled;
   }
 
+  public void setTrackingEnabled(boolean isEnabled) {
+    trackingEnabled = isEnabled;
+  }
+
   public double getOffsetAngle() {
-    if (shooterCamera.getValid()) return HORIZ_FOV * getPixOffset() / HORIZ_RES;
+    if (shooterCamera.getValid()) {
+      return HORIZ_FOV * getPixOffset() / HORIZ_RES;
+    }
     return 2767;
   }
 
@@ -122,18 +119,22 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   public int getHoodTicksAdjustment() {
     double distance = getGroundDistance();
-    if (distance > 96 && distance <= 180)
+    if (distance > 96 && distance <= 180) {
       return Constants.VisionConstants.kHoodInchesCorrectionR1
           * Constants.VisionConstants.kHoodTicksPerInchR1;
-    if (distance > 180 && distance <= 228)
+    }
+    if (distance > 180 && distance <= 228) {
       return Constants.VisionConstants.kHoodInchesCorrectionR2
           * Constants.VisionConstants.kHoodTicksPerInchR2;
-    if (distance > 228 && distance <= 300)
+    }
+    if (distance > 228 && distance <= 300) {
       return Constants.VisionConstants.kHoodInchesCorrectionR3
           * Constants.VisionConstants.kHoodTicksPerInchR3;
-    if (distance > 300)
+    }
+    if (distance > 300) {
       return Constants.VisionConstants.kHoodInchesCorrectionR4
           * Constants.VisionConstants.kHoodTicksPerInchR4;
+    }
     return 0;
   }
 
@@ -155,21 +156,26 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
   public double getDistance() {
     double enclosedAngle =
         HORIZ_FOV * Math.max(shooterCamera.getWidth(), shooterCamera.getHeight()) / HORIZ_RES;
-    if (shooterCamera.getValid())
+    if (shooterCamera.getValid()) {
       return TARGET_WIDTH_IN / 2 / Math.tan(Math.toRadians(enclosedAngle / 2));
+    }
     return -1;
   }
 
   public double getGroundDistance() {
-    if (shooterCamera.getValid())
+    if (shooterCamera.getValid()) {
       return Math.sqrt(Math.pow(getDistance(), 2) - Math.pow(TARGET_HEIGHT - CAMERA_HEIGHT, 2));
-    else return -1;
+    } else {
+      return -1;
+    }
   }
 
   public double getRawWidth() {
     if (shooterCamera.getValid()) {
       return Math.max(shooterCamera.getHeight(), shooterCamera.getWidth());
-    } else return -1;
+    } else {
+      return -1;
+    }
   }
 
   public double getCorrectedWidth() {
@@ -179,7 +185,9 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
             + getOffsetAngle());
     if (shooterCamera.getValid()) {
       return getRawWidth() / Math.cos(Math.toRadians(fieldOrientedOffset));
-    } else return -1;
+    } else {
+      return -1;
+    }
   }
 
   public boolean isTargetValid() {
@@ -286,56 +294,13 @@ public class VisionSubsystem extends SubsystemBase implements Measurable {
 
   @NotNull
   @Override
-  public String getDescription() {
-    return "Vision Subsystem";
-  }
-
-  @Override
-  public int getDeviceId() {
-    return 0;
-  }
-
-  @NotNull
-  @Override
   public Set<Measure> getMeasures() {
     return Set.of(
-        new Measure(RANGE, "Raw Range"),
-        new Measure(GROUND_RANGE, "Ground Range"),
-        new Measure(BEARING, "Bearing"),
-        new Measure(X_OFFSET, "Pixel offset"),
-        new Measure(RAW_WIDTH, "Raw Pixel Width"),
-        new Measure(CORRECTED_WIDTH, "Corrected Pixel Width"));
-  }
-
-  @NotNull
-  @Override
-  public String getType() {
-    return "vision";
-  }
-
-  @Override
-  public int compareTo(@NotNull Measurable item) {
-    return 0;
-  }
-
-  @NotNull
-  @Override
-  public DoubleSupplier measurementFor(@NotNull Measure measure) {
-    switch (measure.getName()) {
-      case RANGE:
-        return this::getDistance;
-      case GROUND_RANGE:
-        return this::getGroundDistance;
-      case BEARING:
-        return this::getOffsetAngle;
-      case X_OFFSET:
-        return this::getPixOffset;
-      case RAW_WIDTH:
-        return this::getRawWidth;
-      case CORRECTED_WIDTH:
-        return this::getCorrectedWidth;
-      default:
-        return () -> 2767;
-    }
+        new Measure(RANGE, "Raw Range", this::getDistance),
+        new Measure(GROUND_RANGE, "Ground Range", this::getGroundDistance),
+        new Measure(BEARING, "Bearing", this::getOffsetAngle),
+        new Measure(X_OFFSET, "Pixel offset", this::getPixOffset),
+        new Measure(RAW_WIDTH, "Raw Pixel Width", this::getRawWidth),
+        new Measure(CORRECTED_WIDTH, "Corrected Pixel Width", this::getCorrectedWidth));
   }
 }
