@@ -17,14 +17,6 @@ import org.strykeforce.telemetry.measurable.MeasurableSubsystem;
 import org.strykeforce.telemetry.measurable.Measure;
 
 public class VisionSubsystem extends MeasurableSubsystem {
-
-  private static final String RANGE = "RANGE";
-  private static final String GROUND_RANGE = "GROUND_RANGE";
-  private static final String BEARING = "BEARING";
-  private static final String X_OFFSET = "X_OFFSET";
-  private static final String RAW_WIDTH = "RAW_WIDTH";
-  private static final String CORRECTED_WIDTH = "CORRECTED_WIDTH";
-
   public static double VERTICAL_FOV;
   public static double HORIZ_FOV;
   public static double HORIZ_RES;
@@ -179,10 +171,11 @@ public class VisionSubsystem extends MeasurableSubsystem {
   }
 
   public double getCorrectedWidth() {
-    double fieldOrientedOffset =
-        (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
-            + (270 - turret.getTurretAngle())
-            + getOffsetAngle());
+    // TODO: convert to drive.getHeading()
+    double fieldOrientedOffset = 0;
+    //        (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
+    //            + (270 - turret.getTurretAngle())
+    //            + getOffsetAngle());
     if (shooterCamera.getValid()) {
       return getRawWidth() / Math.cos(Math.toRadians(fieldOrientedOffset));
     } else {
@@ -296,11 +289,11 @@ public class VisionSubsystem extends MeasurableSubsystem {
   @Override
   public Set<Measure> getMeasures() {
     return Set.of(
-        new Measure(RANGE, "Raw Range", this::getDistance),
-        new Measure(GROUND_RANGE, "Ground Range", this::getGroundDistance),
-        new Measure(BEARING, "Bearing", this::getOffsetAngle),
-        new Measure(X_OFFSET, "Pixel offset", this::getPixOffset),
-        new Measure(RAW_WIDTH, "Raw Pixel Width", this::getRawWidth),
-        new Measure(CORRECTED_WIDTH, "Corrected Pixel Width", this::getCorrectedWidth));
+        new Measure("Raw Range", this::getDistance),
+        new Measure("Ground Range", this::getGroundDistance),
+        new Measure("Bearing", this::getOffsetAngle),
+        new Measure("Pixel offset", this::getPixOffset),
+        new Measure("Raw Pixel Width", this::getRawWidth),
+        new Measure("Corrected Pixel Width", this::getCorrectedWidth));
   }
 }

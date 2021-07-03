@@ -1,6 +1,5 @@
 package frc.robot.commands.auto;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -20,41 +19,47 @@ public class PathDriveCommand extends CommandBase {
 
   public PathDriveCommand(String trajectoryName, double targetYaw) {
     addRequirements(driveSubsystem);
-    trajectory = driveSubsystem.calculateTrajectory(trajectoryName);
+    // TODO: convert to new trajectory
+    //    trajectory = driveSubsystem.calculateTrajectory(trajectoryName);
     this.targetYaw = targetYaw;
   }
 
   @Override
   public void initialize() {
-    isFirstExecute = true;
-    driveSubsystem.offsetGyro(-targetYaw);
-    driveSubsystem.startPath(trajectory, targetYaw);
-    logger.info("Starting pathing...");
+    // TODO: convert to new trajectory
+    //    isFirstExecute = true;
+    //    driveSubsystem.offsetGyro(-targetYaw);
+    //    driveSubsystem.startPath(trajectory, targetYaw);
+    //    logger.info("Starting pathing...");
   }
 
   @Override
   public void execute() {
-    if (isFirstExecute) {
-      startTimeSeconds = Timer.getFPGATimestamp();
-      isFirstExecute = false;
-    }
-    double currentTimeSeconds = Timer.getFPGATimestamp();
-    timeElapsed = currentTimeSeconds - startTimeSeconds;
+    // TODO: convert to new trajectory
+    //    if (isFirstExecute) {
+    //      startTimeSeconds = Timer.getFPGATimestamp();
+    //      isFirstExecute = false;
+    //    }
+    //    double currentTimeSeconds = Timer.getFPGATimestamp();
+    //    timeElapsed = currentTimeSeconds - startTimeSeconds;
     //    logger.info("Current time seconds: " + timeElapsed);
-    driveSubsystem.updatePathOutput(timeElapsed);
+    //    driveSubsystem.updatePathOutput(timeElapsed);
   }
 
   @Override
   public boolean isFinished() {
-    return driveSubsystem.isPathDone(timeElapsed);
+    return true;
+    // TODO: convert to new trajectory
+    //    return driveSubsystem.isPathDone(timeElapsed);
   }
 
   @Override
   public void end(boolean interrupted) {
-    logger.info("Stopping pathing; Interruption: " + interrupted);
-    driveSubsystem.offsetGyro(targetYaw);
-    driveSubsystem.drive(0, 0, 0);
-    driveSubsystem.offsetGyro(targetYaw);
+    // TODO: convert to new trajectory
+    //    logger.info("Stopping pathing; Interruption: " + interrupted);
+    //    driveSubsystem.offsetGyro(targetYaw);
+    //    driveSubsystem.drive(0, 0, 0);
+    //    driveSubsystem.offsetGyro(targetYaw);
     //    driveSubsystem.setDriveMode(DriveMode.OPEN_LOOP);
   }
 }

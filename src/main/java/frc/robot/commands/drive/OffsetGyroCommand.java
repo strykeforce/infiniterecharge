@@ -15,6 +15,7 @@ public class OffsetGyroCommand extends InstantCommand {
 
   @Override
   public void initialize() {
-    DRIVE.offsetGyro(offset);
+    // TODO: convert to new swerve
+    //    DRIVE.offsetGyro(offset);
   }
 }
