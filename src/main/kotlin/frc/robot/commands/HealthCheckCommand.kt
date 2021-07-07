@@ -318,7 +318,5 @@ class HealthCheckCommand : CommandBase() {
 
     override fun end(interrupted: Boolean) {
         healthCheck.report()
-        // TODO: convert to new swerve
-//        RobotContainer.DRIVE.zeroSwerve()
     }
 }

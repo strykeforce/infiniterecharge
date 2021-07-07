@@ -67,73 +67,24 @@ public final class Constants {
     }
   }
 
-  //
-  // These settings are temporarily moved here from the DriveSubsystem to facilitate copying them
-  // into the DriveConstants below
-  //
-  //  private static final double ROBOT_LENGTH = 25.5;
-  //  private static final double ROBOT_WIDTH = 21.5;
-  //  private static final double DRIVE_SETPOINT_MAX = 18000.0;
-  //  private static final int XLOCK_FL_TICKS_TARGET = 567;
-  //  private static final int XLOCK_FR_TICKS_TARGET = 1481;
-  //  private static final int AZIMUTH_TICKS = 4096;
-  //  private static final double MAX_VELOCITY = 40000; // FIXME
-  //  private static final double MAX_ACCELERATION = 2.0; // FIXME
-  //  private static final int TICKS_PER_REV = 9011; // FIXME
-  //  private static final double WHEEL_DIAMETER = 0.0635; // In meters
-  //  private static final double TICKS_PER_METER = 55451; // TICKS_PER_REV / (WHEEL_DIAMETER *
-  // Math.PI)
-  //  private static final double kP_PATH = 10; // FIXME?
-  //  private static final double MAX_VELOCITY_MPS = (MAX_VELOCITY * 10) / TICKS_PER_METER;
-  //  private static final double kV_PATH = 1 / MAX_VELOCITY_MPS;
-  //  private static final double kP_YAW = 0.01;
-
-  //  TalonSRXConfiguration azimuthConfig = new TalonSRXConfiguration();
-  //  azimuthConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
-  //  azimuthConfig.continuousCurrentLimit = 10;
-  //  azimuthConfig.peakCurrentDuration = 0;
-  //  azimuthConfig.peakCurrentLimit = 0;
-  //  azimuthConfig.slot0.kP = 10.0;
-  //  azimuthConfig.slot0.kI = 0.0;
-  //  azimuthConfig.slot0.kD = 100.0;
-  //  azimuthConfig.slot0.kF = 0.0;
-  //  azimuthConfig.slot0.integralZone = 0;
-  //  azimuthConfig.slot0.allowableClosedloopError = 0;
-  //  azimuthConfig.motionAcceleration = 10_000;
-  //  azimuthConfig.motionCruiseVelocity = 800;
-  //  azimuthConfig.velocityMeasurementWindow = 64;
-  //  azimuthConfig.voltageCompSaturation = 12;
-  //
-  //  TalonFXConfiguration driveConfig = new TalonFXConfiguration();
-  //  driveConfig.supplyCurrLimit.currentLimit = 0.04;
-  //  driveConfig.supplyCurrLimit.triggerThresholdCurrent = 45;
-  //  driveConfig.supplyCurrLimit.triggerThresholdTime = 40;
-  //  driveConfig.supplyCurrLimit.enable = true;
-  //  driveConfig.slot0.kP = 0.045;
-  //  driveConfig.slot0.kI = 0.0005;
-  //  driveConfig.slot0.kD = 0.000;
-  //  driveConfig.slot0.kF = 0.047;
-  //  driveConfig.slot0.integralZone = 500;
-  //  driveConfig.slot0.maxIntegralAccumulator = 75_000;
-  //  driveConfig.slot0.allowableClosedloopError = 0;
-  //  driveConfig.velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
-  //  driveConfig.velocityMeasurementWindow = 64;
-  //  driveConfig.voltageCompSaturation = 12;
-
   public static final class DriveConstants {
 
     public static final double kDeadbandXLock = 0.2;
 
-    // TODO: get real measurements
-    public static final double kWheelDiameterInches = 3.0 * (508.0 / 504.0);
-    public static final double kMaxSpeedMetersPerSecond = 3.53568;
+    // TODO: verify diameter and run calibration
+    // 500 cm calibration = actual / odometry
+    public static final double kWheelDiameterInches = 2.5 * (500.0 / 500.0);
+
+    // From: https://github.com/strykeforce/axis-config/
+    public static final double kMaxSpeedMetersPerSecond = 3.889;
+
     public static final double kMaxOmega =
-        (kMaxSpeedMetersPerSecond / Math.hypot(0.525 / 2.0, 0.765 / 2.0))
+        (kMaxSpeedMetersPerSecond / Math.hypot(0.5461 / 2.0, 0.6477 / 2.0))
             / 2.0; // wheel locations below
 
-    // TODO: get real measurements
-    static final double kDriveMotorOutputGear = 25;
-    static final double kDriveInputGear = 44;
+    // From: https://github.com/strykeforce/axis-config/
+    static final double kDriveMotorOutputGear = 22;
+    static final double kDriveInputGear = 48;
     static final double kBevelInputGear = 15;
     static final double kBevelOutputGear = 45;
     public static final double kDriveGearRatio =
@@ -144,9 +95,8 @@ public final class Constants {
     }
 
     public static Translation2d[] getWheelLocationMeters() {
-      // TODO: get real measurements
-      final double x = 0.525 / 2.0; // front-back
-      final double y = 0.765 / 2.0; // left-right
+      final double x = 0.5461 / 2.0; // front-back, was ROBOT_LENGTH
+      final double y = 0.6477 / 2.0; // left-right, was ROBOT_WIDTH
       Translation2d[] locs = new Translation2d[4];
       locs[0] = new Translation2d(x, y); // left front
       locs[1] = new Translation2d(x, -y); // right front
@@ -155,7 +105,6 @@ public final class Constants {
       return locs;
     }
 
-    // TODO: get real azimuth settings
     public static TalonSRXConfiguration getAzimuthTalonConfig() {
       // constructor sets encoder to Quad/CTRE_MagEncoder_Relative
       TalonSRXConfiguration azimuthConfig = new TalonSRXConfiguration();
@@ -167,15 +116,15 @@ public final class Constants {
       azimuthConfig.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
 
       azimuthConfig.continuousCurrentLimit = 10;
-      azimuthConfig.peakCurrentDuration = 1;
-      azimuthConfig.peakCurrentLimit = 1;
+      azimuthConfig.peakCurrentDuration = 0;
+      azimuthConfig.peakCurrentLimit = 0;
       azimuthConfig.slot0.kP = 10.0;
       azimuthConfig.slot0.kI = 0.0;
       azimuthConfig.slot0.kD = 100.0;
-      azimuthConfig.slot0.kF = 1.0;
+      azimuthConfig.slot0.kF = 0.0;
       azimuthConfig.slot0.integralZone = 0;
       azimuthConfig.slot0.allowableClosedloopError = 0;
-      azimuthConfig.slot0.maxIntegralAccumulator = 10;
+      azimuthConfig.slot0.maxIntegralAccumulator = 0;
       azimuthConfig.motionCruiseVelocity = 800;
       azimuthConfig.motionAcceleration = 10_000;
       azimuthConfig.velocityMeasurementWindow = 64;
@@ -183,7 +132,6 @@ public final class Constants {
       return azimuthConfig;
     }
 
-    // TODO: get real drive settings
     public static TalonFXConfiguration getDriveTalonConfig() {
       TalonFXConfiguration driveConfig = new TalonFXConfiguration();
       driveConfig.supplyCurrLimit.currentLimit = 0.04;
