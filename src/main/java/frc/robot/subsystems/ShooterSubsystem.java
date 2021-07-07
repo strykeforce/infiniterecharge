@@ -1,30 +1,31 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.thirdcoast.talon.TalonFXItem;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
+import org.strykeforce.telemetry.TelemetryService;
+import org.strykeforce.thirdcoast.talon.TalonFXMeasurable;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private static final DriveSubsystem DRIVE = RobotContainer.DRIVE;
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  private static final DriveSubsystem DRIVE = RobotContainer.DRIVE;
+  private static final int L_MASTER_ID = 40;
+  private static final int R_SLAVE_ID = 41;
   private static TalonFX leftMaster;
   private static TalonFX rightSlave;
-
   private static boolean isArmed = false;
   private static int targetShooterSpeed = 0;
   private static int shooterStableCounts = 0;
-
-  private static final int L_MASTER_ID = 40;
-  private static final int R_SLAVE_ID = 41;
-
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   TelemetryService telService;
 
   public ShooterSubsystem() {
@@ -60,8 +61,8 @@ public class ShooterSubsystem extends SubsystemBase {
     if (!RobotContainer.isEvent) {
       TelemetryService telService = RobotContainer.TELEMETRY;
       telService.stop();
-      telService.register(new TalonFXItem(leftMaster, "ShooterLeftMaster"));
-      telService.register(new TalonFXItem(rightSlave, "ShooterRightSlave"));
+      telService.register(new TalonFXMeasurable(leftMaster, "ShooterLeftMaster"));
+      telService.register(new TalonFXMeasurable(rightSlave, "ShooterRightSlave"));
       telService.start();
     }
   }

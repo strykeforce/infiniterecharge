@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
@@ -10,29 +13,24 @@ import frc.robot.RobotContainer;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
-import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
+import org.strykeforce.telemetry.TelemetryService;
+import org.strykeforce.telemetry.measurable.TalonSRXMeasurable;
 
 public class TurretSubsystem extends SubsystemBase {
+
   private static final DriveSubsystem DRIVE = RobotContainer.DRIVE;
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-  private static TalonSRX turret;
-
-  private static double targetTurretPosition = 0;
-
-  private static int turretStableCounts = 0;
-
   private static final int TURRET_ID = 42;
-
   private static final double TURRET_TICKS_PER_DEGREE =
       Constants.TurretConstants.TURRET_TICKS_PER_DEGREE;
-
-  private static int kTurretZeroTicks;
   private static final double kWrapRange = Constants.TurretConstants.kWrapRange;
   private static final double kTurretMidpoint = Constants.TurretConstants.kTurretMidpoint;
-  TelemetryService telService;
   public static boolean talonReset;
+  private static TalonSRX turret;
+  private static double targetTurretPosition = 0;
+  private static int turretStableCounts = 0;
+  private static int kTurretZeroTicks;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  TelemetryService telService;
 
   public TurretSubsystem() {
     kTurretZeroTicks = Constants.TurretConstants.kTurretZeroTicks;
@@ -68,7 +66,7 @@ public class TurretSubsystem extends SubsystemBase {
     if (!RobotContainer.isEvent) {
       TelemetryService telService = RobotContainer.TELEMETRY;
       telService.stop();
-      telService.register(new TalonSRXItem(turret, "ShooterTurret"));
+      telService.register(new TalonSRXMeasurable(turret, "ShooterTurret"));
       telService.start();
     }
   }
@@ -114,27 +112,20 @@ public class TurretSubsystem extends SubsystemBase {
     setTurret(setPoint);
   }
 
-  public void setTurretAngle(double targetAngle) {
-    if (targetAngle <= kWrapRange && turret.getSelectedSensorPosition() > kTurretMidpoint
-        || targetAngle < 0) {
-      targetAngle += 360;
-    }
-    double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
-    logger.info("Rotating Turret to {} degrees", targetAngle);
-    setTurret(setPoint);
-  }
-
   public void seekTarget(double angleOffset) {
-    double bearing = (DRIVE.getGyro().getAngle() + 270 + angleOffset) % 360;
-    if (bearing < 0) bearing += 360;
+    double bearing = (DRIVE.getHeading().getDegrees() + 270 + angleOffset) % 360;
+    if (bearing < 0) {
+      bearing += 360;
+    }
     double setPoint = bearing * TURRET_TICKS_PER_DEGREE;
     setTurret(setPoint);
     //    logger.info("Seeking Target with {} degree offset", angleOffset);
   }
 
   public void setTurret(double setPoint) {
-    if (turret.hasResetOccurred()) talonReset = true;
-    else {
+    if (turret.hasResetOccurred()) {
+      talonReset = true;
+    } else {
       targetTurretPosition = setPoint;
       turret.set(ControlMode.MotionMagic, setPoint);
       //      logger.info("Rotating Turret to {} ticks", setPoint);
@@ -165,6 +156,16 @@ public class TurretSubsystem extends SubsystemBase {
 
   public double getTurretAngle() {
     return turret.getSelectedSensorPosition() / TURRET_TICKS_PER_DEGREE;
+  }
+
+  public void setTurretAngle(double targetAngle) {
+    if (targetAngle <= kWrapRange && turret.getSelectedSensorPosition() > kTurretMidpoint
+        || targetAngle < 0) {
+      targetAngle += 360;
+    }
+    double setPoint = targetAngle * TURRET_TICKS_PER_DEGREE;
+    logger.info("Rotating Turret to {} degrees", targetAngle);
+    setTurret(setPoint);
   }
 
   public int getTurretError() {

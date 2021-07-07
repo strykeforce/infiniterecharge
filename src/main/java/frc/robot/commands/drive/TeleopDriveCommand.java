@@ -1,6 +1,7 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.DriveSubsystem;
@@ -35,8 +36,11 @@ public class TeleopDriveCommand extends CommandBase {
     double forward = forwardScale.apply(driverControls.getForward());
     double strafe = strafeScale.apply(driverControls.getStrafe());
     double yaw = yawScale.apply(driverControls.getYaw());
+    double vx = forward * -Constants.DriveConstants.kMaxSpeedMetersPerSecond;
+    double vy = strafe * Constants.DriveConstants.kMaxSpeedMetersPerSecond;
+    double omega = yaw * Constants.DriveConstants.kMaxOmega;
 
-    DRIVE.drive(-forward, -strafe, -yaw);
+    DRIVE.drive(vx, vy, omega);
   }
 
   @Override

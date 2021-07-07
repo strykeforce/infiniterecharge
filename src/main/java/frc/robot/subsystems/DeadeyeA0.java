@@ -1,15 +1,18 @@
 package frc.robot.subsystems;
 
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.deadeye.*;
-import org.strykeforce.thirdcoast.telemetry.item.Measurable;
-import org.strykeforce.thirdcoast.telemetry.item.Measure;
+import org.strykeforce.deadeye.Deadeye;
+import org.strykeforce.deadeye.MinAreaRectTargetData;
+import org.strykeforce.deadeye.Point2D;
+import org.strykeforce.deadeye.TargetDataListener;
+import org.strykeforce.telemetry.measurable.Measurable;
+import org.strykeforce.telemetry.measurable.Measure;
 
 public class DeadeyeA0 implements TargetDataListener<MinAreaRectTargetData>, Measurable {
+
   private static final String X = "X";
   private static final String Y = "Y";
 
@@ -99,7 +102,8 @@ public class DeadeyeA0 implements TargetDataListener<MinAreaRectTargetData>, Mea
   @NotNull
   @Override
   public Set<Measure> getMeasures() {
-    return Set.of(new Measure(X, "Target X"), new Measure(Y, "Target Y"));
+    return Set.of(
+        new Measure(X, "Target X", this::getCenterX), new Measure(Y, "Target Y", this::getCenterY));
   }
 
   @NotNull
@@ -109,25 +113,7 @@ public class DeadeyeA0 implements TargetDataListener<MinAreaRectTargetData>, Mea
   }
 
   @Override
-  public int compareTo(@NotNull Measurable measurable) {
-    return Integer.compare(getDeviceId(), measurable.getDeviceId());
-  }
-
-  @Override
   public int getDeviceId() {
     return 0;
-  }
-
-  @NotNull
-  @Override
-  public DoubleSupplier measurementFor(@NotNull Measure measure) {
-    switch (measure.getName()) {
-      case X:
-        return this::getCenterX;
-      case Y:
-        return this::getCenterY;
-      default:
-        throw new IllegalStateException("Unexpected value: " + measure.getName());
-    }
   }
 }

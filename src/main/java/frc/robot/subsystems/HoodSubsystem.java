@@ -1,6 +1,11 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
@@ -11,24 +16,19 @@ import frc.robot.RobotContainer;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
-import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
+import org.strykeforce.telemetry.TelemetryService;
+import org.strykeforce.telemetry.measurable.TalonSRXMeasurable;
 
 public class HoodSubsystem extends SubsystemBase {
+
   private static final DriveSubsystem DRIVE = RobotContainer.DRIVE;
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+  private static final int HOOD_ID = 43;
+  private static final double HOOD_TICKS_PER_DEGREE = Constants.HoodConstants.HOOD_TICKS_PER_DEGREE;
   private static TalonSRX hood;
-
   private static double targetHoodPosition = 0;
   private static int hoodStableCounts = 0;
-
-  private static final int HOOD_ID = 43;
-
-  private static final double HOOD_TICKS_PER_DEGREE = Constants.HoodConstants.HOOD_TICKS_PER_DEGREE;
-
   private static int kHoodZeroTicks;
-
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   TelemetryService telService;
 
   public HoodSubsystem() {
@@ -67,7 +67,7 @@ public class HoodSubsystem extends SubsystemBase {
     if (!RobotContainer.isEvent) {
       TelemetryService telService = RobotContainer.TELEMETRY;
       telService.stop();
-      telService.register(new TalonSRXItem(hood, "ShooterHood"));
+      telService.register(new TalonSRXMeasurable(hood, "ShooterHood"));
       telService.start();
     }
   }
@@ -98,14 +98,14 @@ public class HoodSubsystem extends SubsystemBase {
     return didZero;
   }
 
+  public int getHoodPosition() {
+    return (int) hood.getSelectedSensorPosition();
+  }
+
   public void setHoodPosition(int position) {
     hood.set(ControlMode.MotionMagic, position);
     targetHoodPosition = position;
     logger.info("Setting Hood to {} ticks", position);
-  }
-
-  public int getHoodPosition() {
-    return (int) hood.getSelectedSensorPosition();
   }
 
   public void hoodOpenLoop(double output) {

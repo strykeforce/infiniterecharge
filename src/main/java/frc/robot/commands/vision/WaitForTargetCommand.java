@@ -28,7 +28,8 @@ public class WaitForTargetCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return (VISION.isTargetValid()
-        && Math.abs(VISION.getOffsetAngle()) < Constants.VisionConstants.kCenteredRange);
+        && Math.abs(VISION.getOffsetAngle() - Constants.VisionConstants.kHorizAngleCorrection)
+            < Constants.VisionConstants.kCenteredRange);
   }
 
   @Override

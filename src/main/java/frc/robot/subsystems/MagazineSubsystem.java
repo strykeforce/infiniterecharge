@@ -9,8 +9,8 @@ import frc.robot.RobotContainer;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
-import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
+import org.strykeforce.telemetry.TelemetryService;
+import org.strykeforce.telemetry.measurable.TalonSRXMeasurable;
 
 public class MagazineSubsystem extends SubsystemBase {
   private static final int MAGAZINE_ID = 30;
@@ -49,7 +49,7 @@ public class MagazineSubsystem extends SubsystemBase {
     if (!RobotContainer.isEvent) {
       TelemetryService telemetry = RobotContainer.TELEMETRY;
       telemetry.stop();
-      telemetry.register(new TalonSRXItem(magazineTalon, "Magazine"));
+      telemetry.register(new TalonSRXMeasurable(magazineTalon, "Magazine"));
       telemetry.start();
     }
   }

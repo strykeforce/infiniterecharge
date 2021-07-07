@@ -3,8 +3,9 @@ package frc.robot.commands
 import edu.wpi.first.wpilibj2.command.CommandBase
 import frc.robot.RobotContainer
 import mu.KotlinLogging
-import org.strykeforce.thirdcoast.healthcheck.HealthCheck
-import org.strykeforce.thirdcoast.healthcheck.healthCheck
+import org.strykeforce.healthcheck.HealthCheck
+import org.strykeforce.healthcheck.healthCheck
+import org.strykeforce.swerve.TalonSwerveModule
 
 private val logger = KotlinLogging.logger { }
 
@@ -28,7 +29,10 @@ class HealthCheckCommand : CommandBase() {
             //Azimuth Motors
             talonCheck {
                 name = "swerve azimuth tests"
-                talons = RobotContainer.DRIVE.allWheels.map { it.azimuthTalon }
+                talons = RobotContainer.DRIVE.swerveModules.map {
+                    val module = it as? TalonSwerveModule ?: throw IllegalStateException()
+                    module.azimuthTalon
+                }
 
                 val volt3supplyCurrentRange = 0.25..0.75
                 val volt6supplyCurrentRange = 0.5..1.25
@@ -84,7 +88,10 @@ class HealthCheckCommand : CommandBase() {
             //Drive Motors
             talonCheck {
                 name = "swerve drive tests"
-                talons = RobotContainer.DRIVE.allWheels.map { it.driveTalon }
+                talons = RobotContainer.DRIVE.swerveModules.map {
+                    val module = it as? TalonSwerveModule ?: throw IllegalStateException()
+                    module.driveTalon
+                }
 
                 val volt3supplyCurrentRange = 0.5..1.125
                 val volt6supplyCurrentRange = 1.0..2.0
@@ -311,6 +318,5 @@ class HealthCheckCommand : CommandBase() {
 
     override fun end(interrupted: Boolean) {
         healthCheck.report()
-        RobotContainer.DRIVE.zeroSwerve()
     }
 }

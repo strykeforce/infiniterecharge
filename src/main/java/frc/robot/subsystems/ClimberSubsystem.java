@@ -12,22 +12,22 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.strykeforce.thirdcoast.telemetry.TelemetryService;
-import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem;
+import org.strykeforce.telemetry.TelemetryService;
+import org.strykeforce.telemetry.measurable.TalonSRXMeasurable;
 
 public class ClimberSubsystem extends SubsystemBase {
+
   private static int TALON_ID = 50;
   private static int RATCHET_ID = 0;
 
   private static TalonSRX climb;
   private static Servo ratchet;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private SupplyCurrentLimitConfiguration runningCurrent =
-      new SupplyCurrentLimitConfiguration(true, 60, 80, 1);
-
   public double ratchetReleasedTime;
   public double releaseStartTime;
   public double servoMoveTime;
+  private SupplyCurrentLimitConfiguration runningCurrent =
+      new SupplyCurrentLimitConfiguration(true, 60, 80, 1);
 
   public ClimberSubsystem() {
     climb = new TalonSRX(TALON_ID);
@@ -44,7 +44,7 @@ public class ClimberSubsystem extends SubsystemBase {
     if (!RobotContainer.isEvent) {
       TelemetryService telemetryService = RobotContainer.TELEMETRY;
       telemetryService.stop();
-      telemetryService.register(new TalonSRXItem(climb, "Climb"));
+      telemetryService.register(new TalonSRXMeasurable(climb, "Climb"));
       telemetryService.start();
     }
   }
