@@ -68,6 +68,7 @@ public class DriveSubsystem extends MeasurableSubsystem {
       if (telemetryService != null) {
         telemetryService.register(azimuthTalon);
         telemetryService.register(driveTalon);
+        telemetryService.register(this);
       }
     }
 

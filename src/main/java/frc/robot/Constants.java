@@ -73,7 +73,7 @@ public final class Constants {
 
     // TODO: verify diameter and run calibration
     // 500 cm calibration = actual / odometry
-    public static final double kWheelDiameterInches = 2.5 * (500.0 / 500.0);
+    public static final double kWheelDiameterInches = 3.0 * (500.0 / 500.0);
 
     // From: https://github.com/strykeforce/axis-config/
     public static final double kMaxSpeedMetersPerSecond = 3.889;
@@ -271,8 +271,9 @@ public final class Constants {
     public static final int kTableRes = 1;
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
-    public static final double kHorizAngleCorrection = 0;
-    // + is further and lower
+    // + is left
+    public static final double kHorizAngleCorrection = 3;
+    // + is further along track and lower
     public static final int kHoodInchesCorrectionR1 = 0; // 8-15 feet
     public static final int kHoodInchesCorrectionR2 = 0; // 15-19 feet
     public static final int kHoodInchesCorrectionR3 = 0; // 19-25 feet
@@ -296,7 +297,7 @@ public final class Constants {
     // Turret
     public static final int kTurretZeroTicks = 1931;
     public static final double kMaxStringPotZero = 100;
-    public static final double kMinStringPotZero = 35;
+    public static final double kMinStringPotZero = 0;
 
     // Hood
     public static final int kHoodZeroTicks = 2008; // gut check: 162

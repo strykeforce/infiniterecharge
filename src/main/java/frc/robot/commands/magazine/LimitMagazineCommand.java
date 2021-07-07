@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 public class LimitMagazineCommand extends CommandBase {
   private MagazineSubsystem magazineSubsystem = RobotContainer.MAGAZINE;
-  private ShooterSubsystem shooterSubsystem = RobotContainer.SHOOTER;
   private HoodSubsystem hoodSubsystem = RobotContainer.HOOD;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private double setSpeed;

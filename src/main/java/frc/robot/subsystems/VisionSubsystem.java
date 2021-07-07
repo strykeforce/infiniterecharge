@@ -171,11 +171,10 @@ public class VisionSubsystem extends MeasurableSubsystem {
   }
 
   public double getCorrectedWidth() {
-    // TODO: convert to drive.getHeading()
-    double fieldOrientedOffset = 0;
-    //        (Math.IEEEremainder(drive.getGyro().getAngle(), 360)
-    //            + (270 - turret.getTurretAngle())
-    //            + getOffsetAngle());
+    double fieldOrientedOffset =
+        (Math.IEEEremainder(-drive.getHeading().getDegrees(), 360)
+            + (270 - turret.getTurretAngle())
+            + getOffsetAngle());
     if (shooterCamera.getValid()) {
       return getRawWidth() / Math.cos(Math.toRadians(fieldOrientedOffset));
     } else {

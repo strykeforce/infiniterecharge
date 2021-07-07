@@ -13,7 +13,6 @@ public class ZeroGyroCommand extends InstantCommand {
 
   @Override
   public void initialize() {
-    // TODO: convert to DRIVE.resetGyro()
-    //    DRIVE.zeroGyro();
+    DRIVE.resetGyro();
   }
 }
