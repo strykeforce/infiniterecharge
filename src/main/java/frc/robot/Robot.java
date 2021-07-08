@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.auto.PathDriveCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -43,7 +42,7 @@ public class Robot extends TimedRobot {
     RobotContainer.CLIMBER.zeroClimb();
     RobotContainer.CLIMBER.engageRatchet(true);
     RobotContainer.VISION.setCameraEnabled(false);
-    RobotContainer.VISION.setGamepieceEnabled(true);
+    RobotContainer.VISION.setGamepieceEnabled(false);
     didCamStartup = false;
   }
 
@@ -68,7 +67,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     //    logger.info("Disabled Init");
     RobotContainer.VISION.setCameraEnabled(false);
-    RobotContainer.VISION.setGamepieceEnabled(true);
+    RobotContainer.VISION.setGamepieceEnabled(false);
     RobotContainer.AUTO.reset();
     timerStart = Timer.getFPGATimestamp();
     if (!didCamStartup) {
@@ -89,7 +88,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autoCommand = new PathDriveCommand("barrelRacingPath", 90);
+    autoCommand = RobotContainer.AUTO.getCommand();
 
     // schedule the autonomous command (example)
     if (autoCommand != null) {
