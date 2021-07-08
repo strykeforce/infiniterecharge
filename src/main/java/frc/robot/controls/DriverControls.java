@@ -2,7 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.auto.PathDriveCommand;
+import frc.robot.commands.drive.BruteRotateCommand;
 import frc.robot.commands.drive.XLockCommand;
 import frc.robot.commands.drive.ZeroGyroCommand;
 import frc.robot.commands.hood.HoodOpenLoopCommand;
@@ -35,8 +35,7 @@ public class DriverControls {
 
     // Software Testing
 
-    new JoystickButton(joystick, Button.HAMBURGER.id)
-        .whenPressed(new PathDriveCommand("Bounce1", 90));
+    new JoystickButton(joystick, Button.HAMBURGER.id).whenPressed(new BruteRotateCommand(0.5, 500));
   }
   /** Left stick X (up-down) axis. */
   public double getForward() {
