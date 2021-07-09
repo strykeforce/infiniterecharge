@@ -36,7 +36,7 @@ public class TeleopDriveCommand extends CommandBase {
     double forward = forwardScale.apply(driverControls.getForward());
     double strafe = strafeScale.apply(driverControls.getStrafe());
     double yaw = yawScale.apply(driverControls.getYaw());
-    double vx = forward * -Constants.DriveConstants.kMaxSpeedMetersPerSecond;
+    double vx = forward * Constants.DriveConstants.kMaxSpeedMetersPerSecond;
     double vy = strafe * Constants.DriveConstants.kMaxSpeedMetersPerSecond;
     double omega = yaw * Constants.DriveConstants.kMaxOmega;
 

@@ -5,13 +5,25 @@ import static frc.robot.Constants.kTalonConfigTimeout;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.RobotContainer;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import net.consensys.cava.toml.Toml;
+import net.consensys.cava.toml.TomlArray;
+import net.consensys.cava.toml.TomlParseResult;
+import net.consensys.cava.toml.TomlTable;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +38,8 @@ public class DriveSubsystem extends MeasurableSubsystem {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private final SwerveDrive swerveDrive;
+  private Trajectory trajectoryGenerated;
+  private HolonomicDriveController holonomicDriveController;
   TelemetryService telemetryService;
 
   public DriveSubsystem() {
@@ -140,6 +154,62 @@ public class DriveSubsystem extends MeasurableSubsystem {
     return swerveDrive.getHeading();
   }
 
+  // ----------------------------------Path
+  // Methods--------------------------------------------------
+  public Trajectory calculateTrajctory(String name) {
+    // Take name and parse
+    try {
+      // Parse Toml File
+      TomlParseResult parseResult =
+          Toml.parse(Paths.get("/home/lvuser/deploy/paths/" + name + ".toml"));
+      logger.info("calculating trajectory: {}", name);
+      Pose2d startPos =
+          new Pose2d(
+              parseResult.getTable("start_pose").getDouble("x"),
+              parseResult.getTable("start_pose").getDouble("y"),
+              new Rotation2d(parseResult.getTable("start_pose").getDouble("angle")));
+      Pose2d endPos =
+          new Pose2d(
+              parseResult.getTable("end_pose").getDouble("x"),
+              parseResult.getTable("end_pose").getDouble("y"),
+              new Rotation2d(parseResult.getTable("end_pose").getDouble("angle")));
+      TomlArray internalPointsToml = parseResult.getArray("internal_points");
+      ArrayList<Translation2d> path = new ArrayList<>();
+      logger.info("Toml Array Size: {}", internalPointsToml.size());
+
+      for (int i = 0; i < internalPointsToml.size(); i++) {
+        TomlTable pointToml = internalPointsToml.getTable(i);
+        Translation2d point = new Translation2d(pointToml.getDouble("x"), pointToml.getDouble("y"));
+        //        path.set(i, point);
+        path.add(point);
+      }
+
+      // Create Trajectory
+      TrajectoryConfig trajectoryConfig =
+          new TrajectoryConfig(
+              parseResult.getDouble("max_velocity"), parseResult.getDouble("max_acceleration"));
+      trajectoryConfig.setReversed(parseResult.getBoolean("is_reversed"));
+      trajectoryConfig.setStartVelocity(parseResult.getDouble("start_velocity"));
+      trajectoryConfig.setEndVelocity(parseResult.getDouble("end_velocity"));
+      trajectoryGenerated =
+          TrajectoryGenerator.generateTrajectory(startPos, path, endPos, trajectoryConfig);
+
+      List<Trajectory.State> states = trajectoryGenerated.getStates();
+      for (int i = 0; i < states.size(); i++) {}
+    } catch (IOException error) {
+      logger.error(error.toString());
+      logger.error("Path {} not found", name);
+    }
+    return trajectoryGenerated;
+  }
+
+  public Trajectory.State sampleTrajectory(double timeSeconds) {
+    return trajectoryGenerated.sample(timeSeconds);
+  }
+
+  public Trajectory getTrajectory() {
+    return trajectoryGenerated;
+  }
   // Measurable Support
 
   @NotNull
