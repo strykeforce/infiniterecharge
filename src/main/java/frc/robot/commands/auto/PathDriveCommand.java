@@ -32,7 +32,7 @@ public class PathDriveCommand extends CommandBase {
   private ChassisSpeeds speeds = new ChassisSpeeds();
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  public PathDriveCommand(String trajectoryName, double targetYaw) {
+  public PathDriveCommand(String trajectoryName) {
     // FIXME remove target yaw
     addRequirements(driveSubsystem);
     trajectory = driveSubsystem.calculateTrajctory(trajectoryName);

@@ -10,14 +10,12 @@ import frc.robot.commands.sequences.StopShootCommand;
 
 public class DelayShootCommandGroup extends SequentialCommandGroup {
 
-  public DelayShootCommandGroup(
-      double gyroOffset, double initDelay, double shootWait, double targetYaw) {
+  public DelayShootCommandGroup(double gyroOffset, double initDelay, double shootWait) {
     addCommands(
         new OffsetGyroCommand(gyroOffset),
         new WaitCommand(initDelay),
         new AutoArmCommandGroup(),
         new ParallelDeadlineGroup(new WaitCommand(shootWait), new ArmedShootSequenceCommand()),
-        new ParallelCommandGroup(
-            new StopShootCommand(), new PathDriveCommand("BackupPath", targetYaw)));
+        new ParallelCommandGroup(new StopShootCommand(), new PathDriveCommand("BackupPath")));
   }
 }
