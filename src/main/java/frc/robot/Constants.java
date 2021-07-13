@@ -165,7 +165,7 @@ public final class Constants {
     public static final double kDoublePressMaxTime = 0.5; // Timer class returns time in seconds
 
     // Command Specific
-    public static final long kTimeFullIntake = 1000;
+    public static final long kTimeFullIntake = 2000;
     public static final double kShootDelayIntake = 0;
     public static final double kReverseTime = .5;
     public static final double kStallCount = 5;
