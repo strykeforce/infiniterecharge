@@ -19,9 +19,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private static int TALON_ID = 50;
   private static int RATCHET_ID = 0;
+  private static int PIN_ID = 1;
 
   private static TalonSRX climb;
   private static Servo ratchet;
+  private static Servo pin;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   public double ratchetReleasedTime;
   public double releaseStartTime;
@@ -32,12 +34,13 @@ public class ClimberSubsystem extends SubsystemBase {
   public ClimberSubsystem() {
     climb = new TalonSRX(TALON_ID);
     ratchet = new Servo(RATCHET_ID);
+    pin = new Servo(PIN_ID);
 
     TalonSRXConfiguration talonConfig = new TalonSRXConfiguration();
     talonConfig.forwardSoftLimitThreshold = Constants.ClimberConstants.kForwardSoftLimit;
-    talonConfig.forwardSoftLimitEnable = true;
+    talonConfig.forwardSoftLimitEnable = false;
     talonConfig.reverseSoftLimitThreshold = Constants.ClimberConstants.kReverseSoftLimit;
-    talonConfig.reverseSoftLimitEnable = true;
+    talonConfig.reverseSoftLimitEnable = false;
     climb.configAllSettings(talonConfig);
     climb.setNeutralMode(NeutralMode.Brake);
     climb.configSupplyCurrentLimit(runningCurrent);
@@ -75,6 +78,16 @@ public class ClimberSubsystem extends SubsystemBase {
     } else {
       ratchet.set(Constants.ClimberConstants.kRatchetDisable);
       logger.info("Disabling Ratchet");
+    }
+  }
+
+  public void pullPin(boolean pull) {
+    if (pull) {
+      pin.set(Constants.ClimberConstants.kPinRelease);
+      logger.info("Pulling pin");
+    } else {
+      pin.set(Constants.ClimberConstants.kPinEngaged);
+      logger.info("Engaging pin");
     }
   }
 

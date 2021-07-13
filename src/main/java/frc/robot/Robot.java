@@ -39,7 +39,8 @@ public class Robot extends TimedRobot {
     RobotContainer.HOOD.zeroHood();
     RobotContainer.TURRET.zeroTurret();
     RobotContainer.CLIMBER.zeroClimb();
-    RobotContainer.CLIMBER.engageRatchet(true);
+    RobotContainer.CLIMBER.engageRatchet(false);
+    RobotContainer.CLIMBER.pullPin(false);
     RobotContainer.VISION.setCameraEnabled(false);
     RobotContainer.VISION.setGamepieceEnabled(false);
     didCamStartup = false;
