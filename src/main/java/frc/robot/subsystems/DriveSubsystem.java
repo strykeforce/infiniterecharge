@@ -137,6 +137,10 @@ public class DriveSubsystem extends MeasurableSubsystem {
     swerveDrive.resetGyro();
   }
 
+  public void setGyroOffset(Rotation2d offsetRads) {
+    swerveDrive.setGyroOffset(offsetRads);
+  }
+
   public Rotation2d getHeading() {
     return swerveDrive.getHeading();
   }

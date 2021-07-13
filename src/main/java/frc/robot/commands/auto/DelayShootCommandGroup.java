@@ -12,7 +12,7 @@ public class DelayShootCommandGroup extends SequentialCommandGroup {
 
   public DelayShootCommandGroup(double gyroOffset, double initDelay, double shootWait) {
     addCommands(
-        new OffsetGyroCommand(gyroOffset),
+        new OffsetGyroCommand(gyroOffset),//FIXME: move to end
         new WaitCommand(initDelay),
         new AutoArmCommandGroup(),
         new ParallelDeadlineGroup(new WaitCommand(shootWait), new ArmedShootSequenceCommand()),
