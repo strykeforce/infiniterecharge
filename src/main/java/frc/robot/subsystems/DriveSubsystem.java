@@ -146,8 +146,8 @@ public class DriveSubsystem extends MeasurableSubsystem {
   }
 
   public void xLockSwerveDrive() {
-    SwerveModuleState state1 = new SwerveModuleState(0, new Rotation2d(Math.toRadians(45)));
-    SwerveModuleState state2 = new SwerveModuleState(0, new Rotation2d(Math.toRadians(-45)));
+    SwerveModuleState state1 = new SwerveModuleState(0.01, new Rotation2d(Math.toRadians(45)));
+    SwerveModuleState state2 = new SwerveModuleState(0.01, new Rotation2d(Math.toRadians(-45)));
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (int i = 0; i < 4; i += 2) {
       states[i] = state1;
@@ -163,7 +163,6 @@ public class DriveSubsystem extends MeasurableSubsystem {
   public Set<Measure> getMeasures() {
     return Set.of(
         new Measure("Gyro Rotation2d (deg)", () -> swerveDrive.getHeading().getDegrees()),
-        new Measure("Gyro Angle (deg)", swerveDrive::getGyroAngle),
         new Measure("Odometry X", () -> swerveDrive.getPoseMeters().getX()),
         new Measure("Odometry Y", () -> swerveDrive.getPoseMeters().getY()),
         new Measure(

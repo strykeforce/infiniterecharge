@@ -12,7 +12,7 @@ public class NoDelayShootCommandGroup extends SequentialCommandGroup {
 
   public NoDelayShootCommandGroup(double gyroOffset, double waitSeconds) {
     addCommands(
-        new OffsetGyroCommand(gyroOffset),//FIXME: Move to end
+        new OffsetGyroCommand(gyroOffset), // FIXME: Move to end
         new AutoArmCommandGroup(),
         new ParallelDeadlineGroup(new WaitCommand(waitSeconds), new ArmedShootSequenceCommand()),
         new ParallelCommandGroup(new StopShootCommand(), new PathDriveCommand("BackupPath")));
