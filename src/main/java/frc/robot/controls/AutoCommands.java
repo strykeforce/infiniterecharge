@@ -12,17 +12,17 @@ public class AutoCommands {
   static Command createFor(int switchPosition) {
     switch (switchPosition) {
       case 0x10:
-        return new NoDelayShootCommandGroup(180, 2.5, 180);
+        return new NoDelayShootCommandGroup(180, 2.5);
       case 0x11:
-        return new DelayShootCommandGroup(180, 4, 2.5, 180);
+        return new DelayShootCommandGroup(180, 4, 2.5);
       case 0x12:
-        return new DelayShootCommandGroup(180, 8, 2.5, 180);
+        return new DelayShootCommandGroup(180, 8, 2.5);
       case 0x13:
-        return new DelayShootCommandGroup(180, 10, 2.5, 180);
+        return new DelayShootCommandGroup(180, 10, 2.5);
       case 0x20:
         return new TrenchAutoCommandGroup(180, 1, 2, "TrenchPickupPath", "TrenchReturnPath");
       case 0x30:
-        return new NoDelayShootCommandGroup(90, 12, -90);
+        return new NoDelayShootCommandGroup(90, 12);
 
       default:
         String msg =

@@ -113,7 +113,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void seekTarget(double angleOffset) {
-    double bearing = (DRIVE.getHeading().getDegrees() + 270 + angleOffset) % 360;
+    double bearing = (-DRIVE.getHeading().getDegrees() + 270 + angleOffset) % 360;
     if (bearing < 0) {
       bearing += 360;
     }

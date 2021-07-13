@@ -4,18 +4,15 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.drive.OffsetGyroCommand;
 import frc.robot.commands.sequences.ArmedShootSequenceCommand;
 import frc.robot.commands.sequences.StopShootCommand;
 
 public class NoDelayShootCommandGroup extends SequentialCommandGroup {
 
-  public NoDelayShootCommandGroup(double gyroOffset, double waitSeconds, double targetYaw) {
+  public NoDelayShootCommandGroup(double gyroOffset, double waitSeconds) {
     addCommands(
-        new OffsetGyroCommand(gyroOffset),
         new AutoArmCommandGroup(),
         new ParallelDeadlineGroup(new WaitCommand(waitSeconds), new ArmedShootSequenceCommand()),
-        new ParallelCommandGroup(
-            new StopShootCommand(), new PathDriveCommand("BackupPath", targetYaw)));
+        new ParallelCommandGroup(new StopShootCommand(), new PathDriveCommand("BackupPath")));
   }
 }

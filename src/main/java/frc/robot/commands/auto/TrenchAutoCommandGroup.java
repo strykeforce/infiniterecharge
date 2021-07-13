@@ -17,19 +17,18 @@ public class TrenchAutoCommandGroup extends SequentialCommandGroup {
       String ballFetchPath,
       String driveShootPath) {
     addCommands(
-        new OffsetGyroCommand(gyroOffset),
+        new OffsetGyroCommand(gyroOffset), // FIXME: Move to end
         new AutoArmCommandGroup(),
         new ParallelDeadlineGroup(new WaitCommand(shootWait), new ArmedShootSequenceCommand()),
         new ParallelDeadlineGroup(
             new SequentialCommandGroup(
-                new PathDriveCommand(ballFetchPath, 180), new WaitCommand(intakeWait)),
+                new PathDriveCommand(ballFetchPath), new WaitCommand(intakeWait)),
             new AutoIntakeCmdGroup(),
             new ShooterClosedLoopStopCommand(),
             new StopVisionTrackingCommand(),
             new TurretPositionCommand(0),
             new HoodPositionCommand(500)),
-        new ParallelCommandGroup(
-            new PathDriveCommand(driveShootPath, 180), new AutoArmCommandGroup()),
+        new ParallelCommandGroup(new PathDriveCommand(driveShootPath), new AutoArmCommandGroup()),
         new ArmedShootSequenceCommand());
   }
 }

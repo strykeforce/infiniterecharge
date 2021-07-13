@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.RobotContainer;
 import java.util.Set;
@@ -74,6 +75,7 @@ public class DriveSubsystem extends MeasurableSubsystem {
 
     swerveDrive = new SwerveDrive(swerveModules);
     swerveDrive.resetGyro();
+    swerveDrive.setGyroOffset(Rotation2d.fromDegrees(180));
   }
 
   /**
@@ -136,8 +138,23 @@ public class DriveSubsystem extends MeasurableSubsystem {
     swerveDrive.resetGyro();
   }
 
+  public void setGyroOffset(Rotation2d offsetRads) {
+    swerveDrive.setGyroOffset(offsetRads);
+  }
+
   public Rotation2d getHeading() {
     return swerveDrive.getHeading();
+  }
+
+  public void xLockSwerveDrive() {
+    SwerveModuleState state1 = new SwerveModuleState(0.01, Rotation2d.fromDegrees(45));
+    SwerveModuleState state2 = new SwerveModuleState(0.01, Rotation2d.fromDegrees(-45));
+    SwerveModuleState[] states = new SwerveModuleState[4];
+    for (int i = 0; i < 4; i += 2) {
+      states[i] = state1;
+      states[i + 1] = state2;
+    }
+    swerveDrive.setModuleStates(states);
   }
 
   // Measurable Support
@@ -147,41 +164,10 @@ public class DriveSubsystem extends MeasurableSubsystem {
   public Set<Measure> getMeasures() {
     return Set.of(
         new Measure("Gyro Rotation2d (deg)", () -> swerveDrive.getHeading().getDegrees()),
-        new Measure("Gyro Angle (deg)", swerveDrive::getGyroAngle),
         new Measure("Odometry X", () -> swerveDrive.getPoseMeters().getX()),
         new Measure("Odometry Y", () -> swerveDrive.getPoseMeters().getY()),
         new Measure(
             "Odometry Rotation2d (deg)",
             () -> swerveDrive.getPoseMeters().getRotation().getDegrees()));
-  }
-
-  public void xLockSwerveDrive() {
-    //    int angle = 0;
-    //    logger.info("X-locking wheels");
-    //    Wheel[] swerveWheels = swerve.getWheels();
-    //
-    //    for (int i = 0; i < 4; i++) {
-    //
-    //      int position = (int) swerveWheels[i].getAzimuthTalon().getSelectedSensorPosition();
-    //      int TARGET = XLOCK_FL_TICKS_TARGET;
-    //      angle = position % AZIMUTH_TICKS;
-    //      if (i == 1 || i == 2) {
-    //        TARGET = XLOCK_FR_TICKS_TARGET;
-    //      }
-    //
-    //      if (angle >= 0) {
-    //        int delta = TARGET - angle;
-    //        if (Math.abs(delta) > AZIMUTH_TICKS / 4) {
-    //          delta = (TARGET + AZIMUTH_TICKS / 2) - angle;
-    //        }
-    //        swerveWheels[i].setAzimuthPosition(position + delta);
-    //      } else {
-    //        int delta = (TARGET - AZIMUTH_TICKS / 2) - angle;
-    //        if (Math.abs(delta) > AZIMUTH_TICKS / 4) {
-    //          delta = (TARGET - AZIMUTH_TICKS) - angle;
-    //        }
-    //        swerveWheels[i].setAzimuthPosition(position + delta);
-    //      }
-    //    }
   }
 }
