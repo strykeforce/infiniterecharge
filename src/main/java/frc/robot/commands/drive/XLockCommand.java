@@ -21,7 +21,7 @@ public class XLockCommand extends CommandBase {
   public void initialize() {
     controls = RobotContainer.CONTROLS.getDriverControls();
     logger.info("X-locking wheels");
-    driveSubsystem.xLockSwerveDrive();
+    driveSubsystem.xLockSwerveDrive(); // FIXME: currently does nothing
   }
 
   @Override
