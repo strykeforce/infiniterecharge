@@ -31,7 +31,7 @@ import org.strykeforce.telemetry.TelemetryService;
 import org.strykeforce.telemetry.measurable.Measurable;
 import org.strykeforce.telemetry.measurable.Measure;
 
-public class PathDriveCommand extends CommandBase implements Measurable {
+public class DistanceCalibrationCommand extends CommandBase implements Measurable {
 
   private DriveSubsystem driveSubsystem = RobotContainer.DRIVE;
   private Trajectory trajectory;
@@ -44,9 +44,9 @@ public class PathDriveCommand extends CommandBase implements Measurable {
   private TelemetryService telemetryService;
   private String trajectoryName;
 
-  public PathDriveCommand(String trajectoryName) {
+  public DistanceCalibrationCommand() {
     addRequirements(driveSubsystem);
-    this.trajectoryName = trajectoryName;
+    trajectoryName = "DistanceCalibrationPath";
 
     if (!RobotContainer.isEvent) {
       telemetryService = RobotContainer.TELEMETRY;
@@ -63,6 +63,7 @@ public class PathDriveCommand extends CommandBase implements Measurable {
 
   @Override
   public void initialize() {
+    logger.info("Starting distance calibration!");
     var p = 6.0;
     var d = p / 100.0;
     ProfiledPIDController thetaController =
@@ -100,6 +101,7 @@ public class PathDriveCommand extends CommandBase implements Measurable {
   public void end(boolean interrupted) {
     driveSubsystem.drive(0.0, 0.0, 0.0);
     logger.info("Finished Path in: {}", timer.get());
+    logger.info("Odometry X Distance: {}", odometryPose.getX());
   }
 
   public Trajectory calculateTrajectory(String name) {
