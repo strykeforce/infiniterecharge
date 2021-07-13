@@ -211,6 +211,7 @@ public final class Constants {
     public static final double kTurretMidpoint = 13_000; // FIXME
     public static final double loadAngle = 25;
     public static final int kBatterShotTicks = 19600;
+    public static final int kClimbClearAngle = 300;
     // Subsystem Specific
     public static int kTurretZeroTicks = 2488;
     public static double kMaxStringPotZero = 500;
@@ -240,6 +241,9 @@ public final class Constants {
     public static final double kRatchetEngage = 0.6;
     public static final double kRatchetDisable = 0.3;
     public static final double kServoMoveTime = 0.05;
+
+    public static final double kPinEngaged = 0; // FIXME
+    public static final double kPinRelease = 1; // FIXME
 
     public static final int kReverseSoftLimit = -300;
     public static final int kForwardSoftLimit = 55_000;
