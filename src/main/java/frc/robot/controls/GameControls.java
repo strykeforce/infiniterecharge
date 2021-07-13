@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.commands.climber.ClimberExtendCommand;
 import frc.robot.commands.climber.ClimberOpenLoopCommand;
+import frc.robot.commands.climber.ClimberUpCmdGroup;
 import frc.robot.commands.climber.FastClimbRatchetCommand;
 import frc.robot.commands.intake.IntakeRunCommand;
 import frc.robot.commands.sequences.*;
@@ -100,7 +100,7 @@ public class GameControls {
 
     // Climb Commands
     new JoystickButton(controller, Button.kStart.value)
-        .whenPressed(new ClimberExtendCommand(Constants.ClimberConstants.kFastUpOutput));
+        .whenPressed(new ClimberUpCmdGroup(Constants.ClimberConstants.kFastUpOutput));
     new JoystickButton(controller, Button.kStart.value).whenReleased(new ClimberOpenLoopCommand(0));
     new JoystickButton(controller, Button.kBack.value).whenPressed(new FastClimbRatchetCommand());
     new JoystickButton(controller, Button.kBack.value).whenReleased(new ClimberOpenLoopCommand(0));
@@ -109,7 +109,7 @@ public class GameControls {
     new JoystickButton(controller, Button.kBumperLeft.value)
         .whenReleased(new ClimberOpenLoopCommand(0));
     new JoystickButton(controller, Button.kBumperRight.value)
-        .whenPressed(new ClimberExtendCommand(Constants.ClimberConstants.kSlowUpOutput));
+        .whenPressed(new ClimberUpCmdGroup(Constants.ClimberConstants.kSlowUpOutput));
     new JoystickButton(controller, Button.kBumperRight.value)
         .whenReleased(new ClimberOpenLoopCommand(0));
 

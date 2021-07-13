@@ -211,6 +211,7 @@ public final class Constants {
     public static final double kTurretMidpoint = 13_000; // FIXME
     public static final double loadAngle = 25;
     public static final int kBatterShotTicks = 19600;
+    public static final int kClimbClearAngle = 300;
     // Subsystem Specific
     public static int kTurretZeroTicks = 2488;
     public static double kMaxStringPotZero = 500;

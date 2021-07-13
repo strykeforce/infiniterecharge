@@ -4,20 +4,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ClimberSubsystem;
 
-public class ClimberExtendCommand extends InstantCommand {
-  private double setpoint;
+public class ClimberPullPinCommand extends InstantCommand {
   private ClimberSubsystem climberSubsystem = RobotContainer.CLIMBER;
+  private boolean doPull;
 
-  public ClimberExtendCommand(double setpoint) {
+  public ClimberPullPinCommand(boolean doPull) {
     addRequirements(climberSubsystem);
-
-    this.setpoint = setpoint;
+    this.doPull = doPull;
   }
 
   @Override
   public void initialize() {
-    climberSubsystem.pullPin(true);
-    climberSubsystem.engageRatchet(false);
-    climberSubsystem.runOpenLoop(setpoint);
+    climberSubsystem.pullPin(doPull);
   }
 }
