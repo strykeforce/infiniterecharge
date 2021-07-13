@@ -12,7 +12,6 @@ public class XLockCommand extends CommandBase {
   private DriveSubsystem driveSubsystem = RobotContainer.DRIVE;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private DriverControls controls;
-  private boolean isDoneLocked;
 
   public XLockCommand() {
     addRequirements(driveSubsystem);
@@ -21,22 +20,15 @@ public class XLockCommand extends CommandBase {
   @Override
   public void initialize() {
     controls = RobotContainer.CONTROLS.getDriverControls();
-    isDoneLocked = false;
+    logger.info("X-locking wheels");
     driveSubsystem.xLockSwerveDrive();
   }
 
   @Override
-  public void execute() {
-    if ((Math.abs(controls.getYaw()) >= Constants.DriveConstants.kDeadbandXLock)
-        || (Math.abs(controls.getForward()) >= Constants.DriveConstants.kDeadbandXLock)
-        || (Math.abs(controls.getStrafe()) >= Constants.DriveConstants.kDeadbandXLock)) {
-      isDoneLocked = true;
-    }
-  }
-
-  @Override
   public boolean isFinished() {
-    return isDoneLocked;
+    return Math.abs(controls.getYaw()) >= Constants.DriveConstants.kDeadbandXLock
+        || Math.abs(controls.getForward()) >= Constants.DriveConstants.kDeadbandXLock
+        || Math.abs(controls.getStrafe()) >= Constants.DriveConstants.kDeadbandXLock;
   }
 
   @Override
