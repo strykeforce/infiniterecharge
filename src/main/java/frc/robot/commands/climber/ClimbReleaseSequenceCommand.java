@@ -34,8 +34,9 @@ public class ClimbReleaseSequenceCommand extends CommandBase {
   public void execute() {
     switch (state) {
       case STOWED:
-        CLIMB.engageRatchet(false);
-        state = ClimberSubsystem.State.SERVO_ENGAGE;
+        // CLIMB.engageRatchet(false);
+        CLIMB.pullPin(true);
+        state = ClimberSubsystem.State.CLIMBING;
         CLIMB.servoMoveTime = Timer.getFPGATimestamp();
         logger.info("Moving Servo, time: {}", CLIMB.servoMoveTime);
         break;

@@ -241,6 +241,9 @@ public final class Constants {
     public static final double kRatchetDisable = 0.3;
     public static final double kServoMoveTime = 0.05;
 
+    public static final double kPinEngaged = 0; // FIXME
+    public static final double kPinRelease = 1; // FIXME
+
     public static final int kReverseSoftLimit = -300;
     public static final int kForwardSoftLimit = 55_000;
 
