@@ -19,9 +19,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private static int TALON_ID = 50;
   private static int RATCHET_ID = 0;
+  private static int PIN_ID; //FIXME
 
   private static TalonSRX climb;
   private static Servo ratchet;
+  private static Servo pin;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   public double ratchetReleasedTime;
   public double releaseStartTime;
@@ -32,6 +34,7 @@ public class ClimberSubsystem extends SubsystemBase {
   public ClimberSubsystem() {
     climb = new TalonSRX(TALON_ID);
     ratchet = new Servo(RATCHET_ID);
+    pin = new Servo(PIN_ID);
 
     TalonSRXConfiguration talonConfig = new TalonSRXConfiguration();
     talonConfig.forwardSoftLimitThreshold = Constants.ClimberConstants.kForwardSoftLimit;
