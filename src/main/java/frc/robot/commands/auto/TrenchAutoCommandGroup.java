@@ -17,7 +17,7 @@ public class TrenchAutoCommandGroup extends SequentialCommandGroup {
       String ballFetchPath,
       String driveShootPath) {
     addCommands(
-        new OffsetGyroCommand(gyroOffset), // FIXME: Move to end
+        new OffsetGyroCommand(gyroOffset),
         new AutoArmCommandGroup(),
         new ParallelDeadlineGroup(new WaitCommand(shootWait), new ArmedShootSequenceCommand()),
         new ParallelDeadlineGroup(
