@@ -1,7 +1,7 @@
 {
     "fileName": "thirdcoast.json",
     "name": "StrykeForce-ThirdCoast",
-    "version": "21.3.1-SNAPSHOT",
+    "version": "21.3.1",
     "uuid": "13c4f4b5-a1c0-4670-8f8d-b7b03628c0d3",
     "mavenUrls": [
         "http://maven.strykeforce.org/repo"
@@ -11,7 +11,7 @@
         {
             "groupId": "org.strykeforce",
             "artifactId": "thirdcoast",
-            "version": "21.3.1-SNAPSHOT"
+            "version": "21.3.1T"
         }
     ],
     "jniDependencies": [],
