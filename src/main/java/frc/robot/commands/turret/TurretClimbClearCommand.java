@@ -15,7 +15,7 @@ public class TurretClimbClearCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    if(Math.abs(turretSubsystem.getTurretAngle() - 270) > 5) {
+    if (Math.abs(turretSubsystem.getTurretAngle() - 270) > 5) {
       turretSubsystem.setTurretAngle(angle);
     }
   }

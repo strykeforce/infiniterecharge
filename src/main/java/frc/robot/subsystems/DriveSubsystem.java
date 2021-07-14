@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.RobotContainer;
 import java.util.Set;
@@ -147,14 +146,14 @@ public class DriveSubsystem extends MeasurableSubsystem {
   }
 
   public void xLockSwerveDrive() {
-    SwerveModuleState state1 = new SwerveModuleState(0.01, Rotation2d.fromDegrees(45));
-    SwerveModuleState state2 = new SwerveModuleState(0.01, Rotation2d.fromDegrees(-45));
-    SwerveModuleState[] states = new SwerveModuleState[4];
-    for (int i = 0; i < 4; i += 2) {
-      states[i] = state1;
-      states[i + 1] = state2;
-    }
-    swerveDrive.setModuleStates(states);
+    ((TalonSwerveModule) swerveDrive.getSwerveModules()[0])
+        .setAzimuthRotation2d(Rotation2d.fromDegrees(45));
+    ((TalonSwerveModule) swerveDrive.getSwerveModules()[1])
+        .setAzimuthRotation2d(Rotation2d.fromDegrees(-45));
+    ((TalonSwerveModule) swerveDrive.getSwerveModules()[2])
+        .setAzimuthRotation2d(Rotation2d.fromDegrees(-45));
+    ((TalonSwerveModule) swerveDrive.getSwerveModules()[3])
+        .setAzimuthRotation2d(Rotation2d.fromDegrees(45));
   }
 
   // Measurable Support
