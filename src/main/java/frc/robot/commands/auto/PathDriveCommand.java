@@ -86,9 +86,9 @@ public class PathDriveCommand extends CommandBase implements Measurable {
   public void execute() {
     state = trajectory.sample(timer.get());
     odometryPose = driveSubsystem.getPoseMeters();
-    speeds = holonomicDriveController.calculate(odometryPose, state, new Rotation2d());
+    speeds = holonomicDriveController.calculate(odometryPose, state, Rotation2d.fromDegrees(180));
     driveSubsystem.move(
-        speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, true);
+        speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false);
   }
 
   @Override
