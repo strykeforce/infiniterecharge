@@ -276,12 +276,12 @@ public final class Constants {
     public static final int kShooterIndex = 2;
     public static final int kHoodIndex = 3;
     // + is left
-    public static final double kHorizAngleCorrection = 3;
+    public static final double kHorizAngleCorrection = 2.5;
     // + is further along track and lower
-    public static final int kHoodInchesCorrectionR1 = 0; // 8-15 feet
-    public static final int kHoodInchesCorrectionR2 = 0; // 15-19 feet
-    public static final int kHoodInchesCorrectionR3 = 0; // 19-25 feet
-    public static final int kHoodInchesCorrectionR4 = 0; // 25+ feet
+    public static final int kHoodInchesCorrectionR1 = 20; // 8-15 feet
+    public static final int kHoodInchesCorrectionR2 = 13; // 15-19 feet (old 10)
+    public static final int kHoodInchesCorrectionR3 = 10; // 19-25 feet
+    public static final int kHoodInchesCorrectionR4 = 20; // 25+ feet
     public static final int kHoodTicksPerInchR1 = 40; // 8-15 feet
     public static final int kHoodTicksPerInchR2 = 75; // 15-19 feet
     public static final int kHoodTicksPerInchR3 = 75; // 19-25 feet
@@ -304,7 +304,7 @@ public final class Constants {
     public static final double kMinStringPotZero = 0;
 
     // Hood
-    public static final int kHoodZeroTicks = 2008; // gut check: 162
+    public static final int kHoodZeroTicks = 2118; // gut check: 162
 
     // Camera
     public static final String kCameraId = "A0";
