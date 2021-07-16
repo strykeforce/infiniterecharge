@@ -39,7 +39,7 @@ public class MagazineSmartFeedCommand extends CommandBase {
         if (!isMoving()) {
           state = FeedStates.START_MAG;
           logger.info("Turret Done Moving - Starting Smart Feed again");
-        } else System.out.println("MOVING!!!!");
+        } else logger.info("MOVING!!!!");
         break;
       case START_MAG:
         MAGAZINE.runSpeed(Constants.MagazineConstants.kClosedLoopShoot);
@@ -52,7 +52,6 @@ public class MagazineSmartFeedCommand extends CommandBase {
             > Constants.MagazineConstants.kArmTimeToShooterOn) {
           state = FeedStates.START_INTAKE;
         }
-        System.out.println("Waiting");
         break;
       case START_INTAKE:
         INTAKE.runBoth(kIntakeShootSpeed, kSquidShootSpeed);

@@ -31,6 +31,6 @@ public class ArmShooterCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     SHOOTER.setArmedState(true);
-    System.out.println("Armed!!!");
+    logger.info("Armed!!!");
   }
 }
