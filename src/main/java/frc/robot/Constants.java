@@ -278,7 +278,7 @@ public final class Constants {
     // + is left
     public static final double kHorizAngleCorrection = 2.5;
     // + is further along track and lower
-    public static final int kHoodInchesCorrectionR1 = 20; // 8-15 feet
+    public static final int kHoodInchesCorrectionR1 = 13; // 8-15 feet (was 20)
     public static final int kHoodInchesCorrectionR2 = 13; // 15-19 feet (old 10)
     public static final int kHoodInchesCorrectionR3 = 10; // 19-25 feet
     public static final int kHoodInchesCorrectionR4 = 20; // 25+ feet
